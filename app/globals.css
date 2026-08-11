@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F4F1EB;
+  --foreground: #171717;
+  --accent: #AAA39A;
+  --gold: #C4A35A;
+  --gold-light: #D4B87A;
+  --cream-dark: #E8E3D9;
+  --white: #F8F7F3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-cream-dark: var(--cream-dark);
+  --color-white: var(--white);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-display: var(--font-playfair-display), ui-serif, Georgia, serif;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* ─── Text Reveal Animation (word/line clip-path mask) ─── */
+.text-reveal-line {
+  overflow: hidden;
+  display: block;
+}
+.text-reveal-word {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+.text-reveal-word.revealed {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Image Reveal (clip-path wipe from bottom) ─── */
+.image-reveal {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.image-reveal.revealed {
+  clip-path: inset(0% 0 0 0);
+}
+
+/* ─── Smooth Underline for editorial links ─── */
+.editorial-link {
+  position: relative;
+  display: inline-block;
+}
+.editorial-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.editorial-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ─── Gold Underline variant ─── */
+.editorial-link-gold::after {
+  background: var(--gold);
+}
+
+/* ─── Infinite Marquee ─── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ─── Hero Loading Blinds ─── */
+@keyframes blinds-reveal {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+/* ─── Gold Divider ─── */
+.gold-rule {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  opacity: 0.6;
+}
+
+/* ─── Custom scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}
