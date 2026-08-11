@@ -64,4 +64,4 @@ npm run start
 
 ## 📄 License
 
-Copyright © 2023–2026 **Msfilms**. All rights reserved.
+Copyright © 2026 **Msfilms**. All rights reserved.

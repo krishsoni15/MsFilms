@@ -19,7 +19,7 @@ export const siteData = {
   aboutText: "Msfilms is a Saskatoon-based company that specializes in capturing precious memories of special events like weddings, family functions and more. The team at Msfilms has a keen eye for detail and a deep understanding of the technical aspects of photography and videography. They strive to produce high-quality and visually stunning images and videos that will be cherished by clients for years to come. Their commitment to their craft and client satisfaction makes Msfilms a valuable asset in photography and videography.",
   contactHeadline: "Contact Us",
   contactText: "We at Msfilms, take pride in offering our valued clients the utmost in professional photography services. To ensure that we are able to provide you with the best possible service, we kindly request that you provide us with detailed information about your upcoming event by filling out the form. This will allow us to fully understand your requirements and tailor our services to meet your specific needs. Once we have received your information, we will get back to you as soon as possible with a personalized quote and any additional information that you may require. We appreciate your interest in our services and look forward to working with you to capture the memories of your special event.",
-  copyright: "Copyright ©2023 | All rights reserved by Msfilms",
+  copyright: "Copyright ©2026 | All rights reserved by Msfilms",
 };
 
 // ─────────────────────────────────────────────────
