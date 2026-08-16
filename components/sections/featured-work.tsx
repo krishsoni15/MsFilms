@@ -134,7 +134,7 @@ export function FeaturedWork() {
         >
           <button
             onClick={() => setActiveProject(projects[0])}
-            className="inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase border border-foreground/20 px-8 py-4 text-foreground hover:bg-foreground hover:text-background transition-all duration-500 group cursor-pointer"
+            className="inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase border border-gold/40 px-8 py-4 text-foreground hover:bg-gold hover:text-[#061a2b] hover:border-gold transition-all duration-500 group cursor-pointer"
           >
             Browse Full Galleries
             <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>

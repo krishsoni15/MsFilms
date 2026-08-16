@@ -1,13 +1,29 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'La Luxes Script';
+  src: url('https://static.showit.co/file/ke-v2qhxSTioQ-VX3-us_Q/shared/laluxesscript.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'La Luxes Serif';
+  src: url('https://static.showit.co/file/a742SlglQgCGKShAxW2dYg/shared/laluxesserif.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --background: #F4F1EB;
-  --foreground: #171717;
-  --accent: #AAA39A;
-  --gold: #C4A35A;
-  --gold-light: #D4B87A;
-  --cream-dark: #E8E3D9;
-  --white: #F8F7F3;
+  --background: #061a2b;
+  --foreground: #f4f1eb;
+  --accent: #435c70;
+  --gold: #cba358;
+  --gold-light: #e2be7a;
+  --cream-dark: #102638;
+  --white: #ffffff;
 }
 
 @theme inline {
@@ -21,6 +37,8 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-display: var(--font-playfair-display), ui-serif, Georgia, serif;
+  --font-laluxes-script: "La Luxes Script", var(--font-inter), cursive;
+  --font-laluxes-serif: "La Luxes Serif", var(--font-instrument-serif), serif;
 }
 
 html,
@@ -51,16 +69,18 @@ body {
   overflow: hidden;
   display: block;
 }
+
 .text-reveal-word {
   display: inline-block;
   transform: translateY(100%);
   opacity: 0;
 }
+
 .text-reveal-word.revealed {
   transform: translateY(0);
   opacity: 1;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ─── Image Reveal (clip-path wipe from bottom) ─── */
@@ -68,6 +88,7 @@ body {
   clip-path: inset(100% 0 0 0);
   transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .image-reveal.revealed {
   clip-path: inset(0% 0 0 0);
 }
@@ -77,6 +98,7 @@ body {
   position: relative;
   display: inline-block;
 }
+
 .editorial-link::after {
   content: '';
   position: absolute;
@@ -89,6 +111,7 @@ body {
   transform-origin: right;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .editorial-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -101,22 +124,34 @@ body {
 
 /* ─── Infinite Marquee ─── */
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
 .marquee-track {
   display: flex;
   animation: marquee 40s linear infinite;
   will-change: transform;
 }
+
 .marquee-track:hover {
   animation-play-state: paused;
 }
 
 /* ─── Hero Loading Blinds ─── */
 @keyframes blinds-reveal {
-  0% { transform: scaleY(1); }
-  100% { transform: scaleY(0); }
+  0% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(0);
+  }
 }
 
 /* ─── Gold Divider ─── */
@@ -127,13 +162,20 @@ body {
   opacity: 0.6;
 }
 
+/* ─── Gold Filter for white logos/icons ─── */
+.gold-filter {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(35%) saturate(677%) hue-rotate(359deg) brightness(91%) contrast(83%);
+}
+
 /* ─── Custom scrollbar ─── */
 ::-webkit-scrollbar {
   width: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--background);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
   border-radius: 3px;
@@ -141,14 +183,19 @@ body {
 
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+
   html {
     scroll-behavior: auto;
   }
+
   .marquee-track {
     animation: none;
   }

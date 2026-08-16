@@ -12,17 +12,20 @@ import { Play } from "lucide-react";
 
 function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
     if (videoRef.current && film.videoUrl) {
+      setIsVideoLoading(true);
       videoRef.current.play().catch(() => {});
     }
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+    setIsVideoLoading(false);
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -64,8 +67,10 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
               loop
               playsInline
               preload="none"
+              onPlaying={() => setIsVideoLoading(false)}
+              onError={() => setIsVideoLoading(false)}
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                isHovered ? "opacity-100" : "opacity-0"
+                isHovered && !isVideoLoading ? "opacity-100" : "opacity-0"
               }`}
             />
           )}
@@ -100,7 +105,11 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
                     ? "bg-white text-black border-white scale-110 shadow-[0_0_40px_rgba(196,163,90,0.4)]"
                     : "bg-black/30 text-white border-white/30"
                 }`}>
-                  <Play size={20} className={`ml-0.5 transition-colors duration-300 ${isHovered ? "fill-black text-black" : "fill-white text-white"}`} />
+                  {isHovered && isVideoLoading ? (
+                    <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                  ) : (
+                    <Play size={20} className={`ml-0.5 transition-colors duration-300 ${isHovered ? "fill-black text-black" : "fill-white text-white"}`} />
+                  )}
                 </div>
               </Magnetic>
             </div>
@@ -123,10 +132,10 @@ export function Films() {
 
   return (
     <>
-      <section id="films" className="bg-[#111111] text-white py-24 md:py-32 px-5 md:px-10 lg:px-16">
+      <section id="films" className="bg-[#03111d] text-foreground py-24 md:py-32 px-5 md:px-10 lg:px-16">
         <div className="mb-12 md:mb-16">
-          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-white/40 mb-4">Films</AnimatedText>
-          <TextReveal as="h2" className="font-display text-3xl md:text-4xl lg:text-5xl text-white/90 max-w-lg">
+          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">Films</AnimatedText>
+          <TextReveal as="h2" className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground/90 max-w-lg">
             {"Some stories are better\nfelt in motion."}
           </TextReveal>
         </div>

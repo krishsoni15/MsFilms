@@ -14,8 +14,7 @@ export function Navigation() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const heroThreshold = window.innerHeight * 0.85;
-      setIsScrolled(window.scrollY > heroThreshold);
+      setIsScrolled(window.scrollY > 40);
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll);
@@ -40,11 +39,11 @@ export function Navigation() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
-          isScrolled
-            ? "bg-background/95 backdrop-blur-sm border-b border-foreground/5 py-3 md:py-4"
-            : "bg-transparent py-5 md:py-6"
-        }`}
+        style={{ zIndex: 9999 }}
+        className={`fixed top-0 left-0 right-0 transition-all duration-700 ease-out ${isScrolled
+          ? "bg-[#061a2b]/85 backdrop-blur-lg border-b border-white/5 py-[12px] md:py-[14px]"
+          : "bg-[#061a2b]/20 backdrop-blur-md py-[16px] md:py-[18px]"
+          }`}
       >
         <div className="flex justify-between items-center px-5 md:px-10 lg:px-16">
           {/* Logo */}
@@ -58,9 +57,8 @@ export function Navigation() {
               width={140}
               height={40}
               priority
-              className={`h-8 sm:h-9 md:h-10 w-auto object-contain transition-all duration-500 ${
-                mobileOpen || !isScrolled ? "brightness-100" : "brightness-0"
-              }`}
+              className={`w-auto object-contain transition-all duration-500 gold-filter ${isScrolled ? "h-[26px] sm:h-[30px] md:h-[34px]" : "h-8 sm:h-9 md:h-10"
+                }`}
             />
           </Link>
 
@@ -70,9 +68,8 @@ export function Navigation() {
               <Link
                 key={link.label}
                 href={link.href}
-                className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 hover:opacity-80 group ${
-                  isScrolled ? "text-foreground" : "text-white/90"
-                }`}
+                className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 hover:opacity-80 group ${isScrolled ? "text-foreground" : "text-white/90"
+                  }`}
               >
                 {link.label}
                 {/* Gold hover underline */}
@@ -83,15 +80,13 @@ export function Navigation() {
             <Magnetic strength={0.25}>
               <Link
                 href="#contact"
-                className={`relative text-[11px] tracking-[0.2em] uppercase border px-5 py-2.5 overflow-hidden group block transition-colors duration-500 ${
-                  isScrolled
-                    ? "border-foreground/20 text-foreground hover:text-background"
-                    : "border-white/30 text-white hover:text-foreground"
-                }`}
+                className={`relative text-[11px] tracking-[0.2em] uppercase border overflow-hidden group block transition-all duration-500 ${isScrolled
+                    ? "border-foreground/20 text-foreground hover:text-background px-4 py-2"
+                    : "border-white/30 text-white hover:text-foreground px-5 py-2.5"
+                  }`}
               >
-                <span className={`absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left ${
-                  isScrolled ? "bg-foreground" : "bg-white"
-                }`} />
+                <span className={`absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left ${isScrolled ? "bg-foreground" : "bg-white"
+                  }`} />
                 <span className="relative z-10">Let&apos;s Talk</span>
               </Link>
             </Magnetic>
@@ -103,12 +98,10 @@ export function Navigation() {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle Menu"
           >
-            <span className={`block w-6 h-px transition-all duration-300 ${
-              mobileOpen ? "rotate-45 translate-y-[3.5px] bg-white" : isScrolled ? "bg-foreground" : "bg-white"
-            }`} />
-            <span className={`block w-6 h-px transition-all duration-300 ${
-              mobileOpen ? "-rotate-45 -translate-y-[3.5px] bg-white" : isScrolled ? "bg-foreground" : "bg-white"
-            }`} />
+            <span className={`block w-6 h-px transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[3.5px] bg-white" : isScrolled ? "bg-foreground" : "bg-white"
+              }`} />
+            <span className={`block w-6 h-px transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[3.5px] bg-white" : isScrolled ? "bg-foreground" : "bg-white"
+              }`} />
           </button>
         </div>
       </motion.header>
@@ -121,7 +114,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-[#171717] z-40 flex flex-col justify-between px-8 py-28"
+            className="fixed inset-0 bg-[#03111d] z-40 flex flex-col justify-between px-8 py-28"
           >
             <nav className="flex flex-col gap-1">
               {links.map((link, i) => (

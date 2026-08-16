@@ -47,7 +47,7 @@ export function Testimonials() {
 
   return (
     <section
-      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-foreground text-background relative overflow-hidden"
+      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#03111d] text-foreground relative overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -58,9 +58,9 @@ export function Testimonials() {
 
       <div className="relative z-10 max-w-4xl mx-auto">
         <AnimatedText as="div" className="mb-16 md:mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase text-background/30 mb-4">Kind Words</p>
-          <h2 className="font-display text-3xl md:text-4xl text-background/90">
-            Real stories from <em className="text-background/50 italic">real clients.</em>
+          <p className="text-[10px] tracking-[0.25em] uppercase text-foreground/30 mb-4">Kind Words</p>
+          <h2 className="font-display text-3xl md:text-4xl text-foreground/90">
+            Real stories from <em className="text-foreground/50 italic">real clients.</em>
           </h2>
         </AnimatedText>
 
@@ -75,16 +75,16 @@ export function Testimonials() {
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0"
             >
-              <p className="font-display text-2xl md:text-3xl lg:text-4xl leading-relaxed text-background/70 italic mb-10">
+              <p className="font-display text-2xl md:text-3xl lg:text-4xl leading-relaxed text-foreground/70 italic mb-10">
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div>
-                <p className="text-sm text-background/50 uppercase tracking-wider">{t.name}</p>
-                <p className="text-[10px] text-background/25 uppercase tracking-widest mt-1">{t.event}</p>
+                <p className="text-sm text-foreground/50 uppercase tracking-wider">{t.name}</p>
+                <p className="text-[10px] text-foreground/25 uppercase tracking-widest mt-1">{t.event}</p>
               </div>
               {/* Placeholder notice — only visible to dev/owner */}
               {t.isPlaceholder && (
-                <p className="text-[8px] text-background/8 mt-6 uppercase tracking-widest select-none">
+                <p className="text-[8px] text-foreground/8 mt-6 uppercase tracking-widest select-none">
                   placeholder — replace before publishing
                 </p>
               )}
@@ -98,15 +98,14 @@ export function Testimonials() {
             <button
               key={i}
               onClick={() => setCurrent(i)}
-              className={`transition-all duration-500 rounded-full ${
-                i === current
+              className={`transition-all duration-500 rounded-full ${i === current
                   ? "w-8 h-2 bg-gold"
-                  : "w-2 h-2 bg-background/20 hover:bg-background/40"
-              }`}
+                  : "w-2 h-2 bg-foreground/20 hover:bg-foreground/40"
+                }`}
               aria-label={`Go to testimonial ${i + 1}`}
             />
           ))}
-          <span className="ml-4 text-[10px] tracking-[0.15em] text-background/20 font-sans">
+          <span className="ml-4 text-[10px] tracking-[0.15em] text-foreground/20 font-sans">
             {String(current + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
           </span>
         </div>

@@ -1,212 +1,364 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { heroData, siteData } from "@/lib/data";
-import { Magnetic } from "@/components/ui/magnetic";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { siteData } from "@/lib/data";
+
+interface CategoryImageProps {
+  src: string;
+  alt: string;
+  delay?: number;
+}
+
+function CategoryImage({ src, alt, delay = 0 }: CategoryImageProps) {
+  return (
+    <div className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black/10">
+      <AnimatePresence mode="popLayout">
+        <motion.img
+          key={src}
+          src={src}
+          alt={alt}
+          initial={{ opacity: 0, scale: 1.03 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 1.0, delay, ease: "easeInOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ willChange: "transform, opacity" }}
+        />
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const categories = [
+  {
+    id: "wedding",
+    subtitle: "Wedding Photography & Films",
+    titleMain: "TELLING STORIES WORTH",
+    titleHighlight: "Remembering.",
+    images: [
+      "/wedding/imgi_3_5.png",       // Arched (left)
+      "/wedding/imgi_7_3.jpg",       // Toast/Top-Right
+      "/wedding/imgi_6_4.jpg",       // Polaroid
+      "/wedding/imgi_4_7.jpg",       // Celebration Crowd/Bottom-Center
+      "/wedding/imgi_8_6.jpg",       // Walking Wedding Party/Bottom-Right
+    ]
+  },
+  {
+    id: "drone",
+    subtitle: "Drone Photography & Films",
+    titleMain: "ELEVATING EVERY UNIQUE",
+    titleHighlight: "Perspective.",
+    images: [
+      "/drone/imgi_11_6.jpg",        // Arched (left)
+      "/drone/imgi_10_3.jpg",        // Toast/Top-Right
+      "/drone/imgi_2_1.jpg",         // Polaroid
+      "/drone/imgi_7_5.jpg",         // Celebration Crowd/Bottom-Center
+      "/drone/imgi_12_9.jpg",        // Walking Wedding Party/Bottom-Right
+    ]
+  },
+  {
+    id: "landscape",
+    subtitle: "Landscape Scenery & Fine Art",
+    titleMain: "CAPTURING EARTH'S SILENT",
+    titleHighlight: "Majesty.",
+    images: [
+      "/landscape/imgi_2_1 (1).jpg",  // Arched (left)
+      "/landscape/imgi_8_8.jpg",      // Toast/Top-Right
+      "/landscape/imgi_7_4.jpg",      // Polaroid
+      "/landscape/imgi_5_10 (1).jpg", // Celebration Crowd/Bottom-Center
+      "/landscape/imgi_10_6.jpg",     // Walking Wedding Party/Bottom-Right
+    ]
+  }
+];
 
 export function Hero() {
   const [isLoaded, setIsLoaded] = useState(false);
-  const ref = useRef(null);
+  const [shift, setShift] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [categoryIndex, setCategoryIndex] = useState(0);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 0.2], ["0%", "-10%"]);
+  // Preload all category images to prevent any transition lag or flicker
+  useEffect(() => {
+    categories.forEach((category) => {
+      category.images.forEach((src) => {
+        const img = new window.Image();
+        img.src = src;
+      });
+    });
+  }, []);
 
   useEffect(() => {
-    // Trigger loading sequence after a brief pause
-    const timer = setTimeout(() => setIsLoaded(true), 600);
+    const timer = setTimeout(() => setIsLoaded(true), 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const headlineWords = heroData.headline.split("\n").map(line => line.split(" "));
+  useEffect(() => {
+    const updateLayout = () => {
+      const width = window.innerWidth;
+      setIsDesktop(width >= 768);
+      setShift(width >= 1200 ? (width - 1200) / 2 : 0);
+    };
+    updateLayout();
+    window.addEventListener("resize", updateLayout);
+    return () => window.removeEventListener("resize", updateLayout);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    let intervalId: NodeJS.Timeout;
+
+    // Hold the first slide (Wedding) for 7.5 seconds on initial load, then cycle every 5.5 seconds
+    const timeoutId = setTimeout(() => {
+      setCategoryIndex(1);
+      intervalId = setInterval(() => {
+        setCategoryIndex((prev) => (prev + 1) % categories.length);
+      }, 5500);
+    }, 7500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isLoaded]);
+
+  const currentCategory = categories[categoryIndex];
 
   return (
-    <section ref={ref} className="relative h-screen w-full overflow-hidden bg-black">
-      {/* ── Loading Overlay (signature logo + horizontal blinds wipe) ── */}
+    <section className="relative w-full bg-background overflow-hidden px-4 pt-[68px] pb-12 md:pt-[92px] md:pb-[96px] flex justify-center">
+      {/* ── Loading Overlay (signature logo + blinds wipe) ── */}
       <AnimatePresence>
         {!isLoaded && (
           <motion.div
-            className="absolute inset-0 z-50 flex flex-col justify-center items-center pointer-events-none"
+            className="fixed inset-0 z-[10000] pointer-events-none overflow-hidden"
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.5, delay: 1.3 }}
           >
-            {/* Signature Logo reveal in center */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.05 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute z-10"
-            >
-              <Image
-                src={siteData.logo}
-                alt={siteData.name}
-                width={200}
-                height={60}
-                priority
-                className="h-14 sm:h-16 md:h-20 w-auto object-contain brightness-100 drop-shadow-2xl"
+            {/* Ambient Blur Backdrops (behind shutters) */}
+            <div className="absolute inset-0 z-10 bg-[#02070f]">
+              {/* Floating Gold Orb */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.15, 1],
+                  x: [-30, 30, -30],
+                  y: [-30, 30, -30],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -left-1/4 -top-1/4 w-3/4 h-3/4 bg-gold/8 rounded-full blur-[140px]"
               />
+              {/* Floating Blue-Grey Orb */}
+              <motion.div
+                animate={{
+                  scale: [1.15, 1, 1.15],
+                  x: [30, -30, 30],
+                  y: [30, -30, 30],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -right-1/4 -bottom-1/4 w-3/4 h-3/4 bg-[#0a1626]/40 rounded-full blur-[140px]"
+              />
+              {/* Pulsing Center Gold Aura */}
+              <motion.div
+                animate={{
+                  opacity: [0.2, 0.5, 0.2],
+                  scale: [0.9, 1.1, 0.9],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{ backgroundImage: "radial-gradient(circle, rgba(200,170,110,0.2) 0%, transparent 75%)" }}
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full blur-[60px]"
+              />
+            </div>
+
+            {/* Top Shutter Panel */}
+            <motion.div
+              className="absolute top-0 left-0 w-full h-[50%] bg-[#02070f]/92 backdrop-blur-md z-20"
+              initial={{ y: "0%" }}
+              animate={{ y: "-100%" }}
+              transition={{
+                duration: 1.1,
+                delay: 0.2,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+            >
+              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
             </motion.div>
 
-            {[...Array(5)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="flex-1 w-full bg-[#111111]"
-                initial={{ scaleY: 1 }}
-                animate={{ scaleY: 0 }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.5 + i * 0.08,
-                  ease: [0.76, 0, 0.24, 1],
-                }}
-                style={{ transformOrigin: i % 2 === 0 ? "top" : "bottom" }}
-              />
-            ))}
+            {/* Bottom Shutter Panel */}
+            <motion.div
+              className="absolute bottom-0 left-0 w-full h-[50%] bg-[#02070f]/92 backdrop-blur-md z-20"
+              initial={{ y: "0%" }}
+              animate={{ y: "100%" }}
+              transition={{
+                duration: 1.1,
+                delay: 0.2,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+            >
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Background — Video or Image with parallax ── */}
-      <motion.div
-        initial={{ scale: 1.15 }}
-        animate={{ scale: isLoaded ? 1 : 1.15 }}
-        transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1] }}
-        style={{ y: bgY, scale: bgScale }}
-        className="absolute inset-0 z-0"
-      >
-        {heroData.videoSrc ? (
-          <video
-            src={heroData.videoSrc}
-            poster={heroData.videoPoster}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <Image
-            src={heroData.videoPoster}
-            alt="Cinematic wedding moment"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-            quality={85}
-          />
-        )}
-        {/* Cinematic dark gradient overlay for crystal clear high-contrast white text */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/45" />
-      </motion.div>
+      {/* ── Collage Canvas ── */}
+      <div className="relative w-full aspect-[320/611] md:w-full md:max-w-[1200px] md:aspect-[1200/881] @container">
 
-      {/* ── Content ── */}
-      <motion.div
-        style={{ opacity: contentOpacity, y: contentY }}
-        className="relative z-10 h-full flex flex-col justify-between px-5 md:px-10 lg:px-16 text-white"
-      >
-        {/* Top Row — Eyebrow */}
-        <div className="pt-28 md:pt-32 flex justify-between items-start">
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase text-white/50 font-sans"
-          >
-            {heroData.eyebrow}
-          </motion.p>
-        </div>
-
-        {/* Center — Headline with staggered word reveals */}
-        <div className="flex-1 flex flex-col justify-center max-w-4xl -mt-12">
-          <div className="mb-8">
-            {headlineWords.map((line, lineIdx) => (
-              <span key={lineIdx} className="block overflow-hidden pb-2">
-                {line.map((word, wordIdx) => {
-                  const globalIdx = lineIdx * 3 + wordIdx;
-                  return (
-                    <motion.span
-                      key={wordIdx}
-                      initial={{ y: "120%", opacity: 0 }}
-                      animate={isLoaded ? { y: "0%", opacity: 1 } : {}}
-                      transition={{
-                        duration: 1,
-                        delay: 0.8 + globalIdx * 0.1,
-                        ease: [0.16, 1, 0.3, 1],
-                      }}
-                      className={`inline-block mr-[0.25em] font-display text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] leading-[1.05] tracking-tight ${
-                        lineIdx === 1 ? "italic text-white/80" : ""
-                      }`}
-                    >
-                      {word}
-                    </motion.span>
-                  );
-                })}
-              </span>
-            ))}
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 1.4 }}
-            className="font-sans text-sm md:text-base text-white/60 max-w-md mb-12 leading-relaxed"
-          >
-            {heroData.subheadline}
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 1.6 }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 font-sans text-[11px] tracking-[0.2em] uppercase"
-          >
-            <Magnetic strength={0.3}>
-              <Link
-                href="#work"
-                className="relative border border-white/30 px-8 py-4 text-center overflow-hidden group block transition-colors duration-500 hover:text-black"
-              >
-                <span className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left" />
-                <span className="relative z-10">View Our Work</span>
-              </Link>
-            </Magnetic>
-
-            <Magnetic strength={0.3}>
-              <Link
-                href="#contact"
-                className="px-8 py-4 text-center text-white/60 hover:text-white transition-colors duration-500 flex items-center gap-2 group block"
-              >
-                Start a Conversation
-                <span className="transform group-hover:translate-x-2 transition-transform duration-300">→</span>
-              </Link>
-            </Magnetic>
-          </motion.div>
-        </div>
-
-        {/* Bottom — Scroll indicator with growing line */}
+        {/* 1. Logo Branding - centered above subtitle text */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={isLoaded ? { opacity: 1 } : {}}
-          transition={{ duration: 1, delay: 2 }}
-          className="pb-10 self-center flex flex-col items-center gap-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-1/2 -translate-x-1/2 top-[38%] md:top-[20%] w-[48%] h-[10%] md:w-[28%] md:h-[14%] z-[35] pointer-events-none select-none"
         >
-          <span className="text-[9px] tracking-[0.3em] uppercase text-white/30 font-sans">Scroll</span>
-          <motion.div
-            className="w-px bg-white/30 origin-top"
-            initial={{ height: 0 }}
-            animate={isLoaded ? { height: 40 } : {}}
-            transition={{ duration: 1.5, delay: 2.2, ease: [0.16, 1, 0.3, 1] }}
+          <Image
+            src={siteData.logo}
+            alt="Ms films"
+            fill
+            className="object-contain gold-filter drop-shadow-[0_2px_15px_rgba(0,0,0,0.6)]"
+            priority
           />
         </motion.div>
-      </motion.div>
+
+        {/* 2. Arched Image (Center-Left) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-[18.75%] top-[2.62%] w-[62.5%] h-[42%] md:left-[21.5%] md:top-[12.03%] md:w-[26.33%] md:h-[56%] rounded-t-[129px] md:rounded-t-[165px] overflow-hidden z-10 shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
+          style={isDesktop ? { left: `calc(21.5% - ${shift}px)` } : {}}
+        >
+          <CategoryImage
+            src={currentCategory.images[0]}
+            alt={`${currentCategory.subtitle} arched photo`}
+            delay={0.0}
+          />
+          <div className="absolute inset-3 border border-gold/20 rounded-t-[117px] md:rounded-t-[153px] pointer-events-none z-20" />
+        </motion.div>
+
+        {/* 3. Toast Couple champagne (Top-Right - Desktop only) */}
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden md:block absolute md:left-[65.08%] md:top-[-0.57%] md:w-[25.08%] md:h-[59.14%] z-20 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/35"
+          style={isDesktop ? { left: `calc(65.08% + ${shift}px)` } : {}}
+        >
+          <CategoryImage
+            src={currentCategory.images[1]}
+            alt={`${currentCategory.subtitle} detailed photo`}
+            delay={0.1}
+          />
+          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+        </motion.div>
+
+        {/* 4. Polaroid Photo Frame (Bottom-Left) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.95 }}
+          animate={isLoaded ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 1.2, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-[2.18%] top-[70.54%] w-[51.25%] h-[21.76%] md:left-[0.83%] md:top-[46.31%] md:w-[25.42%] md:h-[28.49%] z-20 drop-shadow-[0_25px_45px_rgba(180,150,90,0.2)]"
+          style={isDesktop ? { left: `calc(0.83% - ${shift}px)` } : {}}
+        >
+          <div className="absolute left-[1.3%] top-[4.4%] w-[97.4%] h-[91.2%] overflow-hidden">
+            <CategoryImage
+              src={currentCategory.images[2]}
+              alt={`${currentCategory.subtitle} polaroid photo`}
+              delay={0.2}
+            />
+          </div>
+          <Image
+            src="https://static.showit.co/400/1ywRPbZkQy6XIDjbr_VVsA/shared/3.png"
+            alt="Polaroid Frame"
+            fill
+            className="object-fill z-10 pointer-events-none"
+          />
+        </motion.div>
+
+        {/* 5. Celebration Crowd (Bottom-Center) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-[50.31%] top-[77.41%] w-[45%] h-[25.69%] md:left-[7.17%] md:top-[66.17%] md:w-[33.75%] md:h-[37.12%] z-20 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
+          style={isDesktop ? { left: `calc(7.17% + ${shift}px)` } : {}}
+        >
+          <CategoryImage
+            src={currentCategory.images[3]}
+            alt={`${currentCategory.subtitle} celebration`}
+            delay={0.3}
+          />
+          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+        </motion.div>
+
+        {/* 6. Walking Wedding Party (Bottom-Right - Desktop only) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="hidden md:block absolute md:left-[49.33%] md:top-[52.78%] md:w-[51.25%] md:h-[38.02%] z-10 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
+          style={isDesktop ? { left: `calc(49.33% + ${shift}px)` } : {}}
+        >
+          <CategoryImage
+            src={currentCategory.images[4]}
+            alt={`${currentCategory.subtitle} walking`}
+            delay={0.4}
+          />
+          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+        </motion.div>
+
+        {/* 7. Text Subtitle - Smooth dynamic swap */}
+        <div className="absolute left-[5%] top-[50.73%] w-[90.31%] h-[16px] md:left-[11.5%] md:top-[37.34%] md:w-[77%] md:h-[23px] z-30 select-none flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={categoryIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.8, delay: categoryIndex === 0 ? 1.0 : 0, ease: [0.16, 1, 0.3, 1] }}
+              style={{ textShadow: "2px 2px 20px rgba(0,0,0,0.9)" }}
+              className="text-gold font-sans text-[3cqw] md:text-[1.2cqw] tracking-[0.4em] md:tracking-[0.5em] uppercase text-center font-medium"
+            >
+              {currentCategory.subtitle}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* 8. Text Title - Smooth dynamic swap */}
+        <div className="absolute left-[5%] top-[56.08%] w-[90.31%] h-[60px] md:left-[11.5%] md:top-[43.7%] md:w-[77%] md:h-[118px] z-30 select-none flex items-center justify-center font-normal">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={categoryIndex}
+              initial={{ opacity: 0, y: 15 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.8, delay: categoryIndex === 0 ? 1.15 : 0, ease: [0.16, 1, 0.3, 1] }}
+              style={{ textShadow: "3px 3px 25px rgba(0,0,0,0.9)" }}
+              className="text-foreground font-laluxes-serif text-[6.25cqw] md:text-[4.08cqw] text-center leading-[1.2] tracking-normal"
+            >
+              <span>
+                {currentCategory.titleMain} {" "}
+                <span className="text-gold font-laluxes-script normal-case ml-2 text-[1.25em] whitespace-nowrap">
+                  {currentCategory.titleHighlight}
+                </span>
+              </span>
+            </motion.h1>
+          </AnimatePresence>
+        </div>
+
+      </div>
+
     </section>
   );
 }

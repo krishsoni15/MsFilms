@@ -15,10 +15,17 @@ interface VideoModalProps {
 
 export function VideoModal({ isOpen, onClose, videoUrl, posterUrl, title }: VideoModalProps) {
   const [mounted, setMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(true);
+    }
+  }, [isOpen]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") onClose();
@@ -49,7 +56,7 @@ export function VideoModal({ isOpen, onClose, videoUrl, posterUrl, title }: Vide
           onClick={onClose}
         >
           {/* Close button */}
-          <button 
+          <button
             onClick={onClose}
             className="absolute top-6 right-6 z-50 text-white/70 hover:text-white transition-colors"
             aria-label="Close video"
@@ -70,17 +77,26 @@ export function VideoModal({ isOpen, onClose, videoUrl, posterUrl, title }: Vide
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="w-full max-w-5xl aspect-video mx-4"
+            className="w-full max-w-5xl aspect-video mx-4 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {videoUrl ? (
-              <video
-                src={videoUrl}
-                poster={posterUrl}
-                controls
-                autoPlay
-                className="w-full h-full object-contain"
-              />
+              <div className="relative w-full h-full bg-[#02070f] rounded-sm overflow-hidden flex items-center justify-center">
+                {isLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-10 gap-3">
+                    <div className="w-8 h-8 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
+                    <p className="text-[10px] tracking-[0.2em] text-white/50 uppercase font-sans">Loading Film...</p>
+                  </div>
+                )}
+                <video
+                  src={videoUrl}
+                  poster={posterUrl}
+                  controls
+                  autoPlay
+                  onCanPlay={() => setIsLoading(false)}
+                  className="w-full h-full object-contain"
+                />
+              </div>
             ) : (
               <div className="w-full h-full bg-zinc-900 flex flex-col items-center justify-center gap-4">
                 {posterUrl && (

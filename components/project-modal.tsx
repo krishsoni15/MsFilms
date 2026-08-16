@@ -49,10 +49,10 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-[9990] bg-[#111111] overflow-y-auto"
+          className="fixed inset-0 z-[9990] bg-[#03111d] overflow-y-auto"
         >
           {/* Header Bar */}
-          <div className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 bg-[#111111]/90 backdrop-blur-md border-b border-white/10">
+          <div className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 bg-[#03111d]/90 backdrop-blur-md border-b border-white/10">
             <div>
               <p className="text-[9px] tracking-[0.25em] uppercase text-gold/80 font-sans mb-0.5">
                 {project.category} Story
@@ -100,13 +100,12 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + idx * 0.1 }}
-                  className={`relative overflow-hidden rounded-sm ${
-                    idx === 0
+                  className={`relative overflow-hidden rounded-sm ${idx === 0
                       ? "aspect-[16/10] md:aspect-[16/9] w-full"
                       : idx % 2 === 1
-                      ? "aspect-[4/5] max-w-2xl mx-auto"
-                      : "aspect-[16/10] w-full"
-                  }`}
+                        ? "aspect-[4/5] max-w-2xl mx-auto"
+                        : "aspect-[16/10] w-full"
+                    }`}
                 >
                   <Image
                     src={img}
