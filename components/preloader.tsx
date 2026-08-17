@@ -259,20 +259,32 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
     return () => clearInterval(id);
   }, []);
 
-  // ── Focus Lock sound and state when progress hits 100 ──
+  // ── Focus Lock sound and automatic transition when progress hits 100 ──
   useEffect(() => {
     if (progress < 100) return;
     playFocusBeep();
     setFocusLocked(true);
-    setStatusText("READY / CLICK TO CAPTURE");
+    setStatusText("CAPTURING");
+    setIsClicked(true); // Automatically trigger enter transition
   }, [progress]);
 
-  // ── Transition pipeline (runs when user clicks the shutter) ──
+  // ── Transition pipeline (runs when user clicks the shutter or automatically on 100) ──
   useEffect(() => {
     if (!isClicked) return;
     console.log("[Debug Preloader] Transition started.");
 
     setStatusText("CAPTURING");
+
+    // Load actual camera shutter sound provided by user
+    const shutterAudio = new Audio("/mp3/freesound_community-camera-shutter-6305.mp3");
+    shutterAudio.volume = 0.55;
+    shutterAudio.preload = "auto";
+
+    // Play user shutter MP3 automatically (falls back to Web Audio API synthesis if blocked by autoplay policies)
+    shutterAudio.play().catch((err) => {
+      console.warn("MP3 shutter audio play failed, falling back to synthesis:", err);
+      playCameraShutterSound();
+    });
 
     // Phase 1: Smoothly open iris blades at 80ms
     let rafId: number;
@@ -338,18 +350,7 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
   const handleShutterClick = () => {
     console.log("[Debug Preloader] Shutter clicked. progress:", progress, "isClicked:", isClicked);
     if (progress < 100 || isClicked) return;
-
-    // Play shutter sound synchronously inside user gesture callback to prevent autoplay block
-    const shutterAudio = new Audio("/mp3/freesound_community-camera-shutter-6305.mp3");
-    shutterAudio.volume = 0.55;
-    shutterAudio.preload = "auto";
-    shutterAudio.play().catch((err) => {
-      console.warn("MP3 shutter audio play failed, falling back to synthesis:", err);
-      playCameraShutterSound();
-    });
-
     setIsClicked(true);
-    setStatusText("CAPTURING");
   };
 
   return (
