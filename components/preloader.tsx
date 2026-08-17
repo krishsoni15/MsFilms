@@ -382,6 +382,8 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
               alt="Portfolio"
               fill
               className="object-cover"
+              sizes="100vw"
+              quality={65}
               priority
             />
           </motion.div>

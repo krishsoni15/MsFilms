@@ -34,6 +34,7 @@ function CategoryImage({ src, alt, delay = 0 }: CategoryImageProps) {
             fill
             className="object-cover"
             sizes="(max-width: 768px) 50vw, 30vw"
+            quality={65}
             priority
           />
         </motion.div>
