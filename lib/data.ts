@@ -67,6 +67,22 @@ export const projects = [
     description: "Capturing precious memories of special events like weddings, ceremonies, and intimate moments with a keen eye for technical and emotional detail.",
   },
   {
+    slug: "portraits",
+    title: "Portrait Photography & Sessions",
+    subtitle: "Intimate Studies of Character",
+    category: "Portraits",
+    location: "Saskatoon",
+    year: "2026",
+    cover: "/landscape/imgi_9_3.jpg",
+    images: [
+      "/landscape/imgi_9_3.jpg",
+      "/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg",
+      "/wedding/imgi_8_6.jpg",
+      "/landscape/imgi_10_6.jpg",
+    ],
+    description: "Professional portrait sessions capturing genuine character and personal expressions in studio and natural light settings.",
+  },
+  {
     slug: "landscape",
     title: "Landscape Scenery & Fine Art",
     subtitle: "Natural Horizon Studies",

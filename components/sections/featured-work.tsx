@@ -1,102 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import { projects } from "@/lib/data";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
 import { ProjectModal } from "@/components/project-modal";
-import { motion, useScroll, useTransform } from "framer-motion";
-
-function ProjectCard({
-  project,
-  layout,
-  index,
-  onSelect,
-}: {
-  project: typeof projects[0];
-  layout: "hero" | "side-left" | "side-right";
-  index: number;
-  onSelect: (project: typeof projects[0]) => void;
-}) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const aspectMap = {
-    hero: "aspect-[16/10] md:aspect-[16/9]",
-    "side-left": "aspect-[4/5]",
-    "side-right": "aspect-[4/5]",
-  };
-
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start end", "end start"],
-  });
-
-  // Slow parallax vertical slide to create a premium floating cinematic feel
-  const yParallax = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
-
-  const num = String(index + 1).padStart(2, "0");
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: index * 0.1 }}
-    >
-      <button
-        onClick={() => onSelect(project)}
-        className="group block w-full text-left cursor-pointer"
-      >
-        <div
-          ref={cardRef}
-          data-cursor-text="VIEW STORY"
-          className={`relative ${aspectMap[layout]} overflow-hidden mb-6 rounded-sm border border-foreground/10 group-hover:border-gold/50 transition-colors duration-700 shadow-xl`}
-        >
-          <motion.div style={{ y: yParallax, scale: 1.12 }} className="absolute inset-0">
-            <Image
-              src={project.cover}
-              alt={`${project.title} — {project.category} photography`}
-              fill
-              className="object-cover transition-transform duration-[1.8s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-              sizes={
-                layout === "hero"
-                  ? "(max-width: 768px) 100vw, 85vw"
-                  : "(max-width: 768px) 100vw, 45vw"
-              }
-            />
-          </motion.div>
-          {/* Subtle gradient vignette for depth */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 group-hover:from-black/90 transition-all duration-700" />
-
-          {/* Top Info Pill Badges */}
-          <div className="absolute top-5 left-5 right-5 flex justify-between items-center z-10">
-            <span className="text-[9px] tracking-[0.25em] uppercase text-white/90 bg-black/40 backdrop-blur-md px-3.5 py-1.5 border border-white/15 rounded-full font-sans">
-              {project.category}
-            </span>
-            <span className="text-[10px] tracking-[0.2em] text-white/60 font-sans">{num}</span>
-          </div>
-
-          {/* Bottom Floating Title Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-10 text-white flex flex-col justify-end">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-gold/90 mb-1 font-sans">
-              {project.subtitle}
-            </p>
-            <h3 className="font-serif text-2xl md:text-3xl font-normal leading-snug group-hover:translate-x-2 transition-transform duration-500 ease-out">
-              {project.title}
-            </h3>
-
-            <div className="mt-4 flex items-center justify-between border-t border-white/15 pt-4 text-[10px] tracking-[0.2em] uppercase text-white/60">
-              <span>{project.location} · {project.year}</span>
-              <span className="text-gold flex items-center gap-1.5 group-hover:translate-x-1 transition-transform duration-300">
-                Explore Gallery →
-              </span>
-            </div>
-          </div>
-        </div>
-      </button>
-    </motion.div>
-  );
-}
+import { AccordionGallery } from "@/components/ui/accordion-gallery";
+import { motion } from "framer-motion";
 
 export function FeaturedWork() {
   const [activeProject, setActiveProject] = useState<typeof projects[0] | null>(null);
@@ -122,26 +32,27 @@ export function FeaturedWork() {
             </ScrollReveal>
           </div>
           <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
-            Explore our core portfolios across Wedding, Landscape, and Dronography — click any story to view full high-res galleries.
+            Explore our core portfolios across Wedding, Portraits, Landscape, and Dronography — click any expanded panel to view full high-res galleries.
           </p>
         </div>
 
-        {/* 3 Core Gallery Cards Grid */}
-        <div className="space-y-16 md:space-y-20 max-w-7xl mx-auto">
-          {/* Card 01 — WEDDING (Hero Full Width) */}
-          {projects[0] && (
-            <ProjectCard project={projects[0]} layout="hero" index={0} onSelect={setActiveProject} />
-          )}
-
-          {/* Cards 02 & 03 — LANDSCAPE & DRONE (Side by Side) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-            {projects[1] && (
-              <ProjectCard project={projects[1]} layout="side-left" index={1} onSelect={setActiveProject} />
-            )}
-            {projects[2] && (
-              <ProjectCard project={projects[2]} layout="side-right" index={2} onSelect={setActiveProject} />
-            )}
-          </div>
+        {/* Accordion Gallery replacing the old grid */}
+        <div className="max-w-7xl mx-auto relative z-10">
+          <AccordionGallery
+            items={projects.map((project) => ({
+              image: project.cover,
+              label: project.category,
+              slug: project.slug,
+            }))}
+            defaultIndex={0}
+            expandRatio={0.48}
+            onItemClick={(item) => {
+              const project = projects.find((p) => p.slug === item.slug);
+              if (project) {
+                setActiveProject(project);
+              }
+            }}
+          />
         </div>
 
         {/* View All CTA */}
@@ -171,3 +82,4 @@ export function FeaturedWork() {
     </>
   );
 }
+
