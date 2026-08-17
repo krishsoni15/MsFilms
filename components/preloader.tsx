@@ -259,12 +259,13 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
     return () => clearInterval(id);
   }, []);
 
-  // ── Focus Lock sound and manual click entry transition when progress hits 100 ──
+  // ── Focus Lock sound and automatic transition when progress hits 100 ──
   useEffect(() => {
     if (progress < 100) return;
     playFocusBeep();
     setFocusLocked(true);
-    setStatusText("FOCUS LOCKED");
+    setStatusText("CAPTURING");
+    setIsClicked(true); // Automatically trigger enter transition
   }, [progress]);
 
   // ── Transition pipeline (runs when user clicks the shutter) ──
@@ -619,19 +620,24 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
 
         {/* Bottom bar */}
         <div className="absolute bottom-3 sm:bottom-5 md:bottom-9 left-4 sm:left-6 md:left-11 right-4 sm:right-6 md:right-11 flex justify-between items-end">
+          {/* Left Side: Camera settings */}
           <div className="flex flex-col gap-0.5 text-[6px] sm:text-[7px] md:text-[8px] tracking-[0.12em] text-white/30">
             <span>ISO {progress < 35 ? "100" : progress < 70 ? "200" : "400"}</span>
             <span>F/1.2 50mm</span>
             <span>1/125s</span>
           </div>
-          <div className="flex flex-col items-center gap-1 mx-auto">
-            <span className={`text-[6px] sm:text-[7px] tracking-[0.25em] text-gold/50 uppercase ${progress === 100 && !isClicked ? "animate-pulse text-gold font-bold" : ""}`}>
-              {progress === 100 && !isClicked ? "CLICK SCREEN TO ENTER" : statusText}
+
+          {/* Center Side: Absolutely Centered Progress to ensure perfect layout centering */}
+          <div className="absolute left-1/2 bottom-0 -translate-x-1/2 flex flex-col items-center gap-1">
+            <span className="text-[6px] sm:text-[7px] tracking-[0.25em] text-gold/50 uppercase">
+              {statusText}
             </span>
             <div className="w-20 sm:w-28 md:w-36 h-[1px] bg-white/[0.05] relative overflow-hidden">
               <motion.div style={{ width: `${progress}%` }} className="h-full bg-gold/60" />
             </div>
           </div>
+
+          {/* Right Side: Focus settings */}
           <div className="flex flex-col items-end gap-0.5 text-[6px] sm:text-[7px] md:text-[8px] tracking-[0.12em] text-white/30">
             <span>AF-C</span>
             <div className="flex items-end gap-[1px] h-2">
