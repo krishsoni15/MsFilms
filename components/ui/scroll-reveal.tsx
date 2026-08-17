@@ -11,6 +11,13 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const getChildrenText = (children: React.ReactNode): string => {
+  if (typeof children === "string") return children;
+  if (typeof children === "number") return children.toString();
+  if (Array.isArray(children)) return children.map(getChildrenText).join("");
+  return "";
+};
+
 interface ScrollRevealProps {
   children: React.ReactNode;
   scrollContainerRef?: React.RefObject<HTMLElement | null>;
@@ -19,11 +26,13 @@ interface ScrollRevealProps {
   baseRotation?: number;
   blurStrength?: number;
   containerClassName?: string;
+  className?: string;
   textClassName?: string;
   rotationEnd?: string;
   wordAnimationEnd?: string;
   preset?: "blur" | "fade" | "slide" | "scale";
   yOffset?: number;
+  as?: React.ElementType;
 }
 
 export function ScrollReveal({
@@ -34,16 +43,18 @@ export function ScrollReveal({
   baseRotation = 3,
   blurStrength = 4,
   containerClassName = "",
+  className = "",
   textClassName = "",
   rotationEnd = "bottom bottom",
   wordAnimationEnd = "bottom bottom",
   preset = "blur",
   yOffset = 24,
+  as: Component = "h2",
 }: ScrollRevealProps) {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
   const splitText = useMemo(() => {
-    const text = typeof children === "string" ? children : "";
+    const text = getChildrenText(children);
     return text.split(/(\s+)/).map((word, index) => {
       if (word.match(/^\s+$/)) return word;
       return (
@@ -151,9 +162,9 @@ export function ScrollReveal({
   ]);
 
   return (
-    <h2 ref={containerRef} className={`scroll-reveal ${containerClassName}`}>
-      <p className={`scroll-reveal-text ${textClassName}`}>{splitText}</p>
-    </h2>
+    <Component ref={containerRef} className={`scroll-reveal ${containerClassName} ${className}`}>
+      <span className={`scroll-reveal-text ${textClassName}`}>{splitText}</span>
+    </Component>
   );
 }
 

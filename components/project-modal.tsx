@@ -100,7 +100,7 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 + idx * 0.1 }}
-                  className={`relative overflow-hidden rounded-sm ${idx === 0
+                  className={`relative overflow-hidden rounded-2xl ${idx === 0
                       ? "aspect-[16/10] md:aspect-[16/9] w-full"
                       : idx % 2 === 1
                         ? "aspect-[4/5] max-w-2xl mx-auto"
@@ -129,10 +129,13 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
               <a
                 href="#contact"
                 onClick={onClose}
-                className="inline-flex items-center gap-3 bg-white text-black px-8 py-4 text-[11px] tracking-[0.2em] uppercase font-sans hover:bg-gold hover:text-foreground transition-all duration-300 group"
+                className="relative inline-flex items-center gap-3 border border-white/20 px-9 py-4 text-[12px] tracking-[0.25em] uppercase font-sans text-white overflow-hidden group transition-colors duration-500 hover:text-[#061a2b] hover:border-gold"
               >
-                Inquire About Availability
-                <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform" />
+                <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
+                <span className="relative z-10 flex items-center gap-3">
+                  Inquire About Availability
+                  <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
               </a>
             </div>
           </div>

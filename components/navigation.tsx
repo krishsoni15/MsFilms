@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { siteData } from "@/lib/data";
-import { Magnetic } from "@/components/ui/magnetic";
 import { motion, AnimatePresence } from "framer-motion";
 
 import Image from "next/image";
@@ -131,12 +130,12 @@ export function Navigation() {
  
             <Link
               href="#contact"
-              className={`relative text-[11px] tracking-[0.2em] uppercase border overflow-hidden group block transition-all duration-500 hover:text-[#020912] ${isScrolled
-                  ? "border-gold/30 hover:border-gold text-foreground px-4 py-2"
-                  : "border-gold/50 hover:border-gold text-white px-5 py-2.5"
+              className={`relative text-[12px] tracking-[0.25em] uppercase border overflow-hidden group block transition-all duration-500 hover:text-[#020912] ${isScrolled
+                  ? "border-gold/30 hover:border-gold text-foreground px-5 py-2.5"
+                  : "border-gold/50 hover:border-gold text-white px-6 py-3"
                 }`}
             >
-              <span className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left bg-gold" />
+              <span className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left bg-gold pointer-events-none" />
               <span className="relative z-10">Let&apos;s Talk</span>
             </Link>
           </nav>

@@ -6,7 +6,6 @@ import { films } from "@/lib/data";
 import { AnimatedText } from "@/components/animated-text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { VideoModal } from "@/components/video-modal";
-import { Magnetic } from "@/components/ui/magnetic";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
 
@@ -46,7 +45,7 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
         onMouseLeave={handleMouseLeave}
       >
         {/* Cinematic Poster with overlaid typography */}
-        <div className="relative aspect-[16/10] md:aspect-[16/9] overflow-hidden rounded-sm">
+        <div className="relative aspect-[16/10] md:aspect-[16/9] overflow-hidden rounded-2xl">
           {/* Poster Image */}
           <Image
             src={film.poster}
@@ -98,20 +97,17 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
                 </p>
               </div>
 
-              {/* Magnetic Play button */}
-              <Magnetic strength={0.4}>
-                <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border flex items-center justify-center backdrop-blur-md transition-all duration-500 ${
-                  isHovered
-                    ? "bg-white text-black border-white scale-110 shadow-[0_0_40px_rgba(196,163,90,0.4)]"
-                    : "bg-black/30 text-white border-white/30"
-                }`}>
-                  {isHovered && isVideoLoading ? (
-                    <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
-                  ) : (
-                    <Play size={20} className={`ml-0.5 transition-colors duration-300 ${isHovered ? "fill-black text-black" : "fill-white text-white"}`} />
-                  )}
-                </div>
-              </Magnetic>
+              <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border flex items-center justify-center backdrop-blur-md transition-all duration-500 ${
+                isHovered
+                  ? "bg-white text-black border-white scale-110 shadow-[0_0_40px_rgba(196,163,90,0.4)]"
+                  : "bg-black/30 text-white border-white/30"
+              }`}>
+                {isHovered && isVideoLoading ? (
+                  <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                ) : (
+                  <Play size={20} className={`ml-0.5 transition-colors duration-300 ${isHovered ? "fill-black text-black" : "fill-white text-white"}`} />
+                )}
+              </div>
             </div>
           </div>
 

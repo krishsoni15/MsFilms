@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import "./accordion-gallery.css";
 
@@ -9,7 +10,7 @@ export interface AccordionItem {
   label?: string;
   link?: string;
   alt?: string;
-  [key: string]: any; // Allow custom properties
+  [key: string]: unknown; // Allow custom properties
 }
 
 interface AccordionGalleryProps {
@@ -184,8 +185,17 @@ export function AccordionGallery({
   };
 
   const handleClick = (i: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    setActive(i);
+    if (trigger === "click") {
+      e.preventDefault();
+      setActive(i);
+    }
+    if (onItemClick) {
+      e.preventDefault();
+      onItemClick(items[i], i);
+    } else if (trigger === "hover") {
+      e.preventDefault();
+      setActive(i);
+    }
   };
 
   return (
@@ -209,24 +219,24 @@ export function AccordionGallery({
         return (
           <Tag
             key={i}
-            ref={(el: any) => { panelRefs.current[i] = el; }}
+            ref={(el: HTMLDivElement | null) => { panelRefs.current[i] = el; }}
             className={`ag-panel${isActive ? " ag-panel--active" : ""}`}
             style={{ borderRadius: `${radius}px` }}
-            onClick={e => handleClick(i, e as any)}
+            onClick={e => handleClick(i, e)}
             onMouseEnter={() => handleEnter(i)}
             aria-current={isActive ? "true" : undefined}
             aria-label={item.label}
           >
             <span className="ag-panel__frame">
-              <span className="ag-panel__media" ref={(el: any) => { mediaRefs.current[i] = el; }}>
-                <img src={item.image} alt={item.alt || item.label || ""} draggable="false" />
+              <span className="ag-panel__media" ref={(el: HTMLSpanElement | null) => { mediaRefs.current[i] = el; }}>
+                <Image src={item.image} alt={item.alt || item.label || ""} fill className="object-cover" draggable="false" />
               </span>
               <span className="ag-panel__overlay" aria-hidden="true" />
             </span>
             {showLabels && (
               <span className="ag-panel__label" aria-hidden="true">
-                <span className="ag-panel__bar" ref={(el: any) => { barRefs.current[i] = el; }} />
-                <span className="ag-panel__text" ref={(el: any) => { textRefs.current[i] = el; }}>
+                <span className="ag-panel__bar" ref={(el: HTMLSpanElement | null) => { barRefs.current[i] = el; }} />
+                <span className="ag-panel__text" ref={(el: HTMLSpanElement | null) => { textRefs.current[i] = el; }}>
                   {item.label}
                 </span>
               </span>

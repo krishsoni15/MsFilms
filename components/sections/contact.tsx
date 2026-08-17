@@ -5,6 +5,7 @@ import { siteData } from "@/lib/data";
 import { AnimatedText } from "@/components/animated-text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
   return (
@@ -131,11 +132,11 @@ export function Contact() {
 
                   <button
                     type="submit"
-                    className="relative inline-flex items-center gap-4 bg-foreground text-background px-10 py-4 text-[11px] tracking-[0.2em] uppercase overflow-hidden group"
+                    className="relative inline-flex items-center gap-4 bg-foreground text-background px-11 py-[18px] text-[12px] tracking-[0.25em] uppercase overflow-hidden group"
                   >
-                    <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left" />
+                    <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
                     <span className="relative z-10 group-hover:text-foreground transition-colors duration-500">Start Your Story</span>
-                    <span className="relative z-10 transform group-hover:translate-x-1.5 group-hover:text-foreground transition-all duration-300">→</span>
+                    <ArrowRight size={14} className="relative z-10 transform group-hover:translate-x-1.5 group-hover:text-foreground transition-all duration-300" />
                   </button>
                 </motion.form>
               ) : (

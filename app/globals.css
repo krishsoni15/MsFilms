@@ -265,7 +265,7 @@ body {
   left: 0;
   width: 0;
   height: 0;
-  pointer-events: none;
+  pointer-events: none !important;
   z-index: 999999;
   transform: translate(-50%, -50%);
 }
@@ -278,7 +278,7 @@ body {
   height: 10px;
   border: 1.5px solid currentColor; /* Precise camera viewfinder outline thickness */
   will-change: transform;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .corner-tl {

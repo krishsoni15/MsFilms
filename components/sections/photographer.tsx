@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
-import { Magnetic } from "@/components/ui/magnetic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowRight } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -93,7 +93,7 @@ export function AboutPhotographer() {
 
           <div className="reveal-text-item space-y-5 font-sans text-sm md:text-base text-foreground/60 leading-relaxed max-w-lg mb-10 opacity-0">
             <p>
-              Driven by a deep passion for visual storytelling and a meticulous eye for cinematic detail, Madhav founded Msfilms to capture life's raw, unscripted emotions. He believes that the best photographs are not just staged poses, but the silent, candid moments that tell the true story of how it felt.
+              Driven by a deep passion for visual storytelling and a meticulous eye for cinematic detail, Madhav founded Msfilms to capture life&apos;s raw, unscripted emotions. He believes that the best photographs are not just staged poses, but the silent, candid moments that tell the true story of how it felt.
             </p>
             <p>
               For Madhav, photography and filmmaking are not just professions — they are a lifelong dedication to preserving the moments that shape our lives. With a keen artistic eye, he captures the subtle details, the quiet glances, and the raw emotions of your most meaningful days, translating them into timeless visual legacies.
@@ -101,21 +101,22 @@ export function AboutPhotographer() {
           </div>
 
           <div className="reveal-text-item opacity-0">
-            <Magnetic strength={0.25}>
               <Link
                 href="#contact"
-                className="inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase border border-gold/40 px-8 py-4 text-foreground hover:bg-gold hover:text-[#061a2b] hover:border-gold transition-all duration-500 group"
+                className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground overflow-hidden group transition-colors duration-500 hover:border-gold"
               >
-                Let's Capture Your Story
-                <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
+                <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
+                <span className="relative z-10 flex items-center gap-3 group-hover:text-[#061a2b] transition-colors duration-500">
+                  Let&apos;s Capture Your Story
+                  <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
+                </span>
               </Link>
-            </Magnetic>
           </div>
         </div>
 
         {/* Right Column — Editorial Dual Photo Layout */}
         <div className="lg:col-span-6 relative order-1 lg:order-2">
-          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-sm border border-gold/15 ml-auto opacity-0">
+          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl border border-gold/15 ml-auto opacity-0">
             <div className="absolute inset-0">
               <Image
                 src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
@@ -130,7 +131,7 @@ export function AboutPhotographer() {
           </div>
 
           {/* Overlapping secondary image — parallax floating */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] overflow-hidden shadow-2xl border border-gold/15 rounded-sm group/sub opacity-0">
+          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] overflow-hidden shadow-2xl border border-gold/15 rounded-2xl group/sub opacity-0">
             <Image
               src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
               alt="Madhav Soni in action behind the lens"

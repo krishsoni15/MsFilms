@@ -7,9 +7,18 @@ import { AnimatedText } from "@/components/animated-text";
 import { ProjectModal } from "@/components/project-modal";
 import { AccordionGallery } from "@/components/ui/accordion-gallery";
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
 export function FeaturedWork() {
   const [activeProject, setActiveProject] = useState<typeof projects[0] | null>(null);
+
+  const landscapeItems = [
+    { image: "/landscape/imgi_2_1.jpg", label: "Valley Horizon", alt: "Valley Horizon Study" },
+    { image: "/landscape/imgi_8_8.jpg", label: "Mist Mountain", alt: "Mist Mountain Study" },
+    { image: "/landscape/imgi_7_4.jpg", label: "Silent Forest", alt: "Silent Forest Study" },
+    { image: "/landscape/imgi_5_10.jpg", label: "Alpine Lake", alt: "Alpine Lake Study" },
+    { image: "/landscape/imgi_10_6.jpg", label: "Sunset Peak", alt: "Sunset Peak Study" },
+  ];
 
   return (
     <>
@@ -28,26 +37,25 @@ export function FeaturedWork() {
               rotationEnd="bottom center+=20%"
               wordAnimationEnd="bottom center+=45%"
             >
-              A glimpse into the moments we've preserved.
+              A glimpse into the moments we{"'"}ve preserved.
             </ScrollReveal>
           </div>
           <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
-            Explore our core portfolios across Wedding, Portraits, and Dronography.
+            Explore our fine art landscape photography across Saskatchewan & Banff.
           </p>
         </div>
 
         {/* Accordion Gallery replacing the old grid */}
         <div className="max-w-7xl mx-auto relative z-10">
           <AccordionGallery
-            items={projects
-              .filter((p) => p.slug !== "landscape")
-              .map((project) => ({
-                image: project.cover,
-                label: project.category,
-                slug: project.slug,
-              }))}
-            defaultIndex={0}
-            expandRatio={0.48}
+            items={landscapeItems}
+            defaultIndex={2}
+            expandRatio={0.52}
+            grayscale={true}
+            trigger="hover"
+            duration={0.18}
+            ease="power2.out"
+            radius={16}
           />
         </div>
 
@@ -60,11 +68,14 @@ export function FeaturedWork() {
           className="mt-20 md:mt-24 text-center"
         >
           <button
-            onClick={() => setActiveProject(projects[0])}
-            className="inline-flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase border border-gold/40 px-8 py-4 text-foreground hover:bg-gold hover:text-[#061a2b] hover:border-gold transition-all duration-500 group cursor-pointer"
+            onClick={() => setActiveProject(projects.find((p) => p.slug === "landscape") || null)}
+            className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground overflow-hidden group transition-colors duration-500 hover:text-[#061a2b] hover:border-gold cursor-pointer"
           >
-            Browse Full Galleries
-            <span className="transform group-hover:translate-x-1.5 transition-transform duration-300">→</span>
+            <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
+            <span className="relative z-10 flex items-center gap-3">
+              Browse Full Galleries
+              <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
+            </span>
           </button>
         </motion.div>
       </section>

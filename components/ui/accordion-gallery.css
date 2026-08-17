@@ -27,7 +27,7 @@
   overflow: hidden;
   border-radius: var(--ag-radius);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  cursor: default;
+  cursor: pointer;
   display: block;
   text-decoration: none;
   outline: none;
@@ -55,6 +55,7 @@
   inset: 0;
   overflow: hidden;
   border-radius: inherit;
+  pointer-events: none;
 }
 
 .ag-panel__media {
@@ -67,6 +68,7 @@
   height: 100%;
   filter: grayscale(var(--ag-gray));
   will-change: transform, filter;
+  pointer-events: none;
 }
 
 .accordion-gallery--vertical .ag-panel__media {
@@ -90,7 +92,6 @@
   background:
     linear-gradient(180deg, transparent 40%, rgba(2, 9, 18, 0.88) 100%),
     rgba(2, 9, 18, var(--ag-dim, 0.35));
-  transition: background 0.6s ease;
 }
 
 .ag-panel__label {

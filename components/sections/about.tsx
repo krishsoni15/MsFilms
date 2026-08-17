@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ScrollExpand } from "@/components/ui/scroll-expand";
-import { Magnetic } from "@/components/ui/magnetic";
 import { siteData } from "@/lib/data";
+import { ArrowRight } from "lucide-react";
 
 export function AboutStudio() {
   return (
@@ -53,15 +53,16 @@ export function AboutStudio() {
             </div>
           </div>
 
-          <Magnetic strength={0.2}>
-            <Link
-              href="#work"
-              className="inline-flex items-center gap-3 text-[10px] tracking-[0.2em] uppercase border border-gold/50 px-8 py-3.5 text-white hover:bg-gold hover:text-[#061a2b] hover:border-gold transition-all duration-500 group"
-            >
+          <Link
+            href="#work"
+            className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/50 px-9 py-4 text-white overflow-hidden group transition-colors duration-500 hover:border-gold"
+          >
+            <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
+            <span className="relative z-10 flex items-center gap-3 group-hover:text-[#061a2b] transition-colors duration-500">
               Explore Our Work
-              <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
-            </Link>
-          </Magnetic>
+              <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+            </span>
+          </Link>
         </div>
       </ScrollExpand>
     </section>

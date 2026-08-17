@@ -104,7 +104,8 @@ export function CustomCursor() {
 
   const constants = useMemo(() => ({
     borderWidth: 1.5,
-    cornerSize: 10
+    cornerSize: 10,
+    padding: 5
   }), []);
 
   // GSAP-based cursor position updates
@@ -278,17 +279,17 @@ export function CustomCursor() {
       }
 
       const rect = target.getBoundingClientRect();
-      const { borderWidth, cornerSize } = constants;
+      const { borderWidth, cornerSize, padding } = constants;
       const { x: offsetX, y: offsetY } = getOffset();
       const cursorX = gsap.getProperty(cursor, "x") as number;
       const cursorY = gsap.getProperty(cursor, "y") as number;
 
-      // Calculate targeting box corners
+      // Calculate targeting box corners with padding
       targetCornerPositionsRef.current = [
-        { x: rect.left - borderWidth - offsetX, y: rect.top - borderWidth - offsetY },
-        { x: rect.right + borderWidth - cornerSize - offsetX, y: rect.top - borderWidth - offsetY },
-        { x: rect.right + borderWidth - cornerSize - offsetX, y: rect.bottom + borderWidth - cornerSize - offsetY },
-        { x: rect.left - borderWidth - offsetX, y: rect.bottom + borderWidth - cornerSize - offsetY }
+        { x: rect.left - borderWidth - padding - offsetX, y: rect.top - borderWidth - padding - offsetY },
+        { x: rect.right + borderWidth + padding - cornerSize - offsetX, y: rect.top - borderWidth - padding - offsetY },
+        { x: rect.right + borderWidth + padding - cornerSize - offsetX, y: rect.bottom + borderWidth + padding - cornerSize - offsetY },
+        { x: rect.left - borderWidth - padding - offsetX, y: rect.bottom + borderWidth + padding - cornerSize - offsetY }
       ];
 
       gsap.ticker.add(tickerFnRef.current!);
@@ -424,15 +425,15 @@ export function CustomCursor() {
             {/* 1. Viewfinder Circular Focus Ring (spins slowly in background) */}
             <div 
               ref={guidesRef}
-              className="absolute w-[18px] h-[18px] border border-dashed border-current/25 rounded-full" 
+              className="absolute w-[18px] h-[18px] border border-dashed border-current/25 rounded-full pointer-events-none" 
             />
             
             {/* 2. Central Focus Crosshair Ticks (always aligned straight - 0 rotation) */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               {/* Horizontal line */}
-              <div className="w-2.5 h-[0.5px] bg-current/30 absolute" />
+              <div className="w-2.5 h-[0.5px] bg-current/30 absolute pointer-events-none" />
               {/* Vertical line */}
-              <div className="h-2.5 w-[0.5px] bg-current/30 absolute" />
+              <div className="h-2.5 w-[0.5px] bg-current/30 absolute pointer-events-none" />
             </div>
           </div>
         )}
@@ -448,11 +449,11 @@ export function CustomCursor() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.6 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="w-[90px] h-[90px] rounded-full bg-black/92 border border-gold/75 flex items-center justify-center text-center backdrop-blur-[2px] shadow-2xl overflow-hidden select-none"
+              className="w-[90px] h-[90px] rounded-full bg-black/92 border border-gold/75 flex items-center justify-center text-center backdrop-blur-[2px] shadow-2xl overflow-hidden select-none pointer-events-none"
             >
-              <span className="text-[9px] tracking-[0.25em] font-sans uppercase font-medium leading-tight text-white px-2">
+              <span className="text-[9px] tracking-[0.25em] font-sans uppercase font-medium leading-tight text-white px-2 pointer-events-none">
                 {cursorText.split(" ").map((word, i) => (
-                  <span key={i} className="block">{word}</span>
+                  <span key={i} className="block pointer-events-none">{word}</span>
                 ))}
               </span>
             </motion.div>
@@ -460,7 +461,7 @@ export function CustomCursor() {
             <motion.div
               key="dot"
               ref={dotRef}
-              className="w-1.5 h-1.5 rounded-full bg-white will-change-transform"
+              className="w-1.5 h-1.5 rounded-full bg-white will-change-transform pointer-events-none"
             />
           )}
         </AnimatePresence>
@@ -468,22 +469,22 @@ export function CustomCursor() {
 
       {/* ═══ Focus Brackets (Lock onto elements during hover) ═══ */}
       <div className="absolute inset-0 pointer-events-none" style={{ color: isHovering ? cursorColorOnTarget : cursorColor }}>
-        <div className="target-cursor-corner corner-tl" style={{ borderColor: "inherit" }}>
+        <div className="target-cursor-corner corner-tl pointer-events-none" style={{ borderColor: "inherit" }}>
           {/* Pulsing RED REC indicator for videos */}
           {cursorText === "PLAY FILM" && (
             <div className="absolute bottom-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-red-500 tracking-wider select-none whitespace-nowrap bg-[#061a2b]/60 border border-red-500/30 px-1 py-0.5 rounded-[2px] pointer-events-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse pointer-events-none" />
               REC
             </div>
           )}
         </div>
-        <div className="target-cursor-corner corner-tr" style={{ borderColor: "inherit" }} />
-        <div className="target-cursor-corner corner-br" style={{ borderColor: "inherit" }} />
-        <div className="target-cursor-corner corner-bl" style={{ borderColor: "inherit" }}>
+        <div className="target-cursor-corner corner-tr pointer-events-none" style={{ borderColor: "inherit" }} />
+        <div className="target-cursor-corner corner-br pointer-events-none" style={{ borderColor: "inherit" }} />
+        <div className="target-cursor-corner corner-bl pointer-events-none" style={{ borderColor: "inherit" }}>
           {/* Green AF-S (Auto-Focus Single) lock status indicator for photos */}
           {cursorText === "VIEW STORY" && (
             <div className="absolute top-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-emerald-400 tracking-wider select-none whitespace-nowrap bg-[#061a2b]/60 border border-emerald-500/25 px-1 py-0.5 rounded-[2px] pointer-events-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pointer-events-none" />
               AF-S
             </div>
           )}
