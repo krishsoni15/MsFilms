@@ -15,10 +15,8 @@ function CategoryImage({ src, alt, delay = 0 }: CategoryImageProps) {
   return (
     <div className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black/10">
       <AnimatePresence mode="popLayout">
-        <motion.img
+        <motion.div
           key={src}
-          src={src}
-          alt={alt}
           initial={{ opacity: 0, scale: 1.08, filter: "blur(4px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
@@ -27,9 +25,18 @@ function CategoryImage({ src, alt, delay = 0 }: CategoryImageProps) {
             delay,
             ease: [0.16, 1, 0.3, 1] // Premium cinematic deceleration curve
           }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full"
           style={{ willChange: "transform, opacity, filter" }}
-        />
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 50vw, 30vw"
+            priority
+          />
+        </motion.div>
       </AnimatePresence>
     </div>
   );
@@ -192,15 +199,7 @@ export function Hero({ isParentLoaded = true }: { isParentLoaded?: boolean }) {
   const y4 = useTransform(scrollYProgress, [0, 1], ["0px", "-65px"]); // Bottom-Center Frame
   const y5 = useTransform(scrollYProgress, [0, 1], ["0px", "-40px"]); // Bottom-Right Frame
 
-  // Preload all category images to prevent any transition lag or flicker
-  useEffect(() => {
-    categories.forEach((category) => {
-      category.images.forEach((src) => {
-        const img = new window.Image();
-        img.src = src;
-      });
-    });
-  }, []);
+
 
   useEffect(() => {
     console.log("[Debug Hero] useEffect triggered. isParentLoaded prop:", isParentLoaded);
