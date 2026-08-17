@@ -259,13 +259,12 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
     return () => clearInterval(id);
   }, []);
 
-  // ── Focus Lock sound and automatic transition when progress hits 100 ──
+  // ── Focus Lock sound and manual click entry transition when progress hits 100 ──
   useEffect(() => {
     if (progress < 100) return;
     playFocusBeep();
     setFocusLocked(true);
-    setStatusText("CAPTURING");
-    setIsClicked(true); // Automatically trigger enter transition
+    setStatusText("FOCUS LOCKED");
   }, [progress]);
 
   // ── Transition pipeline (runs when user clicks the shutter) ──
