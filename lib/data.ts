@@ -184,5 +184,5 @@ export const socialImages = [
 // ─────────────────────────────────────────────────
 export const cinematicBreakImage = "/drone/imgi_6_2.jpg";
 export const visualIntroImage = "/wedding/imgi_2_2.png";
-export const aboutImage = "/wedding/imgi_7_3.jpg";
-export const aboutSecondaryImage = "/wedding/imgi_6_4.jpg";
+export const aboutImage = "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg";
+export const aboutSecondaryImage = "/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg";

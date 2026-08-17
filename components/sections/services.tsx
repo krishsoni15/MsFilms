@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { services } from "@/lib/data";
 import { AnimatedText } from "@/components/animated-text";
-import { TextReveal } from "@/components/text-reveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 
 export function Services() {
@@ -22,9 +22,17 @@ export function Services() {
     <section id="services" className="py-24 md:py-32 px-5 md:px-10 lg:px-16 bg-background border-t border-foreground/5">
       <div className="mb-16 md:mb-20">
         <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">What We Do</AnimatedText>
-        <TextReveal as="h2" className="font-display text-3xl md:text-4xl">
+        <ScrollReveal
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={8}
+          textClassName="font-display text-3xl md:text-4xl font-normal leading-[1.2]"
+          rotationEnd="bottom center+=20%"
+          wordAnimationEnd="bottom center+=45%"
+        >
           Services
-        </TextReveal>
+        </ScrollReveal>
       </div>
 
       <div

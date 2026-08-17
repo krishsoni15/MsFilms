@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { siteData } from "@/lib/data";
-import { TextReveal } from "@/components/text-reveal";
 import { AnimatedText } from "@/components/animated-text";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, AnimatePresence } from "framer-motion";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
@@ -47,9 +47,15 @@ export function Contact() {
               {siteData.contactHeadline}
             </AnimatedText>
 
-            <TextReveal as="h2" delay={0.1} className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.1] mb-6">
-              {"Get in Touch"}
-            </TextReveal>
+            <ScrollReveal
+              baseOpacity={0.05}
+              preset="scale"
+              textClassName="font-display text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.1] mb-6"
+              rotationEnd="bottom center+=20%"
+              wordAnimationEnd="bottom center+=45%"
+            >
+              Get in Touch
+            </ScrollReveal>
 
             <AnimatedText as="p" delay={0.3} className="font-sans text-sm text-foreground/50 leading-relaxed mb-8">
               {siteData.contactText}

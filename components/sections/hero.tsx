@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { siteData } from "@/lib/data";
 
 interface CategoryImageProps {
@@ -19,15 +19,114 @@ function CategoryImage({ src, alt, delay = 0 }: CategoryImageProps) {
           key={src}
           src={src}
           alt={alt}
-          initial={{ opacity: 0, scale: 1.03 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.97 }}
-          transition={{ duration: 1.0, delay, ease: "easeInOut" }}
+          initial={{ opacity: 0, scale: 1.08, filter: "blur(4px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.96, filter: "blur(4px)" }}
+          transition={{
+            duration: 1.35,
+            delay,
+            ease: [0.16, 1, 0.3, 1] // Premium cinematic deceleration curve
+          }}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ willChange: "transform, opacity" }}
+          style={{ willChange: "transform, opacity, filter" }}
         />
       </AnimatePresence>
     </div>
+  );
+}
+
+// React Bits style staggered text blur-in component
+interface BlurInWordsProps {
+  text: string;
+  className?: string;
+  delay?: number;
+  highlightText?: string;
+  highlightClassName?: string;
+  textShadowStyle?: React.CSSProperties;
+  as?: "h1" | "div";
+}
+
+function BlurInWords({
+  text,
+  className = "",
+  delay = 0,
+  highlightText = "",
+  highlightClassName = "",
+  textShadowStyle = {},
+  as = "div"
+}: BlurInWordsProps) {
+  const words = useMemo(() => text.split(" "), [text]);
+  const Component = as === "h1" ? motion.h1 : motion.div;
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.04,
+        delayChildren: delay,
+      }
+    },
+    exit: {
+      transition: {
+        staggerChildren: 0.02,
+        staggerDirection: -1 as any,
+      }
+    }
+  };
+
+  const wordVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 8, 
+      filter: "blur(4px)" 
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.55,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -8, 
+      filter: "blur(4px)",
+      transition: {
+        duration: 0.35,
+        ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
+      }
+    }
+  };
+
+  return (
+    <Component
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      style={textShadowStyle}
+      className={className}
+    >
+      {words.map((word, index) => (
+        <span key={index} className="inline-block whitespace-nowrap mr-[0.25em]">
+          <motion.span variants={wordVariants} className="inline-block">
+            {word}
+          </motion.span>
+        </span>
+      ))}
+      {highlightText && (
+        <span className="inline-block whitespace-nowrap">
+          <motion.span 
+            variants={wordVariants} 
+            className={`inline-block ${highlightClassName}`}
+          >
+            {highlightText}
+          </motion.span>
+        </span>
+      )}
+    </Component>
   );
 }
 
@@ -73,11 +172,25 @@ const categories = [
   }
 ];
 
-export function Hero() {
+export function Hero({ isParentLoaded = true }: { isParentLoaded?: boolean }) {
+  console.log("[Debug Hero] Rendered. isParentLoaded prop:", isParentLoaded);
   const [isLoaded, setIsLoaded] = useState(false);
   const [shift, setShift] = useState(0);
   const [isDesktop, setIsDesktop] = useState(false);
   const [categoryIndex, setCategoryIndex] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Unique parallax shifts for each image slot in the collage
+  const y1 = useTransform(scrollYProgress, [0, 1], ["0px", "-45px"]); // Left Arched Frame
+  const y2 = useTransform(scrollYProgress, [0, 1], ["0px", "-85px"]); // Top-Right Detailed Frame
+  const y3 = useTransform(scrollYProgress, [0, 1], ["0px", "-25px"]); // Bottom-Left Collage Frame
+  const y4 = useTransform(scrollYProgress, [0, 1], ["0px", "-65px"]); // Bottom-Center Frame
+  const y5 = useTransform(scrollYProgress, [0, 1], ["0px", "-40px"]); // Bottom-Right Frame
 
   // Preload all category images to prevent any transition lag or flicker
   useEffect(() => {
@@ -90,9 +203,12 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
+    console.log("[Debug Hero] useEffect triggered. isParentLoaded prop:", isParentLoaded);
+    if (isParentLoaded) {
+      console.log("[Debug Hero] setting isLoaded state to true.");
+      setIsLoaded(true);
+    }
+  }, [isParentLoaded]);
 
   useEffect(() => {
     const updateLayout = () => {
@@ -126,101 +242,37 @@ export function Hero() {
   const currentCategory = categories[categoryIndex];
 
   return (
-    <section className="relative w-full bg-background overflow-hidden px-4 pt-[68px] pb-12 md:pt-[92px] md:pb-[96px] flex justify-center">
-      {/* ── Loading Overlay (signature logo + blinds wipe) ── */}
-      <AnimatePresence>
-        {!isLoaded && (
-          <motion.div
-            className="fixed inset-0 z-[10000] pointer-events-none overflow-hidden"
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, delay: 1.3 }}
-          >
-            {/* Ambient Blur Backdrops (behind shutters) */}
-            <div className="absolute inset-0 z-10 bg-[#02070f]">
-              {/* Floating Gold Orb */}
-              <motion.div
-                animate={{
-                  scale: [1, 1.15, 1],
-                  x: [-30, 30, -30],
-                  y: [-30, 30, -30],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute -left-1/4 -top-1/4 w-3/4 h-3/4 bg-gold/8 rounded-full blur-[140px]"
-              />
-              {/* Floating Blue-Grey Orb */}
-              <motion.div
-                animate={{
-                  scale: [1.15, 1, 1.15],
-                  x: [30, -30, 30],
-                  y: [30, -30, 30],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute -right-1/4 -bottom-1/4 w-3/4 h-3/4 bg-[#0a1626]/40 rounded-full blur-[140px]"
-              />
-              {/* Pulsing Center Gold Aura */}
-              <motion.div
-                animate={{
-                  opacity: [0.2, 0.5, 0.2],
-                  scale: [0.9, 1.1, 0.9],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                style={{ backgroundImage: "radial-gradient(circle, rgba(200,170,110,0.2) 0%, transparent 75%)" }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full blur-[60px]"
-              />
-            </div>
-
-            {/* Top Shutter Panel */}
-            <motion.div
-              className="absolute top-0 left-0 w-full h-[50%] bg-[#02070f]/92 backdrop-blur-md z-20"
-              initial={{ y: "0%" }}
-              animate={{ y: "-100%" }}
-              transition={{
-                duration: 1.1,
-                delay: 0.2,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-            >
-              <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-            </motion.div>
-
-            {/* Bottom Shutter Panel */}
-            <motion.div
-              className="absolute bottom-0 left-0 w-full h-[50%] bg-[#02070f]/92 backdrop-blur-md z-20"
-              initial={{ y: "0%" }}
-              animate={{ y: "100%" }}
-              transition={{
-                duration: 1.1,
-                delay: 0.2,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-            >
-              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <section 
+      id="home" 
+      ref={containerRef}
+      className="relative w-full bg-background overflow-hidden px-4 pt-[48px] pb-8 md:pt-[64px] md:pb-[80px] flex justify-center"
+    >
 
       {/* ── Collage Canvas ── */}
       <div className="relative w-full aspect-[320/611] md:w-full md:max-w-[1200px] md:aspect-[1200/881] @container">
 
-        {/* 1. Logo Branding - centered above subtitle text */}
+        {/* Ambient Dark Navy Scrim (Ensures crisp text readability over overlapping white photo highlights) */}
+        <div 
+          className="absolute left-1/2 top-[52%] md:top-[42%] -translate-x-1/2 -translate-y-1/2 w-[85%] h-[38%] md:h-[48%] pointer-events-none z-[25] blur-[80px] md:blur-[100px] rounded-full opacity-[0.85] md:opacity-[0.90]"
+          style={{
+            background: "radial-gradient(circle, rgba(3, 17, 29, 0.99) 0%, rgba(3, 17, 29, 0.6) 60%, transparent 80%)"
+          }}
+        />
+
+        {/* Ambient Gold Backlight Glow (provides a subtle luxury halo behind the scrim without washing out contrast) */}
+        <div 
+          className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[70%] h-[35%] pointer-events-none z-[24] blur-[100px] rounded-full opacity-[0.12]"
+          style={{
+            background: "radial-gradient(circle, #cba358 0%, transparent 70%)"
+          }}
+        />
+
+        {/* 1. Logo Branding - centered above subtitle text (10% smaller) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-1/2 -translate-x-1/2 top-[38%] md:top-[20%] w-[48%] h-[10%] md:w-[28%] md:h-[14%] z-[35] pointer-events-none select-none"
+          className="absolute left-1/2 -translate-x-1/2 top-[48%] md:top-[14%] w-[43%] h-[9%] md:w-[25%] md:h-[12.6%] z-[35] pointer-events-none select-none"
         >
           <Image
             src={siteData.logo}
@@ -231,129 +283,128 @@ export function Hero() {
           />
         </motion.div>
 
-        {/* 2. Arched Image (Center-Left) */}
+        {/* 2. Arched Image (Center-Left - Thin gold outline) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-[18.75%] top-[2.62%] w-[62.5%] h-[42%] md:left-[21.5%] md:top-[12.03%] md:w-[26.33%] md:h-[56%] rounded-t-[129px] md:rounded-t-[165px] overflow-hidden z-10 shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
-          style={isDesktop ? { left: `calc(21.5% - ${shift}px)` } : {}}
+          className="absolute left-[10%] top-[2.62%] w-[80%] h-[42%] md:left-[21.5%] md:top-[6.0%] md:w-[26.33%] md:h-[56%] rounded-t-[129px] md:rounded-t-[165px] overflow-hidden z-10 shadow-[0_20px_50px_rgba(0,0,0,0.55)] border border-gold/15"
+          style={{
+            y: y1,
+            ...(isDesktop ? { left: `calc(21.5% - ${shift}px)` } : {})
+          }}
         >
           <CategoryImage
             src={currentCategory.images[0]}
             alt={`${currentCategory.subtitle} arched photo`}
             delay={0.0}
           />
-          <div className="absolute inset-3 border border-gold/20 rounded-t-[117px] md:rounded-t-[153px] pointer-events-none z-20" />
+          <div className="absolute inset-2 border border-gold/10 rounded-t-[121px] md:rounded-t-[157px] pointer-events-none z-20" />
         </motion.div>
 
-        {/* 3. Toast Couple champagne (Top-Right - Desktop only) */}
+        {/* 3. Detailed Frame (Top-Right - Desktop only - Thin gold outline) */}
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1.2, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="hidden md:block absolute md:left-[65.08%] md:top-[-0.57%] md:w-[25.08%] md:h-[59.14%] z-20 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/35"
-          style={isDesktop ? { left: `calc(65.08% + ${shift}px)` } : {}}
+          className="hidden md:block absolute md:left-[65.08%] md:top-[1.0%] md:w-[23%] md:h-[52%] z-20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.55)] border border-gold/15 rounded-sm"
+          style={{
+            y: y2,
+            ...(isDesktop ? { left: `calc(65.08% + ${shift}px)` } : {})
+          }}
         >
           <CategoryImage
             src={currentCategory.images[1]}
             alt={`${currentCategory.subtitle} detailed photo`}
             delay={0.1}
           />
-          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+          <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
         </motion.div>
 
-        {/* 4. Polaroid Photo Frame (Bottom-Left) */}
+        {/* 4. Bottom-Left Collage Frame (Standard gold outline - replaced polaroid) */}
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.95 }}
           animate={isLoaded ? { opacity: 1, y: 0, scale: 1 } : {}}
           transition={{ duration: 1.2, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-[2.18%] top-[70.54%] w-[51.25%] h-[21.76%] md:left-[0.83%] md:top-[46.31%] md:w-[25.42%] md:h-[28.49%] z-20 drop-shadow-[0_25px_45px_rgba(180,150,90,0.2)]"
-          style={isDesktop ? { left: `calc(0.83% - ${shift}px)` } : {}}
+          className="absolute left-[2%] top-[76.0%] w-[50%] h-[22%] md:left-[0.83%] md:top-[40.31%] md:w-[25.42%] md:h-[28.49%] z-20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.55)] border border-gold/15 rounded-sm"
+          style={{
+            y: y3,
+            ...(isDesktop ? { left: `calc(0.83% - ${shift}px)` } : {})
+          }}
         >
-          <div className="absolute left-[1.3%] top-[4.4%] w-[97.4%] h-[91.2%] overflow-hidden">
-            <CategoryImage
-              src={currentCategory.images[2]}
-              alt={`${currentCategory.subtitle} polaroid photo`}
-              delay={0.2}
-            />
-          </div>
-          <Image
-            src="https://static.showit.co/400/1ywRPbZkQy6XIDjbr_VVsA/shared/3.png"
-            alt="Polaroid Frame"
-            fill
-            className="object-fill z-10 pointer-events-none"
+          <CategoryImage
+            src={currentCategory.images[2]}
+            alt={`${currentCategory.subtitle} collage photo`}
+            delay={0.2}
           />
+          <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
         </motion.div>
 
-        {/* 5. Celebration Crowd (Bottom-Center) */}
+        {/* 5. Celebration Crowd (Bottom-Center - Thin gold outline) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute left-[50.31%] top-[77.41%] w-[45%] h-[25.69%] md:left-[7.17%] md:top-[66.17%] md:w-[33.75%] md:h-[37.12%] z-20 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
-          style={isDesktop ? { left: `calc(7.17% + ${shift}px)` } : {}}
+          className="absolute left-[48%] top-[80.0%] w-[50%] h-[22%] md:left-[7.17%] md:top-[63.17%] md:w-[33.75%] md:h-[37.12%] z-20 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.55)] border border-gold/15 rounded-sm"
+          style={{
+            y: y4,
+            ...(isDesktop ? { left: `calc(7.17% + ${shift}px)` } : {})
+          }}
         >
           <CategoryImage
             src={currentCategory.images[3]}
             alt={`${currentCategory.subtitle} celebration`}
             delay={0.3}
           />
-          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+          <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
         </motion.div>
 
-        {/* 6. Walking Wedding Party (Bottom-Right - Desktop only) */}
+        {/* 6. Walking Wedding Party (Bottom-Right - Desktop only - Thin gold outline) */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isLoaded ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="hidden md:block absolute md:left-[49.33%] md:top-[52.78%] md:w-[51.25%] md:h-[38.02%] z-10 overflow-hidden shadow-[0_25px_60px_-15px_rgba(180,150,90,0.25)] border-2 border-gold/30"
-          style={isDesktop ? { left: `calc(49.33% + ${shift}px)` } : {}}
+          className="hidden md:block absolute md:left-[49.33%] md:top-[46.78%] md:w-[51.25%] md:h-[38.02%] z-10 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.55)] border border-gold/15 rounded-sm"
+          style={{
+            y: y5,
+            ...(isDesktop ? { left: `calc(49.33% + ${shift}px)` } : {})
+          }}
         >
           <CategoryImage
             src={currentCategory.images[4]}
             alt={`${currentCategory.subtitle} walking`}
             delay={0.4}
           />
-          <div className="absolute inset-3 border border-gold/20 pointer-events-none z-20" />
+          <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
         </motion.div>
 
-        {/* 7. Text Subtitle - Smooth dynamic swap */}
-        <div className="absolute left-[5%] top-[50.73%] w-[90.31%] h-[16px] md:left-[11.5%] md:top-[37.34%] md:w-[77%] md:h-[23px] z-30 select-none flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
+        {/* 7. Text Subtitle - Smooth dynamic swap with staggered word blur-in */}
+        <div className="absolute left-[5%] top-[59.0%] w-[90.31%] h-[16px] md:left-[11.5%] md:top-[31.5%] md:w-[77%] md:h-[23px] z-30 select-none flex items-center justify-center">
+          <AnimatePresence>
+            <BlurInWords
               key={categoryIndex}
-              initial={{ opacity: 0, y: 10 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.8, delay: categoryIndex === 0 ? 1.0 : 0, ease: [0.16, 1, 0.3, 1] }}
-              style={{ textShadow: "2px 2px 20px rgba(0,0,0,0.9)" }}
-              className="text-gold font-sans text-[3cqw] md:text-[1.2cqw] tracking-[0.4em] md:tracking-[0.5em] uppercase text-center font-medium"
-            >
-              {currentCategory.subtitle}
-            </motion.div>
+              as="div"
+              text={currentCategory.subtitle}
+              delay={categoryIndex === 0 ? 0.3 : 0}
+              textShadowStyle={{ textShadow: "0 2px 10px rgba(3,17,29,0.99), 0 4px 24px rgba(3,17,29,0.95), 0 0 4px rgba(3,17,29,0.99)" }}
+              className="absolute w-full text-center text-gold font-laluxes-serif text-[3.6cqw] md:text-[1.3cqw] tracking-[0.3em] md:tracking-[0.4em] uppercase font-normal"
+            />
           </AnimatePresence>
         </div>
 
-        {/* 8. Text Title - Smooth dynamic swap */}
-        <div className="absolute left-[5%] top-[56.08%] w-[90.31%] h-[60px] md:left-[11.5%] md:top-[43.7%] md:w-[77%] md:h-[118px] z-30 select-none flex items-center justify-center font-normal">
-          <AnimatePresence mode="wait">
-            <motion.h1
+        {/* 8. Text Title - Smooth dynamic swap with staggered word blur-in */}
+        <div className="absolute left-[5%] top-[65.0%] w-[90.31%] h-[60px] md:left-[11.5%] md:top-[38.0%] md:w-[77%] md:h-[118px] z-30 select-none flex items-center justify-center font-normal">
+          <AnimatePresence>
+            <BlurInWords
               key={categoryIndex}
-              initial={{ opacity: 0, y: 15 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.8, delay: categoryIndex === 0 ? 1.15 : 0, ease: [0.16, 1, 0.3, 1] }}
-              style={{ textShadow: "3px 3px 25px rgba(0,0,0,0.9)" }}
-              className="text-foreground font-laluxes-serif text-[6.25cqw] md:text-[4.08cqw] text-center leading-[1.2] tracking-normal"
-            >
-              <span>
-                {currentCategory.titleMain} {" "}
-                <span className="text-gold font-laluxes-script normal-case ml-2 text-[1.25em] whitespace-nowrap">
-                  {currentCategory.titleHighlight}
-                </span>
-              </span>
-            </motion.h1>
+              as="h1"
+              text={currentCategory.titleMain}
+              highlightText={currentCategory.titleHighlight}
+              highlightClassName="text-gold font-laluxes-script normal-case ml-2 text-[1.25em] whitespace-nowrap"
+              delay={categoryIndex === 0 ? 0.4 : 0}
+              textShadowStyle={{ textShadow: "0 4px 16px rgba(3,17,29,0.99), 0 8px 32px rgba(3,17,29,0.95), 0 0 6px rgba(3,17,29,0.99)" }}
+              className="absolute w-full text-center text-foreground font-laluxes-serif text-[6.25cqw] md:text-[4.08cqw] leading-[1.2] tracking-normal"
+            />
           </AnimatePresence>
         </div>
 

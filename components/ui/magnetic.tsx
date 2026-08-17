@@ -15,9 +15,15 @@ export function Magnetic({ children, strength = 0.35, className = "" }: Magnetic
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const springConfig = { stiffness: 200, damping: 20, mass: 0.2 };
+  const innerX = useMotionValue(0);
+  const innerY = useMotionValue(0);
+
+  const springConfig = { stiffness: 180, damping: 18, mass: 0.15 };
   const springX = useSpring(x, springConfig);
   const springY = useSpring(y, springConfig);
+
+  const innerSpringX = useSpring(innerX, springConfig);
+  const innerSpringY = useSpring(innerY, springConfig);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -30,11 +36,17 @@ export function Magnetic({ children, strength = 0.35, className = "" }: Magnetic
 
     x.set(distanceX * strength);
     y.set(distanceY * strength);
+    
+    // Inner stack offset (lags behind slightly at 45% strength for 3D depth)
+    innerX.set(distanceX * strength * 0.45);
+    innerY.set(distanceY * strength * 0.45);
   };
 
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
+    innerX.set(0);
+    innerY.set(0);
   };
 
   return (
@@ -45,7 +57,9 @@ export function Magnetic({ children, strength = 0.35, className = "" }: Magnetic
       style={{ x: springX, y: springY }}
       className={`inline-block ${className}`}
     >
-      {children}
+      <motion.div style={{ x: innerSpringX, y: innerSpringY }} className="w-full h-full">
+        {children}
+      </motion.div>
     </motion.div>
   );
 }

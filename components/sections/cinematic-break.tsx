@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { cinematicBreakImage, cinematicQuote } from "@/lib/data";
-import { TextReveal } from "@/components/text-reveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
@@ -29,14 +29,18 @@ export function CinematicBreak() {
 
       {/* Editorial Quote Overlay */}
       <div className="relative z-10 text-center px-8 max-w-3xl">
-        <TextReveal
-          as="p"
-          className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl italic text-white/90 leading-[1.3] tracking-tight"
-          delay={0.2}
-          staggerDelay={0.06}
+        <ScrollReveal
+          baseOpacity={0.05}
+          enableBlur={true}
+          baseRotation={2}
+          blurStrength={8}
+          containerClassName="mx-auto"
+          textClassName="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl italic text-white/90 leading-[1.3] tracking-tight font-normal"
+          rotationEnd="bottom center+=20%"
+          wordAnimationEnd="bottom center+=45%"
         >
           {cinematicQuote}
-        </TextReveal>
+        </ScrollReveal>
         <motion.div
           initial={{ width: 0, opacity: 0 }}
           whileInView={{ width: 40, opacity: 1 }}

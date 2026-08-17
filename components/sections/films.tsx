@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { films } from "@/lib/data";
 import { AnimatedText } from "@/components/animated-text";
-import { TextReveal } from "@/components/text-reveal";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { VideoModal } from "@/components/video-modal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { motion } from "framer-motion";
@@ -135,9 +135,15 @@ export function Films() {
       <section id="films" className="bg-[#03111d] text-foreground py-24 md:py-32 px-5 md:px-10 lg:px-16">
         <div className="mb-12 md:mb-16">
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">Films</AnimatedText>
-          <TextReveal as="h2" className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground/90 max-w-lg">
-            {"Some stories are better\nfelt in motion."}
-          </TextReveal>
+          <ScrollReveal
+            baseOpacity={0.05}
+            preset="fade"
+            textClassName="font-display text-3xl md:text-4xl lg:text-5xl text-foreground/90 max-w-lg font-normal leading-[1.2]"
+            rotationEnd="bottom center+=20%"
+            wordAnimationEnd="bottom center+=45%"
+          >
+            Some stories are better felt in motion.
+          </ScrollReveal>
         </div>
 
         {/* Side-by-side film cards with vertical separator */}

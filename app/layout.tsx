@@ -3,6 +3,7 @@ import { Inter, Instrument_Serif, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { CustomCursor } from "@/components/custom-cursor";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { SmoothScroll } from "@/components/smooth-scroll";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans" suppressHydrationWarning>
         <ScrollProgress />
+        <SmoothScroll />
         <CustomCursor />
         {children}
       </body>

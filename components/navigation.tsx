@@ -27,22 +27,22 @@ export function Navigation() {
   }, [mobileOpen]);
 
   const links = [
-    { label: "Work", href: "#work", num: "01" },
-    { label: "Films", href: "#films", num: "02" },
-    { label: "About", href: "#about", num: "03" },
+    { label: "Home", href: "#home", num: "01" },
+    { label: "About", href: "#about", num: "02" },
+    { label: "Work", href: "#work", num: "03" },
     { label: "Contact", href: "#contact", num: "04" },
   ];
 
   return (
     <>
       <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed top-0 left-0 right-0 transition-all duration-700 ease-out ${isScrolled
-          ? "bg-[#061a2b]/85 backdrop-blur-lg border-b border-white/5 py-[12px] md:py-[14px]"
-          : "bg-[#061a2b]/20 backdrop-blur-md py-[16px] md:py-[18px]"
+        className={`fixed top-0 left-0 right-0 border-b transition-all duration-700 ease-out ${isScrolled
+          ? "bg-[#020912]/85 backdrop-blur-lg border-gold/15 py-[12px] md:py-[14px]"
+          : "bg-[#020912]/0 backdrop-blur-none border-transparent py-[16px] md:py-[18px]"
           }`}
       >
         <div className="flex justify-between items-center px-5 md:px-10 lg:px-16">
@@ -61,7 +61,7 @@ export function Navigation() {
                 }`}
             />
           </Link>
-
+ 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10">
             {links.map((link) => (
@@ -72,26 +72,23 @@ export function Navigation() {
                   }`}
               >
                 {link.label}
-                {/* Gold hover underline */}
-                <span className={`absolute -bottom-1 left-0 h-px w-0 group-hover:w-full transition-all duration-300 ease-out bg-gold`} />
+                {/* Gold hover underline - grows from center */}
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-px w-0 group-hover:w-full transition-all duration-300 ease-out bg-gold" />
               </Link>
             ))}
-
-            <Magnetic strength={0.25}>
-              <Link
-                href="#contact"
-                className={`relative text-[11px] tracking-[0.2em] uppercase border overflow-hidden group block transition-all duration-500 ${isScrolled
-                    ? "border-foreground/20 text-foreground hover:text-background px-4 py-2"
-                    : "border-white/30 text-white hover:text-foreground px-5 py-2.5"
-                  }`}
-              >
-                <span className={`absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left ${isScrolled ? "bg-foreground" : "bg-white"
-                  }`} />
-                <span className="relative z-10">Let&apos;s Talk</span>
-              </Link>
-            </Magnetic>
+ 
+            <Link
+              href="#contact"
+              className={`relative text-[11px] tracking-[0.2em] uppercase border overflow-hidden group block transition-all duration-500 hover:text-[#020912] ${isScrolled
+                  ? "border-gold/30 hover:border-gold text-foreground px-4 py-2"
+                  : "border-gold/50 hover:border-gold text-white px-5 py-2.5"
+                }`}
+            >
+              <span className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left bg-gold" />
+              <span className="relative z-10">Let&apos;s Talk</span>
+            </Link>
           </nav>
-
+ 
           {/* Mobile Hamburger */}
           <button
             className="md:hidden z-50 relative w-8 h-8 flex flex-col justify-center items-center gap-1.5"
@@ -105,7 +102,7 @@ export function Navigation() {
           </button>
         </div>
       </motion.header>
-
+ 
       {/* Fullscreen Mobile Menu — with numbered links */}
       <AnimatePresence>
         {mobileOpen && (
@@ -114,7 +111,7 @@ export function Navigation() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-[#03111d] z-40 flex flex-col justify-between px-8 py-28"
+            className="fixed inset-0 bg-[#020912] z-40 flex flex-col justify-between px-8 py-28"
           >
             <nav className="flex flex-col gap-1">
               {links.map((link, i) => (

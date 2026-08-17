@@ -17,12 +17,12 @@
 }
 
 :root {
-  --background: #061a2b;
+  --background: #020912;
   --foreground: #f4f1eb;
   --accent: #435c70;
   --gold: #cba358;
   --gold-light: #e2be7a;
-  --cream-dark: #102638;
+  --cream-dark: #06121d;
   --white: #ffffff;
 }
 
@@ -49,6 +49,19 @@ body {
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+/* Hide scrollbar and stable scrollbar gutter when preloader is active */
+html.preloader-active,
+html.preloader-active body {
+  overflow: hidden !important;
+  scrollbar-gutter: auto !important;
+}
+
+html.preloader-active ::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
 }
 
 body {
@@ -169,16 +182,21 @@ body {
 
 /* ─── Custom scrollbar ─── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: #020810;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 3px;
+  background: rgba(203, 163, 88, 0.35); /* Muted gold thumb */
+  border-radius: 4px;
+  border: 2px solid #020810;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(203, 163, 88, 0.85); /* Bright gold on hover */
 }
 
 /* ─── Reduced motion ─── */
@@ -199,4 +217,90 @@ body {
   .marquee-track {
     animation: none;
   }
+}
+
+/* ─── Preloader Viewfinder Extras ─── */
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+.animate-rec-blink {
+  animation: rec-blink 1.5s step-end infinite;
+}
+
+@keyframes film-grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-1%, -1%); }
+  20% { transform: translate(-2%, 1%); }
+  30% { transform: translate(1%, -2%); }
+  45% { transform: translate(-1%, 2%); }
+  55% { transform: translate(-2%, 1%); }
+  65% { transform: translate(1%, 2%); }
+  75% { transform: translate(-1%, -1%); }
+  85% { transform: translate(2%, 1%); }
+  95% { transform: translate(-2%, -2%); }
+}
+
+.film-grain-overlay {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  width: 200%;
+  height: 200%;
+  background: transparent url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.045"/%3E%3C/svg%3E') repeat;
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 99999;
+  animation: film-grain 8s steps(10) infinite;
+  will-change: transform;
+}
+
+/* ─── TargetCursor Viewfinder CSS ─── */
+.target-cursor-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+}
+
+.target-cursor-corner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid currentColor; /* Precise camera viewfinder outline thickness */
+  will-change: transform;
+  pointer-events: none;
+}
+
+.corner-tl {
+  transform: translate(-150%, -150%);
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  transform: translate(50%, -150%);
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-br {
+  transform: translate(50%, 50%);
+  border-left: none;
+  border-top: none;
+}
+
+.corner-bl {
+  transform: translate(-150%, 50%);
+  border-right: none;
+  border-top: none;
 }

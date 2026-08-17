@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { projects } from "@/lib/data";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
-import { TextReveal } from "@/components/text-reveal";
 import { ProjectModal } from "@/components/project-modal";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 function ProjectCard({
   project,
@@ -19,11 +19,20 @@ function ProjectCard({
   index: number;
   onSelect: (project: typeof projects[0]) => void;
 }) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const aspectMap = {
     hero: "aspect-[16/10] md:aspect-[16/9]",
     "side-left": "aspect-[4/5]",
     "side-right": "aspect-[4/5]",
   };
+
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Slow parallax vertical slide to create a premium floating cinematic feel
+  const yParallax = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
 
   const num = String(index + 1).padStart(2, "0");
 
@@ -39,20 +48,23 @@ function ProjectCard({
         className="group block w-full text-left cursor-pointer"
       >
         <div
+          ref={cardRef}
           data-cursor-text="VIEW STORY"
           className={`relative ${aspectMap[layout]} overflow-hidden mb-6 rounded-sm border border-foreground/10 group-hover:border-gold/50 transition-colors duration-700 shadow-xl`}
         >
-          <Image
-            src={project.cover}
-            alt={`${project.title} — ${project.category} photography`}
-            fill
-            className="object-cover transition-all duration-[1.8s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
-            sizes={
-              layout === "hero"
-                ? "(max-width: 768px) 100vw, 85vw"
-                : "(max-width: 768px) 100vw, 45vw"
-            }
-          />
+          <motion.div style={{ y: yParallax, scale: 1.12 }} className="absolute inset-0">
+            <Image
+              src={project.cover}
+              alt={`${project.title} — {project.category} photography`}
+              fill
+              className="object-cover transition-transform duration-[1.8s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+              sizes={
+                layout === "hero"
+                  ? "(max-width: 768px) 100vw, 85vw"
+                  : "(max-width: 768px) 100vw, 45vw"
+              }
+            />
+          </motion.div>
           {/* Subtle gradient vignette for depth */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 group-hover:from-black/90 transition-all duration-700" />
 
@@ -97,9 +109,17 @@ export function FeaturedWork() {
             <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">
               Selected Stories
             </AnimatedText>
-            <TextReveal as="h2" className="font-display text-3xl md:text-4xl lg:text-5xl">
-              {"A glimpse into the moments\nwe've preserved."}
-            </TextReveal>
+            <ScrollReveal
+              baseOpacity={0.05}
+              enableBlur={true}
+              baseRotation={2}
+              blurStrength={8}
+              textClassName="font-display text-3xl md:text-4xl lg:text-5xl font-normal leading-[1.2]"
+              rotationEnd="bottom center+=20%"
+              wordAnimationEnd="bottom center+=45%"
+            >
+              A glimpse into the moments we've preserved.
+            </ScrollReveal>
           </div>
           <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
             Explore our core portfolios across Wedding, Landscape, and Dronography — click any story to view full high-res galleries.
