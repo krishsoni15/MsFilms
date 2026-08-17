@@ -32,26 +32,22 @@ export function FeaturedWork() {
             </ScrollReveal>
           </div>
           <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
-            Explore our core portfolios across Wedding, Portraits, Landscape, and Dronography — click any expanded panel to view full high-res galleries.
+            Explore our core portfolios across Wedding, Portraits, and Dronography.
           </p>
         </div>
 
         {/* Accordion Gallery replacing the old grid */}
         <div className="max-w-7xl mx-auto relative z-10">
           <AccordionGallery
-            items={projects.map((project) => ({
-              image: project.cover,
-              label: project.category,
-              slug: project.slug,
-            }))}
+            items={projects
+              .filter((p) => p.slug !== "landscape")
+              .map((project) => ({
+                image: project.cover,
+                label: project.category,
+                slug: project.slug,
+              }))}
             defaultIndex={0}
             expandRatio={0.48}
-            onItemClick={(item) => {
-              const project = projects.find((p) => p.slug === item.slug);
-              if (project) {
-                setActiveProject(project);
-              }
-            }}
           />
         </div>
 

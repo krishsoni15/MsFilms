@@ -184,29 +184,8 @@ export function AccordionGallery({
   };
 
   const handleClick = (i: number, e: React.MouseEvent) => {
-    if (i !== active) {
-      e.preventDefault();
-      setActive(i);
-    } else {
-      if (onItemClick) {
-        onItemClick(items[i], i);
-      }
-    }
-  };
-
-  const handleKeyDown = (i: number, e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setActive((i + 1) % count);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setActive((i - 1 + count) % count);
-    } else if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      if (onItemClick) {
-        onItemClick(items[i], i);
-      }
-    }
+    e.preventDefault();
+    setActive(i);
   };
 
   return (
@@ -226,23 +205,17 @@ export function AccordionGallery({
     >
       {items.map((item, i) => {
         const isActive = i === active;
-        const Tag = item.link ? "a" : "div";
+        const Tag = "div";
         return (
           <Tag
             key={i}
             ref={(el: any) => { panelRefs.current[i] = el; }}
             className={`ag-panel${isActive ? " ag-panel--active" : ""}`}
             style={{ borderRadius: `${radius}px` }}
-            href={item.link || undefined}
             onClick={e => handleClick(i, e as any)}
             onMouseEnter={() => handleEnter(i)}
-            onFocus={() => setActive(i)}
-            onKeyDown={e => handleKeyDown(i, e)}
-            role="listitem"
-            tabIndex={0}
             aria-current={isActive ? "true" : undefined}
             aria-label={item.label}
-            data-cursor-text={isActive ? "VIEW STORY" : "EXPAND"}
           >
             <span className="ag-panel__frame">
               <span className="ag-panel__media" ref={(el: any) => { mediaRefs.current[i] = el; }}>
