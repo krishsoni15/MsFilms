@@ -11,13 +11,50 @@ import Image from "next/image";
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
+
+      // Detect active section on scroll
+      const sectionIds = ["home", "about", "work", "contact"];
+      const scrollPosition = window.scrollY;
+      
+      // Calculate active section based on proximity to 35% of the viewport height
+      const threshold = window.innerHeight * 0.35;
+      let currentSection = "home";
+      
+      // Edge case: scrolled to bottom
+      const isAtBottom = window.innerHeight + scrollPosition >= document.documentElement.scrollHeight - 20;
+      if (isAtBottom) {
+        setActiveSection("contact");
+        return;
+      }
+
+      let minDistance = Infinity;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Check if the threshold line is within the section bounds
+          if (rect.top <= threshold && rect.bottom >= threshold) {
+            currentSection = id;
+            break;
+          }
+          // Fallback: closest top edge to focal threshold
+          const distance = Math.abs(rect.top - threshold);
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentSection = id;
+          }
+        }
+      }
+      setActiveSection(currentSection);
     };
+
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -33,6 +70,8 @@ export function Navigation() {
     { label: "Contact", href: "#contact", num: "04" },
   ];
 
+  const isNavbarOpaque = isScrolled && activeSection !== "about";
+
   return (
     <>
       <motion.header
@@ -40,10 +79,11 @@ export function Navigation() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed top-0 left-0 right-0 border-b transition-all duration-700 ease-out ${isScrolled
-          ? "bg-[#020912]/85 backdrop-blur-lg border-gold/15 py-[12px] md:py-[14px]"
-          : "bg-[#020912]/0 backdrop-blur-none border-transparent py-[16px] md:py-[18px]"
-          }`}
+        className={`fixed top-0 left-0 right-0 transition-all duration-700 ease-out ${
+          isNavbarOpaque
+            ? "bg-[#020912]/85 backdrop-blur-lg border-b border-gold/30"
+            : "bg-[#020912]/0 backdrop-blur-none border-b-0 border-transparent"
+        } ${isScrolled ? "py-[12px] md:py-[14px]" : "py-[16px] md:py-[18px]"}`}
       >
         <div className="flex justify-between items-center px-5 md:px-10 lg:px-16">
           {/* Logo */}
@@ -64,18 +104,30 @@ export function Navigation() {
  
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-            {links.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 hover:opacity-80 group ${isScrolled ? "text-foreground" : "text-white/90"
+            {links.map((link) => {
+              const isActive = activeSection === link.href.substring(1);
+              return (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 hover:opacity-80 group ${
+                    isActive
+                      ? "text-gold"
+                      : isScrolled
+                        ? "text-foreground"
+                        : "text-white/90"
                   }`}
-              >
-                {link.label}
-                {/* Gold hover underline - grows from center */}
-                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-px w-0 group-hover:w-full transition-all duration-300 ease-out bg-gold" />
-              </Link>
-            ))}
+                >
+                  {link.label}
+                  {/* Gold hover underline - grows from center */}
+                  <span
+                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-px transition-all duration-300 ease-out bg-gold ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
  
             <Link
               href="#contact"
@@ -114,26 +166,33 @@ export function Navigation() {
             className="fixed inset-0 bg-[#020912] z-40 flex flex-col justify-between px-8 py-28"
           >
             <nav className="flex flex-col gap-1">
-              {links.map((link, i) => (
-                <motion.div
-                  key={link.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.08, duration: 0.5 }}
-                  className="flex items-baseline gap-4"
-                >
-                  <span className="text-[10px] tracking-[0.2em] text-gold/50 font-sans w-6">
-                    {link.num}
-                  </span>
-                  <Link
-                    href={link.href}
-                    className="font-display text-4xl text-white/90 block py-3 hover:text-white hover:translate-x-2 transition-all duration-300"
-                    onClick={() => setMobileOpen(false)}
+              {links.map((link, i) => {
+                const isActive = activeSection === link.href.substring(1);
+                return (
+                  <motion.div
+                    key={link.label}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.08, duration: 0.5 }}
+                    className="flex items-baseline gap-4"
                   >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+                    <span className={`text-[10px] tracking-[0.2em] font-sans w-6 transition-colors duration-300 ${
+                      isActive ? "text-gold" : "text-gold/50"
+                    }`}>
+                      {link.num}
+                    </span>
+                    <Link
+                      href={link.href}
+                      className={`font-display text-4xl block py-3 hover:translate-x-2 transition-all duration-300 ${
+                        isActive ? "text-gold" : "text-white/90 hover:text-white"
+                      }`}
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
 
             <motion.div

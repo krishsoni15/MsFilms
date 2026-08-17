@@ -25,14 +25,12 @@ export default function Home() {
 
   return (
     <>
-      <AnimatePresence>
-        {isLoading && (
-          <Preloader
-            onReady={() => setIsReady(true)}
-            onComplete={() => setIsLoading(false)}
-          />
-        )}
-      </AnimatePresence>
+      {isLoading && (
+        <Preloader
+          onReady={() => setIsReady(true)}
+          onComplete={() => setIsLoading(false)}
+        />
+      )}
 
       <Navigation />
       <main className="overflow-x-hidden w-full max-w-full">

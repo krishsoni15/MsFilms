@@ -23,6 +23,9 @@ export function SmoothScroll() {
       touchMultiplier: 1.4,
     });
 
+    // Expose lenis instance globally for scroll-to-top access
+    (window as any).lenis = lenis;
+
     // Animate Lenis on every frame
     let rafId: number;
     function raf(time: number) {
@@ -83,6 +86,7 @@ export function SmoothScroll() {
     });
 
     return () => {
+      delete (window as any).lenis;
       lenis.destroy();
       cancelAnimationFrame(rafId);
       document.removeEventListener("click", handleAnchorClick);
