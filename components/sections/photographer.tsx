@@ -103,10 +103,10 @@ export function AboutPhotographer() {
           <div className="reveal-text-item opacity-0">
               <Link
                 href="#contact"
-                className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground overflow-hidden group transition-colors duration-500 hover:border-gold"
+                className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground hover:text-[#061a2b] overflow-hidden group transition-colors duration-500 hover:border-gold"
               >
-                <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
-                <span className="relative z-10 flex items-center gap-3 group-hover:text-[#061a2b] transition-colors duration-500">
+                <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
+                <span className="relative z-10 flex items-center gap-3">
                   Let&apos;s Capture Your Story
                   <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
                 </span>

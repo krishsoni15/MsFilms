@@ -100,7 +100,7 @@ export function ScrollExpand({
       if (scrimRef.current) gsap.set(scrimRef.current, { opacity: 0 });
       if (titleRef.current) gsap.set(titleRef.current, { opacity: 1, y: 0, scale: 1 });
       if (hintRef.current) gsap.set(hintRef.current, { opacity: 1, y: 0 });
-      if (overlayRef.current) gsap.set(overlayRef.current, { opacity: 0, y: 20 });
+      if (overlayRef.current) gsap.set(overlayRef.current, { opacity: 0, y: 20, pointerEvents: "none" });
 
       // Build symmetric animation by tracking raw progress state
       const stateObj = { progress: 0 };
@@ -169,6 +169,7 @@ export function ScrollExpand({
           {
             opacity: 1,
             y: 0,
+            pointerEvents: "auto",
             duration: 0.4,
             ease: "none",
           },

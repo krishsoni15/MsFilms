@@ -38,7 +38,7 @@ export function CustomCursor() {
   const hoverDuration = 0.22;
   const parallaxOn = true;
   const cursorColor = "rgba(255, 255, 255, 0.65)";
-  const cursorColorOnTarget = "#C4A35A"; // Brand gold
+  const cursorColorOnTarget = "#ffffff"; // Target white
 
   const cursorRef = useRef<HTMLDivElement>(null);
   const cornersRef = useRef<NodeListOf<HTMLDivElement> | null>(null);
@@ -55,6 +55,7 @@ export function CustomCursor() {
   const targetCornerPositionsRef = useRef<{ x: number; y: number }[] | null>(null);
   const activeStrengthRef = useRef(0);
   const tickerFnRef = useRef<(() => void) | null>(null);
+  const mousePositionRef = useRef({ x: 0, y: 0 });
 
   // Disable custom cursor on mobile, touch screens, and reduced-motion settings
   useEffect(() => {
@@ -179,12 +180,9 @@ export function CustomCursor() {
 
         const duration = strength >= 0.99 ? (parallaxOn ? 0.22 : 0) : 0.05;
 
-        gsap.to(corner, {
+        gsap.set(corner, {
           x: finalX,
-          y: finalY,
-          duration: duration,
-          ease: duration === 0 ? "none" : "power2.out",
-          overwrite: "auto"
+          y: finalY
         });
       });
     };
@@ -192,16 +190,16 @@ export function CustomCursor() {
     tickerFnRef.current = tickerFn;
 
     const moveHandler = (e: MouseEvent) => {
+      mousePositionRef.current = { x: e.clientX, y: e.clientY };
       moveCursor(e.clientX, e.clientY);
     };
     window.addEventListener("mousemove", moveHandler);
 
     // Track scroll events to release lock-on brackets if scrolling causes mouse to leave boundaries
     const scrollHandler = () => {
-      if (!activeTarget || !cursorRef.current) return;
-      const { x: offsetX, y: offsetY } = getOffset();
-      const mouseX = (gsap.getProperty(cursorRef.current, "x") as number) + offsetX;
-      const mouseY = (gsap.getProperty(cursorRef.current, "y") as number) + offsetY;
+      if (!activeTarget) return;
+      const mouseX = mousePositionRef.current.x;
+      const mouseY = mousePositionRef.current.y;
       const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
       const isStillOverTarget =
         elementUnderMouse &&
@@ -431,9 +429,9 @@ export function CustomCursor() {
             {/* 2. Central Focus Crosshair Ticks (always aligned straight - 0 rotation) */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               {/* Horizontal line */}
-              <div className="w-2.5 h-[0.5px] bg-current/30 absolute pointer-events-none" />
+              <div className="w-1.5 h-[0.5px] bg-current/30 absolute pointer-events-none" />
               {/* Vertical line */}
-              <div className="h-2.5 w-[0.5px] bg-current/30 absolute pointer-events-none" />
+              <div className="h-1.5 w-[0.5px] bg-current/30 absolute pointer-events-none" />
             </div>
           </div>
         )}
