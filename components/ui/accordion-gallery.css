@@ -1,5 +1,5 @@
 .accordion-gallery {
-  --ag-accent: #cba358;
+  --ag-accent: #ffffff;
   --ag-overlay: #020912;
   --ag-text: #ffffff;
   --ag-gap: 12px;
@@ -41,7 +41,7 @@
 }
 
 .ag-panel--active {
-  border-color: rgba(203, 163, 88, 0.35); /* Subtle gold border on active */
+  border-color: rgba(255, 255, 255, 0.35); /* Subtle white border on active */
 }
 
 .ag-panel:focus-visible {
@@ -59,14 +59,11 @@
 }
 
 .ag-panel__media {
-  --ag-gray: 0;
-  --ag-dim: 0.35;
   position: absolute;
   top: 50%;
   left: 50%;
   width: var(--ag-media-size);
   height: 100%;
-  filter: grayscale(var(--ag-gray));
   will-change: transform, filter;
   pointer-events: none;
 }
@@ -91,7 +88,9 @@
   pointer-events: none;
   background:
     linear-gradient(180deg, transparent 40%, rgba(2, 9, 18, 0.88) 100%),
-    rgba(2, 9, 18, var(--ag-dim, 0.35));
+    rgba(2, 9, 18, 0.35);
+  opacity: 0.35;
+  will-change: opacity;
 }
 
 .ag-panel__label {
@@ -113,7 +112,7 @@
   border-radius: 2px;
   background: var(--ag-accent);
   opacity: 0;
-  box-shadow: 0 0 10px rgba(203, 163, 88, 0.6);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .ag-panel__text {

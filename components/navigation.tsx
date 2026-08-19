@@ -78,7 +78,7 @@ export function Navigation() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed top-0 left-0 right-0 transition-all duration-700 ease-out ${
+        className={`fixed top-0 left-0 right-0 transition-all duration-300 ease-out ${
           isNavbarOpaque
             ? "bg-[#020912]/85 backdrop-blur-lg border-b border-gold/30"
             : "bg-[#020912]/0 backdrop-blur-none border-b-0 border-transparent"
@@ -88,7 +88,7 @@ export function Navigation() {
           {/* Logo */}
           <Link
             href="/"
-            className="z-50 relative block group"
+            className="z-50 relative flex flex-col group"
           >
             <Image
               src={siteData.logo}
@@ -96,9 +96,12 @@ export function Navigation() {
               width={140}
               height={40}
               priority
-              className={`w-auto object-contain transition-all duration-500 gold-filter ${isScrolled ? "h-[26px] sm:h-[30px] md:h-[34px]" : "h-8 sm:h-9 md:h-10"
+              className={`w-auto object-contain transition-all duration-300 gold-filter ${isScrolled ? "h-[26px] sm:h-[30px] md:h-[34px]" : "h-8 sm:h-9 md:h-10"
                 }`}
             />
+            <span className="text-[6.5px] sm:text-[7.5px] tracking-[0.2em] uppercase text-gold font-sans font-medium -mt-[1px] opacity-95 transition-opacity duration-300">
+              Wedding Photography & Films
+            </span>
           </Link>
  
           {/* Desktop Nav */}
@@ -109,7 +112,7 @@ export function Navigation() {
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-500 hover:opacity-80 group ${
+                  className={`relative text-[11px] tracking-[0.2em] uppercase transition-colors duration-300 hover:opacity-80 group ${
                     isActive
                       ? "text-gold"
                       : isScrolled
@@ -130,12 +133,12 @@ export function Navigation() {
  
             <Link
               href="#contact"
-              className={`relative text-[12px] tracking-[0.25em] uppercase border overflow-hidden group block transition-all duration-500 hover:text-[#020912] ${isScrolled
+              className={`relative text-[12px] tracking-[0.25em] uppercase border overflow-hidden group block transition-all duration-300 hover:text-[#020912] ${isScrolled
                   ? "border-gold/30 hover:border-gold text-foreground px-5 py-2.5"
                   : "border-gold/50 hover:border-gold text-white px-6 py-3"
                 }`}
             >
-              <span className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left bg-gold pointer-events-none" />
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] bg-gold pointer-events-none" />
               <span className="relative z-10">Let&apos;s Talk</span>
             </Link>
           </nav>

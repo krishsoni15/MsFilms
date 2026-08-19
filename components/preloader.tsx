@@ -192,6 +192,11 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
   const [showFlash, setShowFlash] = useState(false);
   const [focusLocked, setFocusLocked] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isWelcomeFinished, setIsWelcomeFinished] = useState(false);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Store callbacks in refs to avoid dependency churn
   const onReadyRef = useRef(onReady);
@@ -218,8 +223,28 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
     };
   }, []);
 
+  // ── Welcome screen enter site click handler ──
+  const handleWelcomeEnter = () => {
+    // Play shutter sound to unlock browser autoplay audio policy
+    const shutterAudio = new Audio("/mp3/freesound_community-camera-shutter-6305.mp3");
+    shutterAudio.volume = 0.55;
+    shutterAudio.preload = "auto";
+    shutterAudio.play().catch((err) => {
+      console.warn("MP3 shutter audio play failed, falling back to synthesis:", err);
+      playCameraShutterSound();
+    });
+
+    // Start video playback immediately and bypass lens preloader progress bar
+    setShowFlash(true);
+    setIsClicked(true);
+    setIsWelcomeFinished(true);
+    setIsPlayingVideo(true);
+    onReadyRef.current(); // Ready parent components in the background
+  };
+
   // ── Progress timer (cleanup handles Strict Mode correctly, dynamically scaled) ──
   useEffect(() => {
+    if (!isWelcomeFinished) return;
     let currentProgress = 0;
     const tick = 20; // 20ms update interval
     
@@ -265,10 +290,16 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
     playFocusBeep();
     setFocusLocked(true);
     setStatusText("CAPTURING");
-    setIsClicked(true); // Automatically trigger enter transition
+    setIsClicked(true); // Automatically trigger enter transition (no second click needed!)
   }, [progress]);
 
-  // ── Transition pipeline (runs when user clicks the shutter or automatically on 100) ──
+  // ── Enter Site action fallback ──
+  const handleEnterSite = () => {
+    if (progress < 100 || isClicked) return;
+    setIsClicked(true);
+  };
+
+  // ── Transition pipeline (runs when user clicks the shutter / button) ──
   useEffect(() => {
     if (!isClicked) return;
     console.log("[Debug Preloader] Transition started.");
@@ -302,27 +333,56 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
       rafId = requestAnimationFrame(animateIris);
     }, 80);
 
-    // Phase 2: Flash + shutters wipe at 130ms
+    // Phase 2: Flash + shutters wipe at 130ms -> Trigger onReady
     const wipeTimer = setTimeout(() => {
-      console.log("[Debug Preloader] Phase 2: Calling onReady.");
+      console.log("[Debug Preloader] Phase 2: Open iris, trigger onReady.");
       setShowFlash(true);
       setIsShutterGone(true);
-      onReadyRef.current();
+      onReadyRef.current(); // Ready parent components in the background
     }, 130);
 
-    // Phase 3: Unmount at 750ms (after background images finish fading to 0 opacity)
-    const doneTimer = setTimeout(() => {
-      console.log("[Debug Preloader] Phase 3: Calling onComplete.");
-      onCompleteRef.current();
-    }, 750);
+    // Phase 3: Unmount preloader at 750ms (only if NOT playing cinematic video)
+    let doneTimer: NodeJS.Timeout | undefined;
+    if (!isPlayingVideo) {
+      doneTimer = setTimeout(() => {
+        console.log("[Debug Preloader] Phase 3: Unmount preloader.");
+        onCompleteRef.current();
+      }, 750);
+    }
 
     return () => {
       clearTimeout(startIrisTimer);
       clearTimeout(wipeTimer);
-      clearTimeout(doneTimer);
+      if (doneTimer) clearTimeout(doneTimer);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isClicked]);
+  }, [isClicked, isPlayingVideo]);
+
+  const handleVideoEndOrSkip = () => {
+    console.log("[Debug Preloader] Video ended or skipped. Completing intro.");
+    setShowFlash(true);
+    setTimeout(() => {
+      onCompleteRef.current();
+    }, 120);
+  };
+
+  const handleVideoPlaying = () => {
+    setIsVideoLoading(false);
+    const video = videoRef.current;
+    if (video) {
+      video.volume = 0;
+      let vol = 0;
+      const interval = setInterval(() => {
+        vol += 0.05;
+        if (vol >= 0.8) {
+          video.volume = 0.8;
+          clearInterval(interval);
+        } else {
+          video.volume = vol;
+        }
+      }, 70); // Smooth audio fade-in over ~1.1s
+    }
+  };
 
   // ── Derived animation values ──
   const isIrisOpening = irisOpenAmount > 0;
@@ -349,9 +409,54 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
 
   const handleShutterClick = () => {
     console.log("[Debug Preloader] Shutter clicked. progress:", progress, "isClicked:", isClicked);
-    if (progress < 100 || isClicked) return;
-    setIsClicked(true);
+    handleEnterSite();
   };
+
+  if (!isWelcomeFinished) {
+    return (
+      <div className="fixed inset-0 z-[99999] bg-[#020912] flex items-center justify-center select-none overflow-hidden">
+        <AnimatePresence>
+          {showWelcome && (
+            <motion.div
+              key="welcome-text-block"
+              initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -15, filter: "blur(6px)" }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-center flex flex-col items-center gap-5"
+            >
+              <div className="flex flex-col items-center gap-3">
+                <h1 className="font-laluxes-serif text-gold text-4xl md:text-5xl lg:text-6xl leading-none">
+                  Msfilms
+                </h1>
+                <p className="font-sans text-[8px] sm:text-[9px] tracking-[0.35em] uppercase text-white/40">
+                  Wedding Photography & Films
+                </p>
+              </div>
+
+              {/* Enter Site Button directly on the Welcome Portal to unlock audio */}
+              <div className="flex flex-col items-center gap-3.5 mt-2">
+                <button
+                  onClick={handleWelcomeEnter}
+                  className="px-8 py-3.5 border border-white/20 hover:border-gold bg-[#02070f]/90 text-white font-sans text-xs tracking-[0.3em] uppercase rounded-sm transition-all duration-300 shadow-[0_0_50px_rgba(203,163,88,0.12)] hover:shadow-[0_0_50px_rgba(203,163,88,0.25)] hover:scale-105 active:scale-95 flex items-center gap-2.5 cursor-pointer"
+                >
+                  <span>Enter Site</span>
+                  <svg className="w-3.5 h-3.5 text-white/60 group-hover:text-gold transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                </button>
+                <span className="text-[7.5px] tracking-[0.25em] text-white/35 uppercase animate-pulse">
+                  Sound On Recommended
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <motion.div
@@ -359,7 +464,7 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
       className={`fixed inset-0 z-[99999] flex items-center justify-center select-none overflow-hidden transition-all duration-300 ${
-        progress === 100 && !isClicked ? "cursor-pointer hover:bg-black/20" : ""
+        progress === 100 && !isClicked ? "cursor-pointer hover:bg-black/10" : ""
       }`}
       style={{ fontFamily: "'JetBrains Mono', 'SF Mono', monospace" }}
       onClick={handleShutterClick}
@@ -655,6 +760,69 @@ export function Preloader({ onReady, onComplete }: PreloaderProps) {
           </div>
         </div>
       </motion.div>
+
+
+
+
+
+      {/* ──═ LAYER 7: Fullscreen Cinematic Video Player (z-[100000]) ──═ */}
+      <AnimatePresence>
+        {isPlayingVideo && (
+          <motion.div
+            key="intro-video-layer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100000] bg-[#02070f] bg-[radial-gradient(circle_at_50%_50%,rgba(203,163,88,0.03)_0%,transparent_70%)] flex items-center justify-center"
+          >
+            <video
+              ref={videoRef}
+              src="/mp4/whatsapp_intro.mp4"
+              className="w-full h-full object-cover"
+              autoPlay
+              playsInline
+              onWaiting={() => setIsVideoLoading(true)}
+              onPlaying={handleVideoPlaying}
+              onCanPlay={() => setIsVideoLoading(false)}
+              onEnded={handleVideoEndOrSkip}
+            />
+
+            {/* Premium Buffering Loading Overlay */}
+            <AnimatePresence>
+              {isVideoLoading && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-md z-[100002] pointer-events-none"
+                >
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+                    className="w-12 h-12 rounded-full border-2 border-white/5 border-t-white/40 mb-4"
+                  />
+                  <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-white/50 animate-pulse">
+                    Streaming Cinematic Intro...
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Skip Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleVideoEndOrSkip();
+              }}
+              className="absolute top-6 right-6 z-[100003] px-5 py-2.5 border border-white/20 hover:border-white text-[10px] tracking-[0.2em] uppercase text-white font-sans rounded-sm transition-all duration-300 bg-black/40 backdrop-blur-sm hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              Skip Intro
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══ LAYER 6: White flash (z-50) ═══ */}
       <AnimatePresence>

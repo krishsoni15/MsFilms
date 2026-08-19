@@ -9,7 +9,9 @@ export function AboutStudio() {
   return (
     <section id="about" className="relative w-full bg-[#020912] z-15">
       <ScrollExpand
-        src="/drone/imgi_6_2.jpg"
+        src="/mp4/bg_video.mp4"
+        mediaType="video"
+        poster="/drone/imgi_6_2.jpg"
         alt="Saskatoon Wedding Cinema — Msfilms Studio"
         title="MSFILMS STUDIO"
         scrollHint="SCROLL TO DISCOVER"
@@ -33,7 +35,7 @@ export function AboutStudio() {
           <p className="font-sans text-xs md:text-sm text-white/70 max-w-xl leading-relaxed mb-8">
             {siteData.aboutText}
           </p>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-3xl text-left border-t border-white/10 pt-6 mb-10 font-sans">
             <div className="flex items-center gap-2">
               <span className="w-5 h-5 rounded-full border border-gold/40 flex items-center justify-center text-[10px] text-gold font-bold bg-gold/5 flex-shrink-0">✓</span>
@@ -55,12 +57,11 @@ export function AboutStudio() {
 
           <Link
             href="#work"
-            className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/50 px-9 py-4 text-white overflow-hidden group transition-colors duration-500 hover:border-gold"
+            className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/50 px-9 py-4 text-white hover:text-gold transition-colors duration-300 hover:border-gold group"
           >
-            <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
-            <span className="relative z-10 flex items-center gap-3 group-hover:text-[#061a2b] transition-colors duration-500">
+            <span className="relative z-10 flex items-center gap-3">
               Explore Our Work
-              <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+              <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
             </span>
           </Link>
         </div>

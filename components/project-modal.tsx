@@ -131,10 +131,10 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
                 onClick={onClose}
                 className="relative inline-flex items-center gap-3 border border-white/20 px-9 py-4 text-[12px] tracking-[0.25em] uppercase font-sans text-white overflow-hidden group transition-colors duration-500 hover:text-[#061a2b] hover:border-gold"
               >
-                <span className="absolute inset-0 bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left pointer-events-none" />
+                <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
                 <span className="relative z-10 flex items-center gap-3">
                   Inquire About Availability
-                  <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
                 </span>
               </a>
             </div>
