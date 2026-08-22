@@ -88,20 +88,16 @@ export function Navigation() {
           {/* Logo */}
           <Link
             href="/"
-            className="z-50 relative flex flex-col group"
+            className="z-50 relative flex items-center group"
           >
             <Image
-              src={siteData.logo}
-              alt={siteData.name}
-              width={140}
+              src="/logo/logo.png"
+              alt="Ms films"
+              width={150}
               height={40}
+              className="h-8 md:h-9 w-auto object-contain brightness-100"
               priority
-              className={`w-auto object-contain transition-all duration-300 gold-filter ${isScrolled ? "h-[26px] sm:h-[30px] md:h-[34px]" : "h-8 sm:h-9 md:h-10"
-                }`}
             />
-            <span className="text-[6.5px] sm:text-[7.5px] tracking-[0.2em] uppercase text-gold font-sans font-medium -mt-[1px] opacity-95 transition-opacity duration-300">
-              Wedding Photography & Films
-            </span>
           </Link>
  
           {/* Desktop Nav */}

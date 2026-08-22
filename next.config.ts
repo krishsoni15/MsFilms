@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         hostname: "static.showit.co",
       },
     ],
-    qualities: [75, 85],
+    qualities: [70, 75, 85],
   },
 };
 

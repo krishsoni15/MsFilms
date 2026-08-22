@@ -20,8 +20,8 @@
   --background: #020912;
   --foreground: #f4f1eb;
   --accent: #1e293b;
-  --gold: #ffffff;
-  --gold-light: #e2e8f0;
+  --gold: #c5a880;
+  --gold-light: #e5d5be;
   --cream-dark: #020813;
   --white: #ffffff;
 }
@@ -37,7 +37,7 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-display: var(--font-playfair-display), ui-serif, Georgia, serif;
-  --font-laluxes-script: "La Luxes Script", var(--font-inter), cursive;
+  --font-laluxes-script: "La Luxes Script", var(--font-pinyon-script), cursive;
   --font-laluxes-serif: "La Luxes Serif", var(--font-instrument-serif), serif;
 }
 

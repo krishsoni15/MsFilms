@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { Preloader } from "@/components/preloader";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/sections/hero";
@@ -18,23 +15,11 @@ import { SocialStrip } from "@/components/sections/social-strip";
 import { Contact } from "@/components/sections/contact";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isReady, setIsReady] = useState(false);
-
-  console.log("[Debug Home State]", { isLoading, isReady });
-
   return (
     <>
-      {isLoading && (
-        <Preloader
-          onReady={() => setIsReady(true)}
-          onComplete={() => setIsLoading(false)}
-        />
-      )}
-
       <Navigation />
       <main className="overflow-x-hidden w-full max-w-full">
-        <Hero isParentLoaded={isReady} />
+        <Hero />
         <AboutStudio />
         <AboutPhotographer />
         <Philosophy />

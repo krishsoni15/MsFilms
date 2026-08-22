@@ -4,7 +4,6 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import {
   motion,
-  AnimatePresence,
   useScroll,
   useTransform,
 } from "framer-motion";
@@ -25,7 +24,13 @@ interface CategoryImageProps {
   useBottomImages?: boolean;
 }
 
-function CategoryImage({ categoryIndex, imageIndex, alt, delay = 0, useBottomImages = false }: CategoryImageProps) {
+function CategoryImage({ 
+  categoryIndex, 
+  imageIndex, 
+  alt, 
+  delay = 0, 
+  useBottomImages = false
+}: CategoryImageProps) {
   return (
     <div className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black/10">
       {categories.map((cat, idx) => {
@@ -76,36 +81,36 @@ const categories = [
     eyebrow: "REAL MOMENTS. PURE EMOTIONS.",
     titleLine1: "Telling Stories",
     titleLine2: "Worth",
-    titleHighlight: "Remembering.",
+    titleHighlight: "Remembering",
     description:
       "We capture timeless moments and turn them into memories you'll cherish forever.",
     images: [
-      "/wedding/imgi_3_5.png",
-      "/wedding/imgi_7_3.jpg",
-      "/wedding/imgi_8_6.jpg",
+      "/wedding/1 (1).png",
+      "/wedding/1 (2).png",
+      "/wedding/1 (3).png",
     ],
     bottomImages: [
-      "/wedding/imgi_6_4.jpg",
-      "/wedding/imgi_4_7.jpg",
+      "/wedding/1 (4).png",
+      "/wedding/1 (5).png",
     ],
     videoUrl: heroData.videoSrc,
   },
   {
-    id: "portraits",
-    eyebrow: "GENUINE CHARACTER. NATURAL LIGHT.",
-    titleLine1: "Capturing Persona",
-    titleLine2: "With",
-    titleHighlight: "Authenticity.",
+    id: "drone",
+    eyebrow: "ELEVATED PERSPECTIVES. STUNNING VIEWS.",
+    titleLine1: "Elevating Every",
+    titleLine2: "Unique",
+    titleHighlight: "Perspective",
     description:
-      "Professional portrait sessions capturing genuine character and personal expressions in studio and natural light settings.",
+      "Aerial cinematography and photography revealing the world from extraordinary new vantage points.",
     images: [
-      "/landscape/imgi_9_3.jpg",
-      "/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg",
-      "/landscape/imgi_10_6.jpg",
+      "/drone/imgi_2_1.jpg",
+      "/drone/imgi_11_6.jpg",
+      "/drone/imgi_12_9.jpg",
     ],
     bottomImages: [
-      "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg",
-      "/me/jerry_patel.png",
+      "/drone/imgi_10_3.jpg",
+      "/drone/imgi_4_7.jpg",
     ],
     videoUrl: heroData.videoSrc,
   },
@@ -114,7 +119,7 @@ const categories = [
     eyebrow: "SILENT HORIZONS. TIMELESS BEAUTY.",
     titleLine1: "Capturing Earth's",
     titleLine2: "Silent",
-    titleHighlight: "Majesty.",
+    titleHighlight: "Majesty",
     description:
       "Fine art landscape photography preserving nature's most awe-inspiring panoramic moments.",
     images: [
@@ -129,21 +134,21 @@ const categories = [
     videoUrl: heroData.videoSrc,
   },
   {
-    id: "drone",
-    eyebrow: "ELEVATED PERSPECTIVES. STUNNING VIEWS.",
-    titleLine1: "Elevating Every",
-    titleLine2: "Unique",
-    titleHighlight: "Perspective.",
+    id: "realestate",
+    eyebrow: "PREMIUM SPACES. ARCHITECTURAL BEAUTY.",
+    titleLine1: "Showcasing Fine",
+    titleLine2: "Properties &",
+    titleHighlight: "Interiors",
     description:
-      "Aerial cinematography that reveals the world from extraordinary new vantage points.",
+      "Professional interior and exterior photography capturing the architectural detail and character of luxury estates.",
     images: [
-      "/drone/imgi_2_1.jpg",
-      "/drone/imgi_11_6.jpg",
-      "/drone/imgi_12_9.jpg",
+      "/drone/imgi_6_2.jpg",
+      "/drone/imgi_7_5.jpg",
+      "/drone/imgi_13_12.jpg",
     ],
     bottomImages: [
-      "/drone/imgi_10_3.jpg",
-      "/drone/imgi_4_7.jpg",
+      "/drone/imgi_9_11.jpg",
+      "/drone/imgi_5_10.jpg",
     ],
     videoUrl: heroData.videoSrc,
   },
@@ -229,11 +234,11 @@ export function Hero({
       className="relative w-full bg-background overflow-hidden md:min-h-svh md:flex md:flex-col"
     >
       {/* ── Aurora WebGL Background ── */}
-      <div className="absolute inset-0 pointer-events-none opacity-85 z-0 select-none bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.07)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.06)_0%,transparent_60%)]">
+      <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
         <Aurora
-          colorStops={["#051126", "#cba358", "#ffffff"]}
-          blend={0.6}
-          amplitude={1.2}
+          colorStops={["#081730", "#cba358", "#4e7bb0"]}
+          blend={0.65}
+          amplitude={1.3}
           speed={0.45}
         />
       </div>
@@ -242,31 +247,52 @@ export function Hero({
         initial={{ opacity: 0 }}
         animate={isLoaded ? { opacity: 1 } : {}}
         transition={{ duration: 1, delay: 1 }}
-        className="hidden md:flex flex-col items-center gap-3.5 absolute left-6 lg:left-10 bottom-28 z-30"
+        className="hidden md:flex flex-col items-start gap-4 absolute left-6 lg:left-10 bottom-28 z-30"
       >
-        {categories.map((cat, idx) => (
-          <div key={cat.id} className="flex flex-col items-center gap-1.5">
-            <button
-              onClick={() => handleCategoryClick(idx)}
-              className={`font-sans text-[13px] tracking-wider transition-all duration-500 leading-none ${
-                categoryIndex === idx
-                  ? "text-gold font-semibold"
-                  : "text-foreground/25 hover:text-foreground/50"
-              }`}
-            >
-              {String(idx + 1).padStart(2, "0")}
-            </button>
-            {categoryIndex === idx && (
-              <motion.div
-                layoutId="activeIndicator"
-                className="w-4 h-[1px] bg-gold"
-                transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              />
-            )}
-          </div>
-        ))}
+        {categories.map((cat, idx) => {
+          const isActive = categoryIndex === idx;
+          const displayLabel = 
+            cat.id === "wedding" 
+              ? "Wedding" 
+              : cat.id === "drone" 
+                ? "Drone" 
+                : cat.id === "landscape" 
+                  ? "Landscape" 
+                  : "Real Estate";
 
-        <div className="flex flex-col items-center gap-2 mt-6 pt-4 border-t border-foreground/10">
+          return (
+            <button
+              key={cat.id}
+              onClick={() => handleCategoryClick(idx)}
+              className="flex items-center gap-3 group text-left focus:outline-none"
+            >
+              <div className="flex flex-col items-center">
+                <span className={`font-sans text-[12px] tracking-wider transition-colors duration-300 ${
+                  isActive ? "text-gold font-semibold" : "text-white/25 group-hover:text-white/55"
+                }`}>
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+                {isActive && (
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="w-4 h-[1px] bg-gold mt-1"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+              </div>
+              
+              <span className={`font-sans text-[9px] tracking-[0.2em] uppercase transition-all duration-300 ${
+                isActive 
+                  ? "text-gold opacity-100 translate-x-0 w-auto font-medium" 
+                  : "text-white/0 opacity-0 -translate-x-2 w-0 overflow-hidden pointer-events-none group-hover:text-white/35 group-hover:opacity-100 group-hover:translate-x-0 group-hover:w-auto"
+              }`}>
+                {displayLabel}
+              </span>
+            </button>
+          );
+        })}
+
+        <div className="flex flex-col items-center gap-2 mt-6 pt-4 border-t border-foreground/10 self-center">
           <span className="text-foreground/25 font-sans text-[9px] tracking-[0.25em] uppercase">
             Scroll
           </span>
@@ -298,32 +324,35 @@ export function Hero({
       </motion.div>
 
       {/* ── Main Content ── */}
-      <div className="md:flex-1 relative max-w-[1440px] mx-auto w-full px-5 md:px-14 lg:px-20 xl:px-24 pt-24 md:pt-28 lg:pt-32 pb-8 md:pb-10 md:flex md:flex-col">
-        <div className="grid grid-cols-1 md:grid-cols-[4.5fr_5.5fr] gap-8 md:gap-6 lg:gap-8 md:flex-1">
-          {/* ─── LEFT COLUMN: Text + Bottom Images ─── */}
+      <div className="md:flex-1 relative max-w-[1440px] mx-auto w-full px-5 md:px-14 lg:px-20 xl:px-24 pt-20 md:pt-24 lg:pt-[88px] pb-4 md:pb-6 md:flex md:flex-col">
+        <div className="grid grid-cols-1 md:grid-cols-[4.5fr_5.5fr] gap-8 md:gap-6 lg:gap-8 md:flex-1 relative">
+          {/* ─── LEFT COLUMN: Text Content ─── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={isLoaded ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex flex-col justify-between order-2 md:order-1 py-4 md:py-6 lg:py-10"
+            className="flex flex-col justify-between order-2 md:order-1 py-4 md:py-6 lg:py-10 md:h-full md:transform md:translate-x-[16%] md:-translate-y-[10%]"
           >
             {/* Text Content */}
-            <div className="flex flex-col justify-center flex-1">
-              <AnimatePresence mode="wait">
+            <div className="flex flex-col justify-center flex-1 flex-shrink-0">
+              <div className="relative w-full min-h-[250px] sm:min-h-[270px] md:min-h-[290px] lg:min-h-[310px] flex items-center mb-6 md:mb-8">
                 <motion.div
                   key={`content-${categoryIndex}`}
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="w-full flex flex-col justify-center"
                 >
                   {/* Eyebrow */}
-                  <p className="text-gold/70 font-sans text-[10px] md:text-[11px] tracking-[0.3em] uppercase mb-5 md:mb-7">
-                    {currentCategory.eyebrow}
-                  </p>
+                  <div className="mb-4 md:mb-5 flex flex-col gap-3">
+                    <p className="text-gold/70 font-sans text-[10px] md:text-[11px] tracking-[0.3em] uppercase">
+                      {currentCategory.eyebrow}
+                    </p>
+                    <div className="gold-rule" />
+                  </div>
 
                   {/* Title (staggered internally) */}
-                  <div className="mb-5 md:mb-7">
+                  <div className="mb-4 md:mb-5">
                     <h1>
                       <motion.span
                         initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
@@ -349,11 +378,11 @@ export function Hero({
                   </div>
 
                   {/* Description */}
-                  <p className="text-foreground/45 font-sans text-[13px] md:text-[14px] leading-[1.7] max-w-[380px] mb-8 md:mb-10">
+                  <p className="text-foreground/45 font-sans text-[13px] md:text-[14px] leading-[1.7] max-w-[380px]">
                     {currentCategory.description}
                   </p>
                 </motion.div>
-              </AnimatePresence>
+              </div>
 
               {/* CTAs */}
               <motion.div
@@ -391,43 +420,13 @@ export function Hero({
                 </button>
               </motion.div>
             </div>
-
-            {/* Bottom Image Pair (desktop only) — Dynamic per category */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 1.2,
-                delay: 0.8,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              style={{ y: y3 }}
-              className="hidden md:grid grid-cols-[3.5fr_6.5fr] gap-0 mt-8 lg:mt-10 aspect-[3.2/1] rounded-sm overflow-hidden border border-gold/12 shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
-            >
-              <div className="relative w-full h-full border-r border-gold/12 bg-black/10">
-                <CategoryImage
-                  categoryIndex={categoryIndex}
-                  imageIndex={0}
-                  alt={`${currentCategory.id} bottom detail left`}
-                  delay={0.2}
-                  useBottomImages={true}
-                />
-              </div>
-              <div className="relative w-full h-full bg-black/10">
-                <CategoryImage
-                  categoryIndex={categoryIndex}
-                  imageIndex={1}
-                  alt={`${currentCategory.id} bottom detail right`}
-                  delay={0.3}
-                  useBottomImages={true}
-                />
-              </div>
-            </motion.div>
+            {/* Bottom Spacer to match absolute Bottom-Left Image height */}
+            <div className="hidden md:block h-[27%] w-full flex-shrink-0" />
           </motion.div>
 
           {/* ─── RIGHT COLUMN: Image Collage ─── */}
-          <div className="relative order-1 md:order-2 min-h-[380px] sm:min-h-[440px] md:min-h-0">
-            {/* Arched Image (center of collage) */}
+          <div className="relative order-1 md:order-2 min-h-[340px] sm:min-h-[400px] md:h-full md:min-h-[420px] lg:min-h-[480px] xl:min-h-[540px]">
+            {/* Arched Image (center-left of collage) */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
@@ -436,7 +435,7 @@ export function Hero({
                 delay: 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="absolute left-[10%] top-[3%] w-[75%] h-[90%] md:left-[3%] md:top-[0%] md:w-[54%] md:h-[55%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/12"
+              className="absolute left-[10%] top-0 w-[48.7%] h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/30"
               style={{ y: y1 }}
             >
               <CategoryImage
@@ -445,8 +444,9 @@ export function Hero({
                 alt={`${currentCategory.id} hero arched`}
                 delay={0}
               />
-              <div className="absolute inset-[5px] border border-gold/8 rounded-t-full pointer-events-none z-20" />
+              <div className="absolute inset-[10px] border border-gold/25 rounded-t-full pointer-events-none z-20" />
             </motion.div>
+
             {/* Top-Right Image (desktop only) */}
             <motion.div
               initial={{ opacity: 0, y: -30 }}
@@ -456,7 +456,7 @@ export function Hero({
                 delay: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="hidden md:block absolute right-0 top-0 w-[40%] h-[55%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/12 rounded-sm"
+              className="hidden md:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/20 rounded-md"
               style={{ y: y2 }}
             >
               <CategoryImage
@@ -465,7 +465,7 @@ export function Hero({
                 alt={`${currentCategory.id} detail top`}
                 delay={0.1}
               />
-              <div className="absolute inset-[5px] border border-gold/8 pointer-events-none z-20" />
+              <div className="absolute inset-[10px] border border-gold/15 pointer-events-none z-20" />
             </motion.div>
 
             {/* Bottom-Right Image (desktop only) */}
@@ -477,7 +477,7 @@ export function Hero({
                 delay: 0.7,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="hidden md:block absolute right-0 bottom-[2%] w-[40%] h-[38%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/12 rounded-sm"
+              className="hidden md:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-gold/20 rounded-md"
               style={{ y: y5 }}
             >
               <CategoryImage
@@ -486,9 +486,54 @@ export function Hero({
                 alt={`${currentCategory.id} detail bottom`}
                 delay={0.4}
               />
-              <div className="absolute inset-[5px] border border-gold/8 pointer-events-none z-20" />
+              <div className="absolute inset-[10px] border border-gold/15 pointer-events-none z-20" />
             </motion.div>
           </div>
+
+          {/* ─── BOTTOM IMAGES: Positioned relative to grid wrapper to touch seamlessly ─── */}
+          {/* Bottom-Left Image (desktop only) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              duration: 1.2,
+              delay: 0.8,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            style={{ y: y5 }}
+            className="hidden md:block absolute left-[10%] bottom-0 w-[29.3%] h-[27%] z-20 overflow-hidden rounded-l-md border border-gold/20 shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
+          >
+            <CategoryImage
+              categoryIndex={categoryIndex}
+              imageIndex={0}
+              alt={`${currentCategory.id} bottom detail left`}
+              delay={0.2}
+              useBottomImages={true}
+            />
+            <div className="absolute inset-[10px] border border-gold/15 rounded-l-[4px] pointer-events-none z-20" />
+          </motion.div>
+
+          {/* Bottom-Mid Image (desktop only) */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+            transition={{
+              duration: 1.2,
+              delay: 0.8,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            style={{ y: y5 }}
+            className="hidden md:block absolute left-[39.3%] bottom-0 w-[38.8%] h-[27%] z-20 overflow-hidden rounded-r-md border border-gold/20 shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
+          >
+            <CategoryImage
+              categoryIndex={categoryIndex}
+              imageIndex={1}
+              alt={`${currentCategory.id} bottom detail right`}
+              delay={0.3}
+              useBottomImages={true}
+            />
+            <div className="absolute inset-[10px] border border-gold/15 rounded-r-[4px] pointer-events-none z-20" />
+          </motion.div>
         </div>
       </div>
 
@@ -499,12 +544,11 @@ export function Hero({
         transition={{ duration: 0.8, delay: 1 }}
         className="border-t border-white/[0.06]"
       >
-        <div className="max-w-[1440px] mx-auto px-5 md:px-14 lg:px-20 xl:px-24 py-5 md:py-6">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-14 lg:px-20 xl:px-24 py-4 md:py-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 md:gap-x-0">
             {stats.map((stat, idx) => (
-              <div key={idx} className={`flex items-center gap-4 px-2 md:px-6 ${
-                idx > 0 ? "md:border-l md:border-white/[0.08]" : ""
-              }`}>
+              <div key={idx} className={`flex items-center gap-4 px-2 md:px-6 ${idx > 0 ? "md:border-l md:border-white/[0.08]" : ""
+                }`}>
                 <stat.icon className="w-5 h-5 text-gold shrink-0" />
                 <div className="min-w-0">
                   <p className="text-foreground font-sans text-[12px] md:text-[13px] font-semibold tracking-wide leading-tight">

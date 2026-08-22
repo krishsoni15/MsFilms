@@ -129,10 +129,12 @@ export function Aurora(props: AuroraProps) {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
+    // Optimize DPR (devicePixelRatio): Limit to max 1.2 to reduce WebGL pixel fill overhead on high-DPI Macbooks
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true
+      antialias: true,
+      dpr: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 1.2) : 1
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -180,9 +182,21 @@ export function Aurora(props: AuroraProps) {
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(canvas);
 
+    // Pause WebGL rendering loop when offscreen using IntersectionObserver
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(ctn);
+
     let animateId = 0;
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
+      if (!isVisible) return; // Skip draw calls when scrolled away
+      
       const { speed = 1.0 } = propsRef.current;
       const timeVal = t * 0.01;
       program.uniforms.uTime.value = timeVal * speed * 0.1;
@@ -202,6 +216,7 @@ export function Aurora(props: AuroraProps) {
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener('resize', resize);
+      observer.disconnect();
       if (ctn && canvas.parentNode === ctn) {
         ctn.removeChild(canvas);
       }

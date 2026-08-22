@@ -109,25 +109,29 @@ export function CustomCursor() {
     padding: 5
   }), []);
 
-  // GSAP-based cursor position updates
-  const moveCursor = useCallback((clientX: number, clientY: number) => {
-    if (!cursorRef.current) return;
-    const { x: offsetX, y: offsetY } = getContainingBlockOffset(containingBlockRef.current);
-    gsap.to(cursorRef.current, {
-      x: clientX - offsetX,
-      y: clientY - offsetY,
-      duration: 0.08,
-      ease: "power3.out"
-    });
-  }, []);
-
   useEffect(() => {
     if (isMobile || !cursorRef.current) return;
 
     const cursor = cursorRef.current;
     cornersRef.current = cursor.querySelectorAll(".target-cursor-corner");
     containingBlockRef.current = getContainingBlock(cursor);
-    const getOffset = () => getContainingBlockOffset(containingBlockRef.current);
+
+    let offsetX = 0;
+    let offsetY = 0;
+    const updateOffset = () => {
+      const offset = getContainingBlockOffset(containingBlockRef.current);
+      offsetX = offset.x;
+      offsetY = offset.y;
+    };
+    updateOffset();
+
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.08, ease: "power3.out" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.08, ease: "power3.out" });
+
+    const moveCursor = (clientX: number, clientY: number) => {
+      xTo(clientX - offsetX);
+      yTo(clientY - offsetY);
+    };
 
     let activeTarget: HTMLElement | null = null;
     let currentLeaveHandler: (() => void) | null = null;
@@ -139,12 +143,11 @@ export function CustomCursor() {
       currentLeaveHandler = null;
     };
 
-    const initialOffset = getOffset();
     gsap.set(cursor, {
       xPercent: -50,
       yPercent: -50,
-      x: window.innerWidth / 2 - initialOffset.x,
-      y: window.innerHeight / 2 - initialOffset.y
+      x: window.innerWidth / 2 - offsetX,
+      y: window.innerHeight / 2 - offsetY
     });
 
     // Viewfinder slow continuous breathing rotation tween (targets ONLY the inner guides, keeping brackets straight)
@@ -228,18 +231,8 @@ export function CustomCursor() {
     window.addEventListener("mousedown", mouseDownHandler);
     window.addEventListener("mouseup", mouseUpHandler);
 
-    // Mouse over: Lock onto target element
     const enterHandler = (e: MouseEvent) => {
-      const directTarget = e.target as HTMLElement | null;
-      const allTargets: HTMLElement[] = [];
-      let current = directTarget;
-      while (current && current !== document.body) {
-        if (current.matches && current.matches(targetSelector)) {
-          allTargets.push(current);
-        }
-        current = current.parentElement;
-      }
-      const target = allTargets[0] || null;
+      const target = (e.target as HTMLElement | null)?.closest(targetSelector) as HTMLElement | null;
       if (!target || !cursorRef.current || !cornersRef.current) return;
       
       // Exempt header navigation links from snap targeting to keep navbar clean, except the Let's Talk button
@@ -278,7 +271,6 @@ export function CustomCursor() {
 
       const rect = target.getBoundingClientRect();
       const { borderWidth, cornerSize, padding } = constants;
-      const { x: offsetX, y: offsetY } = getOffset();
       const cursorX = gsap.getProperty(cursor, "x") as number;
       const cursorY = gsap.getProperty(cursor, "y") as number;
 
@@ -366,6 +358,7 @@ export function CustomCursor() {
 
     const resizeHandler = () => {
       containingBlockRef.current = getContainingBlock(cursor);
+      updateOffset();
     };
     window.addEventListener("resize", resizeHandler);
 
@@ -393,7 +386,6 @@ export function CustomCursor() {
   }, [
     targetSelector,
     spinDuration,
-    moveCursor,
     constants,
     hideDefaultCursor,
     isMobile,
