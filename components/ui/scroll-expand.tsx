@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./scroll-expand.css";
@@ -198,17 +198,37 @@ export function ScrollExpand({
     overlayScrim,
   ]);
 
+  // Lazy-load video playback — only start when visible to avoid CPU/GPU waste on page load
+  const [videoShouldPlay, setVideoShouldPlay] = useState(false);
+  useEffect(() => {
+    if (mediaType !== "video") return;
+    const root = rootRef.current;
+    if (!root) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVideoShouldPlay(true);
+          observer.disconnect(); // Only need to trigger once
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [mediaType]);
+
   const mediaElement =
     mediaType === "video" ? (
       <video
         ref={mediaRef as React.RefObject<HTMLVideoElement>}
         className="scroll-expand__media"
-        src={src}
+        src={videoShouldPlay ? src : undefined}
         poster={poster}
-        autoPlay
+        autoPlay={videoShouldPlay}
         muted
         loop
         playsInline
+        preload="none"
       />
     ) : (
       <img

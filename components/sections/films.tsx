@@ -8,6 +8,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { VideoModal } from "@/components/video-modal";
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
+import BorderGlow from "@/components/ui/border-glow";
 
 function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -117,6 +118,27 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
               {film.location}<br />{film.year}
             </p>
           </div>
+
+          {/* Interactive BorderGlow overlay */}
+          <BorderGlow
+            borderRadius={16}
+            backgroundColor="transparent"
+            glowColor="35 85 75"
+            glowRadius={45}
+            glowIntensity={1.5}
+            edgeSensitivity={20}
+            coneSpread={25}
+            colors={["#c5a880", "#e5d5be", "#ffffff"]}
+            fillOpacity={0.08}
+            className="absolute inset-0 w-full h-full z-20 pointer-events-auto"
+            style={{
+              borderRadius: "16px",
+              borderColor: "rgba(197, 168, 128, 0.2)",
+              boxShadow: "none",
+            }}
+          >
+            <div className="w-full h-full" />
+          </BorderGlow>
         </div>
       </button>
     </motion.div>

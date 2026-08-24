@@ -111,6 +111,12 @@ void main() {
 }
 `;
 
+// Pre-parse hex color to RGB array — done ONCE, not every frame
+function hexToRgb(hex: string): [number, number, number] {
+  const c = new Color(hex);
+  return [c.r, c.g, c.b];
+}
+
 export interface AuroraProps {
   colorStops?: string[];
   speed?: number;
@@ -125,16 +131,19 @@ export function Aurora(props: AuroraProps) {
 
   const ctnDom = useRef<HTMLDivElement | null>(null);
 
+  // Cache parsed color values — only recompute when colorStops prop changes
+  const cachedColorsRef = useRef<{ key: string; value: [number, number, number][] } | null>(null);
+
   useEffect(() => {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    // Optimize DPR (devicePixelRatio): Limit to max 1.2 to reduce WebGL pixel fill overhead on high-DPI Macbooks
+    // Limit DPR to reduce WebGL pixel fill on high-DPI screens
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true,
-      dpr: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 1.2) : 1
+      antialias: false, // Disable antialiasing — aurora is a soft gradient, AA is wasteful
+      dpr: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 1) : 1 // Cap at 1x DPR
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -162,10 +171,8 @@ export function Aurora(props: AuroraProps) {
       delete geometry.attributes.uv;
     }
 
-    const colorStopsArray = colorStops.map(hex => {
-      const c = new Color(hex);
-      return [c.r, c.g, c.b];
-    });
+    // Parse colors ONCE at init
+    const initialColors = colorStops.map(hexToRgb);
 
     program = new Program(gl, {
       vertex: VERT,
@@ -173,7 +180,7 @@ export function Aurora(props: AuroraProps) {
       uniforms: {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
-        uColorStops: { value: colorStopsArray },
+        uColorStops: { value: initialColors },
         uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
         uBlend: { value: blend }
       }
@@ -182,7 +189,7 @@ export function Aurora(props: AuroraProps) {
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(canvas);
 
-    // Pause WebGL rendering loop when offscreen using IntersectionObserver
+    // Pause WebGL rendering when offscreen
     let isVisible = true;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -192,21 +199,36 @@ export function Aurora(props: AuroraProps) {
     );
     observer.observe(ctn);
 
+    // Throttled render loop — aurora is a slow ambient effect, ~30fps is plenty
     let animateId = 0;
+    let lastRenderTime = 0;
+    const FRAME_INTERVAL = 1000 / 30; // ~30fps cap
+
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
-      if (!isVisible) return; // Skip draw calls when scrolled away
-      
+
+      // Skip if not visible
+      if (!isVisible) return;
+
+      // Throttle to ~30fps
+      const delta = t - lastRenderTime;
+      if (delta < FRAME_INTERVAL) return;
+      lastRenderTime = t - (delta % FRAME_INTERVAL);
+
       const { speed = 1.0 } = propsRef.current;
       const timeVal = t * 0.01;
       program.uniforms.uTime.value = timeVal * speed * 0.1;
       program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
+
+      // Only re-parse colors if the prop array actually changed
       const stops = propsRef.current.colorStops ?? colorStops;
-      program.uniforms.uColorStops.value = stops.map(hex => {
-        const c = new Color(hex);
-        return [c.r, c.g, c.b];
-      });
+      const stopsKey = stops.join(',');
+      if (!cachedColorsRef.current || cachedColorsRef.current.key !== stopsKey) {
+        cachedColorsRef.current = { key: stopsKey, value: stops.map(hexToRgb) };
+      }
+      program.uniforms.uColorStops.value = cachedColorsRef.current.value;
+
       renderer.render({ scene: mesh });
     };
     animateId = requestAnimationFrame(update);

@@ -97,7 +97,6 @@ export function ScrollReveal({
       // Set up from and to animation properties based on selected preset
       const fromVars: gsap.TweenVars = {
         opacity: baseOpacity,
-        willChange: "opacity, filter, transform",
       };
 
       const toVars: gsap.TweenVars = {
@@ -125,24 +124,30 @@ export function ScrollReveal({
       // Main reveal tween (handles opacity and layout/transform variables)
       gsap.fromTo(wordElements, fromVars, toVars);
 
-      // Separate blur tween (only for blur preset)
+      // PERFORMANCE: Blur filter animation is extremely expensive — it forces a
+      // full repaint on every scrub frame for every word element.
+      // Instead of animating blur on scroll, just set initial blur and clear it
+      // with a simple CSS transition when the element comes into view.
       if (enableBlur && preset === "blur") {
-        gsap.fromTo(
-          wordElements,
-          { filter: `blur(${blurStrength}px)` },
-          {
-            ease: "none",
-            filter: "blur(0px)",
-            stagger: 0.05,
-            scrollTrigger: {
-              trigger: el,
-              scroller,
-              start: "top bottom-=20%",
-              end: wordAnimationEnd,
-              scrub: true,
-            },
-          }
+        // Set initial blur via CSS class, let the scrub opacity handle the reveal timing
+        Array.from(wordElements).forEach((word) => {
+          (word as HTMLElement).style.filter = `blur(${blurStrength}px)`;
+          (word as HTMLElement).style.transition = "filter 0.6s ease-out";
+        });
+
+        // Use a single IntersectionObserver to clear blur when section enters view
+        const blurObserver = new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) {
+              Array.from(wordElements).forEach((word) => {
+                (word as HTMLElement).style.filter = "blur(0px)";
+              });
+              blurObserver.disconnect();
+            }
+          },
+          { threshold: 0.1 }
         );
+        blurObserver.observe(el);
       }
     }, el);
 
