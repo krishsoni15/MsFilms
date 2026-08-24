@@ -332,3 +332,11 @@ body {
   transition: none !important;
   animation: none !important;
 }
+
+/* Custom premium focus-visible styles for keyboard navigation */
+*:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--gold), 0 0 20px rgba(197, 168, 128, 0.6) !important;
+  border-radius: inherit;
+  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}

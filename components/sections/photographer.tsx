@@ -6,7 +6,8 @@ import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import BorderGlow from "@/components/ui/border-glow";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -38,7 +39,7 @@ export function AboutPhotographer() {
         }
       );
 
-      // Animate portraits
+      // Animate portraits entrance
       gsap.fromTo(
         ".reveal-image-item",
         { opacity: 0, y: 30, scale: 0.98 },
@@ -56,6 +57,22 @@ export function AboutPhotographer() {
           },
         }
       );
+
+      // Parallax scroll glide effect on the floating secondary image
+      gsap.fromTo(
+        ".floating-portrait",
+        { y: 35 },
+        {
+          y: -35,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.8,
+          }
+        }
+      );
     }, el);
 
     return () => {
@@ -64,12 +81,12 @@ export function AboutPhotographer() {
   }, []);
 
   return (
-    <section 
-      ref={containerRef} 
+    <section
+      ref={containerRef}
       className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#030c16] border-t border-foreground/5 relative overflow-hidden"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center max-w-7xl mx-auto">
-        
+
         {/* Left Column — Editorial Text & Philosophy */}
         <div className="lg:col-span-6 lg:pr-6 order-2 lg:order-1">
           <p className="reveal-text-item text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4 opacity-0">
@@ -84,33 +101,87 @@ export function AboutPhotographer() {
             rotationEnd="bottom center+=20%"
             wordAnimationEnd="bottom center+=45%"
           >
-            Meet Madhav Soni
+            Madhav Soni
           </ScrollReveal>
 
           <p className="reveal-text-item text-[10px] tracking-[0.2em] uppercase text-foreground/40 mb-8 font-sans opacity-0">
             Founder & Lead Visualist
           </p>
 
-          <div className="reveal-text-item space-y-5 font-sans text-sm md:text-base text-foreground/60 leading-relaxed max-w-lg mb-10 opacity-0">
-            <p>
-              Driven by a deep passion for visual storytelling and a meticulous eye for cinematic detail, Madhav founded Msfilms to capture life&apos;s raw, unscripted emotions. He believes that the best photographs are not just staged poses, but the silent, candid moments that tell the true story of how it felt.
+          <div className="reveal-text-item space-y-5 font-sans text-sm md:text-base text-foreground/60 leading-relaxed max-w-lg mb-8 opacity-0">
+            <p className="font-serif italic text-lg text-gold/90">
+              &ldquo;Hey, I&apos;m Madhav, the visualist behind the lens.&rdquo;
             </p>
             <p>
-              For Madhav, photography and filmmaking are not just professions — they are a lifelong dedication to preserving the moments that shape our lives. With a keen artistic eye, he captures the subtle details, the quiet glances, and the raw emotions of your most meaningful days, translating them into timeless visual legacies.
+              Welcome to Msfilms! Driven by a passion for raw emotions and cinematic precision, I specialize in capturing Saskatoon&apos;s most beautiful wedding days and milestone celebrations.
+            </p>
+            <p>
+              I believe the best visual stories are told through quiet, candid moments. By blending artistic direction with a relaxed, comfortable atmosphere, my goal is to help you feel naturally confident in front of the lens while we preserve the memories that shape your life.
             </p>
           </div>
 
-          <div className="reveal-text-item opacity-0">
+          {/* Key highlights (Why Msfilms?) */}
+          <div className="reveal-text-item mb-10 opacity-0 font-sans max-w-lg">
+            <p className="text-[11px] tracking-[0.2em] uppercase text-gold/80 font-semibold mb-4">
+              Why Collaborate With Us?
+            </p>
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
+                  <Check size={11} strokeWidth={3.5} />
+                </div>
+                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">6+ Years of Industry Experience</span>
+              </div>
+              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
+                  <Check size={11} strokeWidth={3.5} />
+                </div>
+                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">Cinema & Photography Combined</span>
+              </div>
+              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
+                  <Check size={11} strokeWidth={3.5} />
+                </div>
+                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">Collaborative, Client-Focused Process</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="reveal-text-item opacity-0 relative inline-block">
+            <BorderGlow
+              edgeSensitivity={20}
+              glowColor="35 85 75"
+              backgroundColor="transparent"
+              borderRadius={9999}
+              glowRadius={30}
+              glowIntensity={1.5}
+              coneSpread={25}
+              animated={false}
+              colors={["#c5a880", "#e5d5be", "#ffffff"]}
+              fillOpacity={0}
+              style={{
+                borderColor: "transparent",
+              }}
+            >
               <Link
                 href="#contact"
-                className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground hover:text-[#061a2b] overflow-hidden group transition-colors duration-500 hover:border-gold"
+                className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none"
+                style={{
+                  background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
+                }}
               >
-                <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
-                <span className="relative z-10 flex items-center gap-3">
-                  Let&apos;s Capture Your Story
-                  <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
+                <span
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
+                  style={{
+                    background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.2) 0%, rgba(197, 168, 128, 0.05) 100%)",
+                  }}
+                />
+                <span className="relative z-10 flex items-center gap-2.5">
+                  Connect With Me
+                  <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
                 </span>
               </Link>
+            </BorderGlow>
           </div>
         </div>
 
@@ -122,7 +193,7 @@ export function AboutPhotographer() {
                 src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
                 alt="Madhav Soni — Founder & Lead Photographer of Msfilms"
                 fill
-                className="object-cover grayscale transition-transform duration-[1.8s] ease-out group-hover:scale-105"
+                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 45vw"
               />
             </div>
@@ -131,17 +202,19 @@ export function AboutPhotographer() {
           </div>
 
           {/* Overlapping secondary image — parallax floating */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] overflow-hidden shadow-2xl border border-gold/15 rounded-2xl group/sub opacity-0">
-            <Image
-              src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
-              alt="Madhav Soni in action behind the lens"
-              fill
-              className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-110"
-              sizes="30vw"
-            />
-            <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
-            <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1.5 text-[9px] tracking-[0.2em] uppercase text-white/80 z-20">
-              Madhav Soni
+          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] shadow-2xl border border-gold/15 rounded-2xl group/sub opacity-0 overflow-visible">
+            <div className="floating-portrait w-full h-full relative rounded-[inherit] overflow-hidden">
+              <Image
+                src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
+                alt="Madhav Soni in action behind the lens"
+                fill
+                className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-110"
+                sizes="30vw"
+              />
+              <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
+              <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1.5 text-[9px] tracking-[0.2em] uppercase text-white/80 z-20">
+                Madhav Soni
+              </div>
             </div>
           </div>
         </div>

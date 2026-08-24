@@ -47,7 +47,7 @@ export function ScrollExpand({
   mediaZoom = 1.35,
   scrollDistance = 1.2,
   holdDistance = 0.35,
-  smoothing = 0.1,
+  smoothing = 0.8,
   overlayScrim = 0.45,
   useWindowScroll = true,
   enabled = true,
@@ -87,8 +87,28 @@ export function ScrollExpand({
           // The total scroll duration of the pinning action
           end: `+=${window.innerHeight * scrollDistance}`,
           pin: true,
-          scrub: true,
+          scrub: smoothing,
           anticipatePin: 1,
+          onEnter: () => {
+            if (mediaType === "video" && media instanceof HTMLVideoElement) {
+              media.play().catch(() => {});
+            }
+          },
+          onEnterBack: () => {
+            if (mediaType === "video" && media instanceof HTMLVideoElement) {
+              media.play().catch(() => {});
+            }
+          },
+          onLeave: () => {
+            if (mediaType === "video" && media instanceof HTMLVideoElement) {
+              media.pause();
+            }
+          },
+          onLeaveBack: () => {
+            if (mediaType === "video" && media instanceof HTMLVideoElement) {
+              media.pause();
+            }
+          },
         },
       });
 
@@ -102,9 +122,8 @@ export function ScrollExpand({
       if (hintRef.current) gsap.set(hintRef.current, { opacity: 1, y: 0 });
       if (overlayRef.current) gsap.set(overlayRef.current, { opacity: 0, y: 20, pointerEvents: "none" });
 
-      // Build symmetric animation by tracking raw progress state
+      // Animate clipPath, scale, and scrim opacity mathematically for perfect centering and rendering stability
       const stateObj = { progress: 0 };
-
       tl.to(
         stateObj,
         {
@@ -196,39 +215,20 @@ export function ScrollExpand({
     scrollDistance,
     holdDistance,
     overlayScrim,
+    mediaType,
   ]);
-
-  // Lazy-load video playback — only start when visible to avoid CPU/GPU waste on page load
-  const [videoShouldPlay, setVideoShouldPlay] = useState(false);
-  useEffect(() => {
-    if (mediaType !== "video") return;
-    const root = rootRef.current;
-    if (!root) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVideoShouldPlay(true);
-          observer.disconnect(); // Only need to trigger once
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(root);
-    return () => observer.disconnect();
-  }, [mediaType]);
 
   const mediaElement =
     mediaType === "video" ? (
       <video
         ref={mediaRef as React.RefObject<HTMLVideoElement>}
         className="scroll-expand__media"
-        src={videoShouldPlay ? src : undefined}
+        src={src}
         poster={poster}
-        autoPlay={videoShouldPlay}
         muted
         loop
         playsInline
-        preload="none"
+        preload="metadata"
       />
     ) : (
       <img

@@ -19,7 +19,7 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
     setIsHovered(true);
     if (videoRef.current && film.videoUrl) {
       setIsVideoLoading(true);
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch(() => { });
     }
   };
 
@@ -52,9 +52,8 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
             src={film.poster}
             alt={`${film.title} film poster`}
             fill
-            className={`object-cover transition-all duration-[1.4s] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              isHovered ? "scale-[1.05] brightness-[0.35]" : "scale-100 brightness-[0.65]"
-            }`}
+            className={`object-cover transition-all duration-[1.4s] ease-[cubic-bezier(0.16,1,0.3,1)] ${isHovered ? "scale-[1.05] brightness-[0.35]" : "scale-100 brightness-[0.65]"
+              }`}
             sizes="(max-width: 768px) 100vw, 50vw"
           />
 
@@ -69,9 +68,8 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
               preload="none"
               onPlaying={() => setIsVideoLoading(false)}
               onError={() => setIsVideoLoading(false)}
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-                isHovered && !isVideoLoading ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${isHovered && !isVideoLoading ? "opacity-100" : "opacity-0"
+                }`}
             />
           )}
 
@@ -98,11 +96,10 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
                 </p>
               </div>
 
-              <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border flex items-center justify-center backdrop-blur-md transition-all duration-500 ${
-                isHovered
+              <div className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border flex items-center justify-center backdrop-blur-md transition-all duration-500 ${isHovered
                   ? "bg-white text-black border-white scale-110 shadow-[0_0_40px_rgba(196,163,90,0.4)]"
                   : "bg-black/30 text-white border-white/30"
-              }`}>
+                }`}>
                 {isHovered && isVideoLoading ? (
                   <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
                 ) : (

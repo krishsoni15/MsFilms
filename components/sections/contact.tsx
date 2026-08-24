@@ -6,6 +6,7 @@ import { AnimatedText } from "@/components/animated-text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import BorderGlow from "@/components/ui/border-glow";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
   return (
@@ -20,12 +21,12 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
       />
       <label
         htmlFor={id}
-        className="absolute left-0 top-4 text-[11px] text-foreground/35 tracking-[0.15em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-foreground/50 peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px]"
+        className="absolute left-0 top-4 text-[11px] text-foreground/35 tracking-[0.15em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px]"
       >
         {label}
       </label>
       {/* Gold focus line animation */}
-      <span className="absolute bottom-0 left-0 h-px w-0 bg-gold transition-all duration-500 ease-out peer-focus:w-full" />
+      <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-gold transition-all duration-500 ease-out peer-focus:w-full" />
     </div>
   );
 }
@@ -123,21 +124,49 @@ export function Contact() {
                     />
                     <label
                       htmlFor="message"
-                      className="absolute left-0 top-4 text-[11px] text-foreground/35 tracking-[0.15em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-foreground/50 peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px]"
+                      className="absolute left-0 top-4 text-[11px] text-foreground/35 tracking-[0.15em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px]"
                     >
                       Tell us about your plans
                     </label>
-                    <span className="absolute bottom-0 left-0 h-px w-0 bg-gold transition-all duration-500 ease-out peer-focus:w-full" />
+                    <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-gold transition-all duration-500 ease-out peer-focus:w-full" />
                   </div>
 
-                  <button
-                    type="submit"
-                    className="relative inline-flex items-center gap-4 bg-foreground text-background px-11 py-[18px] text-[12px] tracking-[0.25em] uppercase overflow-hidden group"
-                  >
-                    <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
-                    <span className="relative z-10 group-hover:text-foreground transition-colors duration-500">Start Your Story</span>
-                    <ArrowRight size={14} className="relative z-10 transform group-hover:translate-x-1.5 group-hover:text-foreground transition-all duration-300" />
-                  </button>
+                  <div className="relative shrink-0 inline-block">
+                    <BorderGlow
+                      edgeSensitivity={20}
+                      glowColor="35 85 75"
+                      backgroundColor="transparent"
+                      borderRadius={9999}
+                      glowRadius={30}
+                      glowIntensity={1.5}
+                      coneSpread={25}
+                      animated={false}
+                      colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                      fillOpacity={0}
+                      style={{
+                        borderColor: "transparent",
+                      }}
+                    >
+                      <button
+                        type="submit"
+                        className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none cursor-pointer"
+                        style={{
+                          background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
+                        }}
+                      >
+                        <span
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
+                          style={{
+                            background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.2) 0%, rgba(197, 168, 128, 0.05) 100%)",
+                          }}
+                        />
+                        <span className="relative z-10 flex items-center gap-2.5">
+                          Start Your Story
+                          <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
+                        </span>
+                      </button>
+                    </BorderGlow>
+                  </div>
                 </motion.form>
               ) : (
                 <motion.div
