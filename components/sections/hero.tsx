@@ -143,6 +143,16 @@ export function Hero({
   const [isLoaded, setIsLoaded] = useState(false);
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
@@ -200,11 +210,11 @@ export function Hero({
       className="relative w-full bg-background overflow-hidden lg:min-h-svh lg:flex lg:flex-col"
     >
       {/* ── Aurora WebGL Background ── */}
-      <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
+      <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
         <Aurora
           colorStops={["#081730", "#cba358", "#4e7bb0"]}
-          blend={0.65}
-          amplitude={1.3}
+          blend={isMobile ? 0.9 : 0.65}
+          amplitude={isMobile ? 0.65 : 1.3}
           speed={0.45}
         />
       </div>
@@ -291,13 +301,13 @@ export function Hero({
 
       {/* ── Main Content ── */}
       <div className="lg:flex-1 relative max-w-[1440px] mx-auto w-full px-5 lg:px-14 lg:px-20 xl:px-24 pt-20 lg:pt-24 lg:pt-[88px] pb-4 lg:pb-6 lg:flex lg:flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-[4.5fr_5.5fr] gap-8 lg:gap-6 lg:gap-8 lg:flex-1 relative">
+        <div className="grid grid-cols-1 lg:grid-cols-[4.5fr_5.5fr] gap-4 lg:gap-6 lg:gap-8 lg:flex-1 relative">
           {/* ─── LEFT COLUMN: Text Content ─── */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={isLoaded ? { opacity: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex flex-col justify-between order-2 lg:order-1 py-4 lg:py-6 lg:py-10 lg:h-full lg:transform lg:translate-x-[16%] lg:-translate-y-[10%]"
+            className="flex flex-col justify-between order-2 lg:order-1 pt-1 pb-4 lg:py-6 lg:py-10 lg:h-full lg:transform lg:translate-x-[16%] lg:-translate-y-[10%]"
           >
             {/* Text Content */}
             <div className="flex flex-col justify-center flex-1 flex-shrink-0">
@@ -391,7 +401,7 @@ export function Hero({
                         }}
                       />
                       <span className="relative z-10 flex items-center gap-2.5">
-                        Let&apos;s Connect
+                        Let&apos;s Talk
                         <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
                       </span>
                     </a>
@@ -458,7 +468,7 @@ export function Hero({
                 delay: 0.4,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 top-0 w-[70%] lg:w-[48.7%] h-[85%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
+              className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
               style={{ y: y1 }}
             >
               <CategoryImage
@@ -467,7 +477,6 @@ export function Hero({
                 alt={`${currentCategory.id} hero arched`}
                 delay={0}
               />
-              <div className="absolute inset-[10px] border border-gold/25 rounded-t-full pointer-events-none z-20" />
               {/* Interactive BorderGlow overlay */}
               <BorderGlow
                 borderRadius={0}
@@ -506,7 +515,6 @@ export function Hero({
                 alt={`${currentCategory.id} detail top`}
                 delay={0.1}
               />
-              <div className="absolute inset-[10px] border border-gold/15 rounded-[4px] pointer-events-none z-20" />
               {/* Interactive BorderGlow overlay */}
               <BorderGlow
                 borderRadius={6}
@@ -547,7 +555,6 @@ export function Hero({
                 alt={`${currentCategory.id} detail bottom`}
                 delay={0.4}
               />
-              <div className="absolute inset-[10px] border border-gold/15 rounded-[4px] pointer-events-none z-20" />
               {/* Interactive BorderGlow overlay */}
               <BorderGlow
                 borderRadius={6}
@@ -591,7 +598,6 @@ export function Hero({
               delay={0.2}
               useBottomImages={true}
             />
-            <div className="absolute inset-[10px] border border-gold/15 rounded-[4px] pointer-events-none z-20" />
             {/* Interactive BorderGlow overlay */}
             <BorderGlow
               borderRadius={6}
@@ -633,7 +639,6 @@ export function Hero({
               delay={0.3}
               useBottomImages={true}
             />
-            <div className="absolute inset-[10px] border border-gold/15 rounded-[4px] pointer-events-none z-20" />
             {/* Interactive BorderGlow overlay */}
             <BorderGlow
               borderRadius={6}

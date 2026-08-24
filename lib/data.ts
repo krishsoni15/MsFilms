@@ -11,7 +11,7 @@ export const siteData = {
   locationShort: "Saskatoon · Canada",
   email: "contactus.msfilms@gmail.com",
   social: {
-    instagram: "https://instagram.com",
+    instagram: "https://www.instagram.com/msfilms._/",
   },
   booking: "2026 — 2027",
   bookingBadge: "Now Booking 2026 – 2027",

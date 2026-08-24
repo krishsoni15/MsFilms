@@ -6,7 +6,7 @@ import { siteData } from "@/lib/data";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import BorderGlow from "@/components/ui/border-glow";
-import { Phone, Mail, MessageCircle, X, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, MessageCircle, X, ArrowUpRight, Home, User, Film } from "lucide-react";
 
 // Instagram icon (not available in this lucide-react version)
 const InstagramIcon = ({ className }: { className?: string }) => (
@@ -21,8 +21,8 @@ const InstagramIcon = ({ className }: { className?: string }) => (
 const connectLinks = [
   {
     label: "Instagram",
-    subtitle: "@msfilms",
-    href: "https://instagram.com/msfilms",
+    subtitle: "@msfilms._",
+    href: "https://www.instagram.com/msfilms._/",
     icon: InstagramIcon,
     color: "hover:text-[#E1306C]",
     iconBgHover: "group-hover:bg-[#E1306C]/10 group-hover:border-[#E1306C]/20 group-hover:text-[#E1306C]",
@@ -55,11 +55,13 @@ const connectLinks = [
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [connectOpen, setConnectOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const connectRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     let ticking = false;
@@ -68,7 +70,28 @@ export function Navigation() {
       ticking = true;
       requestAnimationFrame(() => {
         ticking = false;
-        setIsScrolled(window.scrollY > 40);
+        const currentScrollY = window.scrollY;
+        const heroThreshold = window.innerHeight * 0.95;
+
+        setIsScrolled(currentScrollY > heroThreshold);
+
+        // Smart show/hide navbar based on scroll direction and context
+        const isMobile = window.innerWidth < 1024;
+        if (isMobile) {
+          setVisible(true);
+        } else {
+          if (currentScrollY <= 40) {
+            setVisible(true);
+          } else if (currentScrollY > 40 && currentScrollY <= window.innerHeight * 1.85) {
+            // Hide during hero video expansion and AboutStudio section to prevent clutter
+            setVisible(false);
+          } else {
+            // Show on all subsequent sections (Photographer, Work, Contact)
+            setVisible(true);
+          }
+        }
+
+        lastScrollY.current = currentScrollY;
 
         // Detect active section on scroll
         const sectionIds = ["home", "about", "work", "contact"];
@@ -149,11 +172,17 @@ export function Navigation() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className="fixed top-0 left-0 right-0 px-4 sm:px-6 lg:px-10"
+        className={`fixed top-0 left-0 right-0 transition-all duration-500 bg-transparent border-b border-transparent ${
+          !visible
+            ? "opacity-0 -translate-y-12 pointer-events-none"
+            : "opacity-100 translate-y-0"
+        } ${isScrolled
+          ? "py-2.5 px-4 sm:px-6 lg:px-10"
+          : "py-4 px-4 sm:px-6 lg:px-10"
+          }`}
       >
         <div
-          className={`flex items-center justify-between max-w-[1440px] mx-auto transition-all duration-500 ease-out ${isScrolled ? "py-2 mt-1.5" : "py-3 mt-2"
-            }`}
+          className="flex items-center justify-between max-w-[1440px] mx-auto"
         >
           {/* Logo */}
           <Link href="/" className="z-50 relative flex items-center shrink-0">
@@ -181,7 +210,7 @@ export function Navigation() {
                 const isActive = activeSection === sectionId;
                 const isHighlighted = hoveredSection !== null ? hoveredSection === sectionId : isActive;
                 return (
-                  <Link
+                  <a
                     key={link.label}
                     href={link.href}
                     onMouseEnter={() => setHoveredSection(sectionId)}
@@ -203,7 +232,7 @@ export function Navigation() {
                       />
                     )}
                     <span className="relative z-10">{link.label}</span>
-                  </Link>
+                  </a>
                 );
               })}
             </div>
@@ -261,7 +290,7 @@ export function Navigation() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.95 }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute right-0 top-full mt-3 min-w-[260px] rounded-2xl border border-white/[0.08] bg-gradient-to-b from-[#0a1628]/98 to-[#050e1b]/98 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] p-2 z-50 flex flex-col gap-1"
+                  className="absolute right-0 top-full mt-3 min-w-[280px] z-50 rounded-2xl border border-white/10 bg-[#060f1b]/70 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.7),0_0_30px_rgba(197,168,128,0.03)] p-2.5 flex flex-col gap-1.5 overflow-hidden"
                 >
                   {connectLinks.map((item, i) => (
                     <a
@@ -276,17 +305,17 @@ export function Navigation() {
                           : undefined
                       }
                       onClick={() => setConnectOpen(false)}
-                      className="group flex items-center justify-between p-2 rounded-xl transition-all duration-300 hover:bg-white/[0.05] active:scale-[0.98]"
+                      className="group flex items-center justify-between p-2.5 rounded-xl transition-all duration-300 hover:bg-white/[0.04] active:scale-[0.98]"
                     >
                       <div className="flex items-center gap-3.5">
-                        <div className={`p-2 rounded-lg bg-white/[0.02] border border-white/[0.03] text-white/60 transition-all duration-300 ${item.iconBgHover}`}>
+                        <div className="p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04] text-white/50 transition-all duration-300 group-hover:bg-gold/10 group-hover:border-gold/25 group-hover:text-gold">
                           <item.icon className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[11px] font-medium tracking-[0.15em] uppercase font-sans text-white/80 group-hover:text-white transition-colors duration-300">
+                          <span className="text-[10px] font-semibold tracking-[0.18em] uppercase font-sans text-white/70 group-hover:text-white transition-colors duration-300">
                             {item.label}
                           </span>
-                          <span className="text-[9px] tracking-wide text-white/35 group-hover:text-white/55 transition-colors duration-300 mt-0.5 max-w-[150px] truncate">
+                          <span className="text-[9px] tracking-wide text-white/30 group-hover:text-white/50 transition-colors duration-300 mt-0.5 max-w-[170px] truncate">
                             {item.subtitle}
                           </span>
                         </div>
@@ -321,51 +350,64 @@ export function Navigation() {
         </div>
       </motion.header>
 
+
       {/* ─── Fullscreen Mobile Menu ─── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            key="mobile-menu-scrim"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 bg-[#020912]/98 backdrop-blur-md z-[9998] flex flex-col"
+            transition={{ duration: 0.3 }}
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9990]"
+          />
+        )}
+        {mobileOpen && (
+          <motion.div
+            key="mobile-menu-drawer"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 220 }}
+            style={{ zIndex: 9995 }}
+            className="fixed top-0 right-0 bottom-0 h-full w-full sm:w-[440px] md:w-[480px] bg-gradient-to-b from-[#030914] via-[#050d1a] to-[#0e0a05] border-l border-gold/15 backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.8)] p-0 flex flex-col"
           >
-            {/* Close button */}
-            <div className="flex justify-end px-6 pt-6">
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 hover:border-white/30 transition-colors"
-                aria-label="Close menu"
-              >
-                <X className="w-4 h-4 text-white/70" />
-              </button>
-            </div>
+            {/* Nav Links (padded at top to clear logo & animated close hamburger from header) */}
+            <nav className="flex-1 flex flex-col justify-center px-8 sm:px-12 gap-1 pt-[110px] pb-6">
+              <motion.div
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: 48, opacity: 0.5 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ delay: 0.1 }}
+                className="h-px bg-gold mb-6"
+              />
 
-            {/* Nav Links */}
-            <nav className="flex-1 flex flex-col justify-center px-10 gap-2">
               {links.map((link, i) => {
                 const isActive = activeSection === link.href.substring(1);
                 return (
                   <motion.div
                     key={link.label}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: 25 }}
                     animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 25 }}
                     transition={{
-                      delay: 0.1 + i * 0.08,
-                      duration: 0.5,
+                      delay: 0.05 + i * 0.06,
+                      duration: 0.4,
+                      ease: [0.16, 1, 0.3, 1]
                     }}
                   >
-                    <Link
+                    <a
                       href={link.href}
-                      className={`block py-3 font-laluxes-serif text-4xl sm:text-5xl transition-all duration-300 hover:translate-x-3 ${isActive
-                        ? "text-gold"
-                        : "text-white/70 hover:text-white"
+                      className={`block py-3 font-laluxes-serif text-4xl sm:text-5xl transition-all duration-300 hover:translate-x-2.5 ${isActive
+                        ? "text-gold font-medium"
+                        : "text-white/70 hover:text-gold"
                         }`}
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </motion.div>
                 );
               })}
@@ -373,13 +415,19 @@ export function Navigation() {
 
             {/* Bottom: Social Links + Logo */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="px-10 pb-10 space-y-6"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 15 }}
+              transition={{ delay: 0.25, duration: 0.4 }}
+              className="px-8 sm:px-12 pb-10 border-t border-white/[0.05] pt-8 space-y-6"
             >
+              {/* Connect Label */}
+              <p className="text-[9px] tracking-[0.2em] uppercase text-white/30 font-sans">
+                Connect With Us
+              </p>
+
               {/* Social icons row */}
-              <div className="flex items-center gap-5">
+              <div className="flex flex-wrap gap-2.5">
                 {connectLinks.map((item) => (
                   <a
                     key={item.label}
@@ -393,23 +441,24 @@ export function Navigation() {
                         : undefined
                     }
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center justify-center w-11 h-11 rounded-full border border-white/10 text-white/50 ${item.color} hover:border-white/25 transition-all duration-300`}
+                    className="group flex items-center gap-2 px-4.5 py-3 rounded-full border border-white/10 bg-white/[0.03] text-white/70 hover:text-gold-light hover:border-gold/45 hover:bg-gold/[0.06] transition-all duration-300 text-[10px] tracking-[0.15em] uppercase font-sans active:scale-[0.97]"
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110" />
+                    <span>{item.label}</span>
                   </a>
                 ))}
               </div>
 
               {/* Logo */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between border-t border-white/[0.05] pt-6">
                 <Image
                   src={siteData.logo}
                   alt={siteData.name}
-                  width={120}
-                  height={35}
-                  className="h-8 w-auto object-contain brightness-100 opacity-60"
+                  width={110}
+                  height={32}
+                  className="h-7 w-auto object-contain brightness-100 opacity-55"
                 />
-                <p className="text-white/25 text-[10px] tracking-[0.15em] uppercase font-sans">
+                <p className="text-white/20 text-[9px] tracking-[0.15em] uppercase font-sans">
                   {siteData.locationShort}
                 </p>
               </div>
