@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
+import BorderGlow from "./border-glow";
 import "./accordion-gallery.css";
 
 export interface AccordionItem {
@@ -235,12 +236,23 @@ export function AccordionGallery({
                 className="ag-panel__media"
                 ref={(el: HTMLSpanElement | null) => { mediaRefs.current[i] = el; }}
               >
-                <Image src={item.image} alt={item.alt || item.label || ""} fill className="object-cover" draggable="false" />
+                <Image
+                  src={item.image}
+                  alt={item.alt || item.label || ""}
+                  fill
+                  className="object-cover"
+                  draggable="false"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 30vw"
+                />
               </span>
               <span
                 className="ag-panel__overlay"
                 ref={(el: HTMLSpanElement | null) => { overlayRefs.current[i] = el; }}
                 aria-hidden="true"
+              />
+              <span
+                className="absolute inset-[10px] border border-gold/15 pointer-events-none z-10"
+                style={{ borderRadius: `${Math.max(0, radius - 10)}px` }}
               />
             </span>
             {showLabels && (
@@ -251,6 +263,26 @@ export function AccordionGallery({
                 </span>
               </span>
             )}
+            {/* Interactive BorderGlow rendered on top of the image to show hover and shine effect */}
+            <BorderGlow
+              borderRadius={radius}
+              backgroundColor="transparent"
+              glowColor="35 85 75"
+              glowRadius={40}
+              glowIntensity={1.5}
+              edgeSensitivity={20}
+              coneSpread={25}
+              colors={["#c5a880", "#e5d5be", "#ffffff"]}
+              fillOpacity={0.12}
+              className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+              style={{
+                borderRadius: `${radius}px`,
+                borderColor: "rgba(197, 168, 128, 0.15)",
+                boxShadow: "none",
+              }}
+            >
+              <div className="w-full h-full" />
+            </BorderGlow>
           </div>
         );
       })}

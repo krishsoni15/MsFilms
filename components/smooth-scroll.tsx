@@ -58,39 +58,32 @@ export function SmoothScroll() {
     };
     document.addEventListener("click", handleAnchorClick);
 
-    // Stop Lenis if preloader is active, start it when preloader is gone
-    const checkPreloader = () => {
-      const isPreloaderActive =
-        document.documentElement.classList.contains("preloader-active") ||
-        !!document.getElementById("preloader");
-      if (isPreloaderActive) {
-        lenis.stop();
-      } else {
-        lenis.start();
-        // Recalculate ScrollTrigger markers once DOM layout height is final
-        setTimeout(() => {
-          ScrollTrigger.refresh();
-        }, 150);
-      }
-    };
+    // ONE-TIME preloader detection — no MutationObserver needed.
+    // Check if preloader is active. If so, stop Lenis and poll until it's gone.
+    // Once it's gone, start Lenis, refresh ScrollTrigger once, and stop polling.
+    const isPreloaderActive = () =>
+      document.documentElement.classList.contains("preloader-active") ||
+      !!document.getElementById("preloader");
 
-    checkPreloader();
-
-    const observer = new MutationObserver(() => {
-      checkPreloader();
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      childList: true,
-      subtree: true,
-    });
+    if (isPreloaderActive()) {
+      lenis.stop();
+      const pollId = setInterval(() => {
+        if (!isPreloaderActive()) {
+          clearInterval(pollId);
+          lenis.start();
+          // Single refresh after preloader is fully gone and DOM has settled
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
+          });
+        }
+      }, 200);
+    }
 
     return () => {
       delete (window as any).lenis;
       lenis.destroy();
       cancelAnimationFrame(rafId);
       document.removeEventListener("click", handleAnchorClick);
-      observer.disconnect();
     };
   }, []);
 

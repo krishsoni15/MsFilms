@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { gsap } from "gsap";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -33,10 +33,7 @@ const getContainingBlockOffset = (block: HTMLElement | null) => {
 
 export function CustomCursor() {
   const targetSelector = "a, button, [data-cursor-text], [data-cursor], .cursor-pointer, input, select, textarea";
-  const spinDuration = 25; // Viewfinder continuous slow rotation time in seconds
   const hideDefaultCursor = true;
-  const hoverDuration = 0.22;
-  const parallaxOn = true;
   const cursorColor = "rgba(255, 255, 255, 0.65)";
   const cursorColorOnTarget = "#ffffff"; // Target white
 
@@ -51,10 +48,6 @@ export function CustomCursor() {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isPreloaderPresent, setIsPreloaderPresent] = useState(true);
 
-  const activeTargetRef = useRef<HTMLElement | null>(null);
-  const targetCornerPositionsRef = useRef<{ x: number; y: number }[] | null>(null);
-  const activeStrengthRef = useRef(0);
-  const tickerFnRef = useRef<(() => void) | null>(null);
   const mousePositionRef = useRef({ x: 0, y: 0 });
 
   // Disable custom cursor on mobile, touch screens, and reduced-motion settings
@@ -72,21 +65,21 @@ export function CustomCursor() {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-  // Monitor DOM for preloader container unmounting to show cursor only after loading finishes
+  // One-time preloader detection — poll briefly then stop permanently
   useEffect(() => {
-    const checkPreloader = () => {
-      const preloader = document.getElementById("preloader");
-      setIsPreloaderPresent(!!preloader);
-    };
-
-    checkPreloader();
-
-    const observer = new MutationObserver(() => {
-      checkPreloader();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    const check = () => !!document.getElementById("preloader");
+    if (!check()) {
+      setIsPreloaderPresent(false);
+      return;
+    }
+    // Preloader is present — poll every 300ms until it's gone, then stop
+    const pollId = setInterval(() => {
+      if (!check()) {
+        setIsPreloaderPresent(false);
+        clearInterval(pollId);
+      }
+    }, 300);
+    return () => clearInterval(pollId);
   }, []);
 
   // Dynamically toggle body native cursor visibility based on preloader state
@@ -125,14 +118,6 @@ export function CustomCursor() {
     };
     updateOffset();
 
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.08, ease: "power3.out" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.08, ease: "power3.out" });
-
-    const moveCursor = (clientX: number, clientY: number) => {
-      xTo(clientX - offsetX);
-      yTo(clientY - offsetY);
-    };
-
     let activeTarget: HTMLElement | null = null;
     let currentLeaveHandler: (() => void) | null = null;
 
@@ -143,12 +128,41 @@ export function CustomCursor() {
       currentLeaveHandler = null;
     };
 
+    // Rest positions
+    const cornerSize = constants.cornerSize;
+    const restPositions = [
+      { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
+      { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
+      { x: cornerSize * 0.5, y: cornerSize * 0.5 },
+      { x: -cornerSize * 1.5, y: cornerSize * 0.5 }
+    ];
+
+    // Animated positions in memory
+    const cursorX = { current: window.innerWidth / 2 - offsetX };
+    const cursorY = { current: window.innerHeight / 2 - offsetY };
+    const cornerPositions = [
+      { x: restPositions[0].x, y: restPositions[0].y },
+      { x: restPositions[1].x, y: restPositions[1].y },
+      { x: restPositions[2].x, y: restPositions[2].y },
+      { x: restPositions[3].x, y: restPositions[3].y }
+    ];
+
+    let targetCornerPositions: { x: number; y: number }[] | null = null;
+
+    // Set initial position
     gsap.set(cursor, {
       xPercent: -50,
       yPercent: -50,
-      x: window.innerWidth / 2 - offsetX,
-      y: window.innerHeight / 2 - offsetY
+      x: cursorX.current,
+      y: cursorY.current
     });
+    
+    // Position corners initially
+    if (cornersRef.current) {
+      Array.from(cornersRef.current).forEach((corner, i) => {
+        gsap.set(corner, { x: restPositions[i].x, y: restPositions[i].y });
+      });
+    }
 
     // Viewfinder slow continuous breathing rotation tween (targets ONLY the inner guides, keeping brackets straight)
     const rotationTween = gsap.to(guidesRef.current, {
@@ -158,45 +172,42 @@ export function CustomCursor() {
       repeat: -1
     });
 
-    // Custom GSAP ticker loop to animate lock-on corner brackets smoothly
-    const tickerFn = () => {
-      if (!targetCornerPositionsRef.current || !cursorRef.current || !cornersRef.current) {
-        return;
+    // Single high-performance requestAnimationFrame loop with zero DOM reads
+    let rafId = 0;
+    const tick = () => {
+      const targetCursorX = mousePositionRef.current.x - offsetX;
+      const targetCursorY = mousePositionRef.current.y - offsetY;
+      cursorX.current += (targetCursorX - cursorX.current) * 0.15;
+      cursorY.current += (targetCursorY - cursorY.current) * 0.15;
+
+      gsap.set(cursor, { x: cursorX.current, y: cursorY.current });
+
+      if (cornersRef.current) {
+        const corners = Array.from(cornersRef.current);
+        corners.forEach((corner, i) => {
+          let destX = restPositions[i].x;
+          let destY = restPositions[i].y;
+
+          if (targetCornerPositions) {
+            destX = targetCornerPositions[i].x - cursorX.current;
+            destY = targetCornerPositions[i].y - cursorY.current;
+          }
+
+          cornerPositions[i].x += (destX - cornerPositions[i].x) * 0.18;
+          cornerPositions[i].y += (destY - cornerPositions[i].y) * 0.18;
+
+          gsap.set(corner, { x: cornerPositions[i].x, y: cornerPositions[i].y });
+        });
       }
 
-      const strength = activeStrengthRef.current;
-      if (strength === 0) return;
-
-      const cursorX = gsap.getProperty(cursorRef.current, "x") as number;
-      const cursorY = gsap.getProperty(cursorRef.current, "y") as number;
-
-      const corners = Array.from(cornersRef.current);
-      corners.forEach((corner, i) => {
-        const currentX = gsap.getProperty(corner, "x") as number;
-        const currentY = gsap.getProperty(corner, "y") as number;
-
-        const targetX = targetCornerPositionsRef.current![i].x - cursorX;
-        const targetY = targetCornerPositionsRef.current![i].y - cursorY;
-
-        const finalX = currentX + (targetX - currentX) * strength;
-        const finalY = currentY + (targetY - currentY) * strength;
-
-        const duration = strength >= 0.99 ? (parallaxOn ? 0.22 : 0) : 0.05;
-
-        gsap.set(corner, {
-          x: finalX,
-          y: finalY
-        });
-      });
+      rafId = requestAnimationFrame(tick);
     };
-
-    tickerFnRef.current = tickerFn;
+    rafId = requestAnimationFrame(tick);
 
     const moveHandler = (e: MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY };
-      moveCursor(e.clientX, e.clientY);
     };
-    window.addEventListener("mousemove", moveHandler);
+    window.addEventListener("mousemove", moveHandler, { passive: true });
 
     // Track scroll events to release lock-on brackets if scrolling causes mouse to leave boundaries
     const scrollHandler = () => {
@@ -253,9 +264,8 @@ export function CustomCursor() {
       setCursorText(text);
 
       const corners = Array.from(cornersRef.current);
-      corners.forEach(corner => gsap.killTweensOf(corner, "x,y"));
 
-      // Change colors to target gold
+      // Change colors to target white
       gsap.to(corners, {
         borderColor: cursorColorOnTarget,
         duration: 0.15,
@@ -270,42 +280,18 @@ export function CustomCursor() {
       }
 
       const rect = target.getBoundingClientRect();
-      const { borderWidth, cornerSize, padding } = constants;
-      const cursorX = gsap.getProperty(cursor, "x") as number;
-      const cursorY = gsap.getProperty(cursor, "y") as number;
+      const { borderWidth, padding } = constants;
 
       // Calculate targeting box corners with padding
-      targetCornerPositionsRef.current = [
+      targetCornerPositions = [
         { x: rect.left - borderWidth - padding - offsetX, y: rect.top - borderWidth - padding - offsetY },
         { x: rect.right + borderWidth + padding - cornerSize - offsetX, y: rect.top - borderWidth - padding - offsetY },
         { x: rect.right + borderWidth + padding - cornerSize - offsetX, y: rect.bottom + borderWidth + padding - cornerSize - offsetY },
         { x: rect.left - borderWidth - padding - offsetX, y: rect.bottom + borderWidth + padding - cornerSize - offsetY }
       ];
 
-      gsap.ticker.add(tickerFnRef.current!);
-
-      gsap.to(activeStrengthRef, {
-        current: 1,
-        duration: hoverDuration,
-        ease: "power2.out"
-      });
-
-      corners.forEach((corner, i) => {
-        gsap.to(corner, {
-          x: targetCornerPositionsRef.current![i].x - cursorX,
-          y: targetCornerPositionsRef.current![i].y - cursorY,
-          duration: 0.25,
-          ease: "power2.out"
-        });
-      });
-
       const leaveHandler = () => {
-        if (tickerFnRef.current) {
-          gsap.ticker.remove(tickerFnRef.current);
-        }
-
-        targetCornerPositionsRef.current = null;
-        gsap.set(activeStrengthRef, { current: 0, overwrite: true });
+        targetCornerPositions = null;
         activeTarget = null;
         setIsHovering(false);
         setCursorText(null);
@@ -326,27 +312,6 @@ export function CustomCursor() {
           });
         }
 
-        // Return corners to rest state
-        if (cornersRef.current) {
-          const corners = Array.from(cornersRef.current);
-          gsap.killTweensOf(corners, "x,y");
-          const { cornerSize } = constants;
-          const positions = [
-            { x: -cornerSize * 1.5, y: -cornerSize * 1.5 },
-            { x: cornerSize * 0.5, y: -cornerSize * 1.5 },
-            { x: cornerSize * 0.5, y: cornerSize * 0.5 },
-            { x: -cornerSize * 1.5, y: cornerSize * 0.5 }
-          ];
-          corners.forEach((corner, index) => {
-            gsap.to(corner, {
-              x: positions[index].x,
-              y: positions[index].y,
-              duration: 0.35,
-              ease: "power3.out"
-            });
-          });
-        }
-
         cleanupTarget(target);
       };
 
@@ -363,10 +328,7 @@ export function CustomCursor() {
     window.addEventListener("resize", resizeHandler);
 
     return () => {
-      if (tickerFnRef.current) {
-        gsap.ticker.remove(tickerFnRef.current);
-      }
-
+      cancelAnimationFrame(rafId);
       window.removeEventListener("mousemove", moveHandler);
       window.removeEventListener("mouseover", enterHandler);
       window.removeEventListener("scroll", scrollHandler);
@@ -379,18 +341,13 @@ export function CustomCursor() {
       }
 
       rotationTween.kill();
-
-      targetCornerPositionsRef.current = null;
-      activeStrengthRef.current = 0;
+      targetCornerPositions = null;
     };
   }, [
     targetSelector,
-    spinDuration,
     constants,
     hideDefaultCursor,
     isMobile,
-    hoverDuration,
-    parallaxOn,
     cursorColor,
     cursorColorOnTarget
   ]);
@@ -431,30 +388,35 @@ export function CustomCursor() {
 
       {/* ═══ Center Dot / Text Badge Morph ═══ */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <AnimatePresence mode="wait">
-          {cursorText ? (
-            <motion.div
-              key="badge"
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="w-[90px] h-[90px] rounded-full bg-black/92 border border-gold/75 flex items-center justify-center text-center backdrop-blur-[2px] shadow-2xl overflow-hidden select-none pointer-events-none"
-            >
-              <span className="text-[9px] tracking-[0.25em] font-sans uppercase font-medium leading-tight text-white px-2 pointer-events-none">
-                {cursorText.split(" ").map((word, i) => (
-                  <span key={i} className="block pointer-events-none">{word}</span>
-                ))}
-              </span>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="dot"
-              ref={dotRef}
-              className="w-1.5 h-1.5 rounded-full bg-white will-change-transform pointer-events-none"
-            />
-          )}
-        </AnimatePresence>
+        {/* Badge Element (rendered statically, animated via opacity/scale) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{
+            opacity: cursorText ? 1 : 0,
+            scale: cursorText ? 1 : 0.6,
+            pointerEvents: cursorText ? "auto" : "none"
+          }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          className="w-[90px] h-[90px] rounded-full bg-black/92 border border-gold/75 flex items-center justify-center text-center backdrop-blur-[2px] shadow-2xl overflow-hidden select-none pointer-events-none absolute"
+        >
+          <span className="text-[9px] tracking-[0.25em] font-sans uppercase font-medium leading-tight text-white px-2 pointer-events-none">
+            {(cursorText || "").split(" ").map((word, i) => (
+              <span key={i} className="block pointer-events-none">{word}</span>
+            ))}
+          </span>
+        </motion.div>
+
+        {/* Center Dot Element (rendered statically, animated via opacity/scale) */}
+        <motion.div
+          ref={dotRef}
+          initial={{ opacity: 1, scale: 1 }}
+          animate={{
+            opacity: cursorText ? 0 : 1,
+            scale: cursorText ? 0 : 1
+          }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+          className="w-1.5 h-1.5 rounded-full bg-white will-change-transform pointer-events-none absolute"
+        />
       </div>
 
       {/* ═══ Focus Brackets (Lock onto elements during hover) ═══ */}
