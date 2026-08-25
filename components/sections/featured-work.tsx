@@ -1,17 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { projects } from "@/lib/data";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
-import { ProjectModal } from "@/components/project-modal";
-import { AccordionGallery } from "@/components/ui/accordion-gallery";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { CardStack } from "@/components/ui/card-stack";
+import BorderGlow from "@/components/ui/border-glow";
 
 export function FeaturedWork() {
-  const [activeProject, setActiveProject] = useState<typeof projects[0] | null>(null);
-
   const landscapeItems = [
     { image: "/landscape/imgi_2_1.jpg", label: "Valley Horizon", alt: "Valley Horizon Study" },
     { image: "/landscape/imgi_8_8.jpg", label: "Mist Mountain", alt: "Mist Mountain Study" },
@@ -20,9 +14,16 @@ export function FeaturedWork() {
     { image: "/landscape/imgi_10_6.jpg", label: "Sunset Peak", alt: "Sunset Peak Study" },
   ];
 
+  const cardStackItems = landscapeItems.map((item, idx) => ({
+    id: idx + 1,
+    title: item.label,
+    description: item.alt,
+    imageSrc: item.image,
+  }));
+
   return (
     <>
-      <section id="work" className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background">
+      <section id="work" className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background overflow-x-hidden">
         <div className="mb-16 md:mb-20 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">
@@ -45,47 +46,82 @@ export function FeaturedWork() {
           </p>
         </div>
 
-        {/* Accordion Gallery replacing the old grid */}
-        <div className="max-w-7xl mx-auto relative z-10">
-          <AccordionGallery
-            items={landscapeItems}
-            defaultIndex={2}
-            expandRatio={0.52}
-            grayscale={true}
-            trigger="hover"
-            duration={0.18}
-            ease="power2.out"
-            radius={16}
+        {/* 3D Card Stack replacing Accordion Gallery */}
+        <div className="max-w-4xl mx-auto relative z-10 flex justify-center items-center py-6">
+          <CardStack
+            items={cardStackItems}
+            initialIndex={2}
+            maxVisible={5}
+            cardWidth={520}
+            cardHeight={330}
+            overlap={0.48}
+            spreadDeg={36}
+            perspectivePx={1100}
+            depthPx={100}
+            tiltXDeg={8}
+            activeLiftPx={18}
+            activeScale={1.03}
+            inactiveScale={0.93}
+            springStiffness={260}
+            springDamping={26}
+            loop={true}
+            autoAdvance={true}
+            intervalMs={3000}
+            pauseOnHover={true}
+            showDots={true}
+            renderCard={(item, { active }) => (
+              <div className="relative h-full w-full rounded-2xl overflow-hidden bg-background">
+                <BorderGlow
+                  borderRadius={16}
+                  backgroundColor="#020912"
+                  glowColor="40 50 60"
+                  glowRadius={40}
+                  glowIntensity={active ? 1.5 : 0.4}
+                  edgeSensitivity={20}
+                  coneSpread={25}
+                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                  fillOpacity={active ? 0.08 : 0.0}
+                  className="w-full h-full"
+                >
+                  <div className="relative h-full w-full">
+                    {/* Card Image */}
+                    {item.imageSrc ? (
+                      <img
+                        src={item.imageSrc}
+                        alt={item.title}
+                        className="h-full w-full object-cover select-none pointer-events-none"
+                        draggable={false}
+                        loading="eager"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-secondary text-sm text-muted-foreground">
+                        No image
+                      </div>
+                    )}
+                    {/* Shadow overlay */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020912]/85 via-[#020912]/30 to-transparent" />
+
+                    {/* Content */}
+                    <div className="relative z-10 flex h-full flex-col justify-end p-6 select-none">
+                      <div className="font-display text-xl font-normal text-white mb-1 tracking-wide">
+                        {item.title}
+                      </div>
+                      {item.description ? (
+                        <div className="text-[11px] text-white/60 font-sans tracking-wide leading-relaxed">
+                          {item.description}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {/* Inside frame outline */}
+                    <div className="absolute inset-[10px] border border-gold/10 pointer-events-none z-10 rounded-[10px]" />
+                  </div>
+                </BorderGlow>
+              </div>
+            )}
           />
         </div>
-
-        {/* View All CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-20 md:mt-24 text-center"
-        >
-          <button
-            onClick={() => setActiveProject(projects.find((p) => p.slug === "landscape") || null)}
-            className="relative inline-flex items-center gap-3 text-[12px] tracking-[0.25em] uppercase border border-gold/40 px-9 py-4 text-foreground hover:text-[#061a2b] hover:border-gold cursor-pointer overflow-hidden group transition-colors duration-500"
-          >
-            <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
-            <span className="relative z-10 flex items-center gap-3">
-              Browse Full Galleries
-              <ArrowRight size={14} className="transform group-hover:translate-x-1.5 transition-transform duration-300" />
-            </span>
-          </button>
-        </motion.div>
       </section>
-
-      {/* High-res Story Viewer Modal */}
-      <ProjectModal
-        isOpen={!!activeProject}
-        onClose={() => setActiveProject(null)}
-        project={activeProject}
-      />
     </>
   );
 }

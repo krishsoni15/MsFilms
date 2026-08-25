@@ -7,7 +7,6 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/sections/hero";
 import { FeaturedWork } from "@/components/sections/featured-work";
-import { Services } from "@/components/sections/services";
 import { AboutStudio } from "@/components/sections/about";
 import { AboutPhotographer } from "@/components/sections/photographer";
 import { Testimonials } from "@/components/sections/testimonials";
@@ -30,7 +29,6 @@ export default function Home() {
         <AboutStudio />
         <AboutPhotographer />
         <FeaturedWork />
-        <Services />
         <Testimonials />
         <Contact />
         <Footer />

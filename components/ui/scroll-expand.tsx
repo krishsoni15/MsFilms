@@ -229,6 +229,22 @@ export function ScrollExpand({
           },
           0.55 // starts as the clipPath reaches full size
         );
+
+        if (holdDistance > 0) {
+          // Fade out and blur the child overlays towards the end of the pinned scroll
+          tl.to(
+            overlayRef.current,
+            {
+              opacity: 0,
+              y: -30,
+              filter: "blur(16px)",
+              pointerEvents: "none",
+              duration: holdDistance * 0.8,
+              ease: "power2.in",
+            },
+            1.0 + holdDistance * 0.2
+          );
+        }
       }
 
       // Spacing is handled natively in totalDuration above
@@ -249,8 +265,8 @@ export function ScrollExpand({
           scrollTrigger: {
             trigger: root,
             pinnedContainer: root, // Factor in pinning distance for accurate scroll measurements
-            start: () => `top+=${window.innerHeight * scrollDistance} top`,
-            end: () => `top+=${window.innerHeight * (scrollDistance + 0.5)} top`, // Faster fade out (0.5 viewports) to avoid text overlap
+            start: "top top",
+            end: () => `top+=${window.innerHeight * 0.5} top`, // Faster fade out (0.5 viewports) to avoid text overlap
             scrub: smoothing,
           },
         }

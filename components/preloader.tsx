@@ -83,22 +83,22 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
 
     const tick = () => {
       const elapsedTime = Date.now() - startTime;
-      
+
       setAnimatedProgress((prev) => {
         const target = progress;
         const diff = target - prev;
-        
+
         // Easing interpolation
-        let step = diff * 0.16; 
+        let step = diff * 0.16;
         if (step > 0 && step < 0.8) step = 0.8;
-        
+
         const nextValue = Math.min(prev + step, target);
-        
+
         if (nextValue >= 99.9 && elapsedTime >= minDuration) {
           setIsReady(true);
           return 100;
         }
-        
+
         return nextValue;
       });
 

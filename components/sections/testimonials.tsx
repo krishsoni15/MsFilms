@@ -99,8 +99,8 @@ export function Testimonials() {
               key={i}
               onClick={() => setCurrent(i)}
               className={`transition-all duration-500 rounded-full ${i === current
-                  ? "w-8 h-2 bg-gold"
-                  : "w-2 h-2 bg-foreground/20 hover:bg-foreground/40"
+                ? "w-8 h-2 bg-gold"
+                : "w-2 h-2 bg-foreground/20 hover:bg-foreground/40"
                 }`}
               aria-label={`Go to testimonial ${i + 1}`}
             />
