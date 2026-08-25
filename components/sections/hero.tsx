@@ -14,7 +14,6 @@ import { Magnetic } from "@/components/ui/magnetic";
 import { Aurora } from "@/components/ui/aurora";
 import { ArrowRight, Play, Mail } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
-import { ShaderBackground } from "@/components/ui/shader-background";
 
 /* ────────────────────────────────────────────────────────────
    Custom Brand SVGs for Social Links
@@ -243,7 +242,6 @@ export function Hero({
       ref={containerRef}
       className="sticky top-0 w-full bg-background overflow-hidden h-screen lg:h-svh flex flex-col z-0"
     >
-      <ShaderBackground />
       <motion.div
         style={{
           scale: heroScale,
