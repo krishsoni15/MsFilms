@@ -63,6 +63,7 @@ export const projects = [
       "/wedding/imgi_6_4.jpg",
       "/wedding/imgi_4_7 (1).jpg",
       "/wedding/imgi_8_6.jpg",
+      "/wedding/8.jpg",
     ],
     description: "Capturing precious memories of special events like weddings, ceremonies, and intimate moments with a keen eye for technical and emotional detail.",
   },

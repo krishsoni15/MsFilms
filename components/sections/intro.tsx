@@ -5,6 +5,7 @@ import { visualIntroImage } from "@/lib/data";
 import { TextReveal } from "@/components/text-reveal";
 import { AnimatedText } from "@/components/animated-text";
 import { motion } from "framer-motion";
+import BorderGlow from "@/components/ui/border-glow";
 
 export function BrandStatement() {
   return (
@@ -53,15 +54,37 @@ export function BrandStatement() {
             whileInView={{ clipPath: "inset(0% 0 0 0)", opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-            className="relative aspect-[3/4] md:aspect-[4/5] overflow-hidden group"
+            className="relative aspect-[3/4] md:aspect-[4/5] overflow-hidden group rounded-2xl"
           >
-            <Image
-              src={visualIntroImage}
-              alt="Intimate wedding moment captured between poses"
-              fill
-              className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-[1.03]"
-              sizes="(max-width: 1024px) 100vw, 55vw"
-            />
+            <BorderGlow
+              borderRadius={16}
+              backgroundColor="transparent"
+              glowColor="35 85 75"
+              glowRadius={45}
+              glowIntensity={1.5}
+              edgeSensitivity={20}
+              coneSpread={25}
+              colors={["#c5a880", "#e5d5be", "#ffffff"]}
+              fillOpacity={0.08}
+              className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+              style={{
+                borderRadius: "16px",
+                borderColor: "rgba(197, 168, 128, 0.2)",
+                boxShadow: "none",
+              }}
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src={visualIntroImage}
+                  alt="Intimate wedding moment captured between poses"
+                  fill
+                  className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-[1.03]"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                />
+                {/* Fine inside border */}
+                <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20 rounded-lg" />
+              </div>
+            </BorderGlow>
           </motion.div>
         </div>
       </div>

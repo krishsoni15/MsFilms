@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Check } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
+import { Aurora } from "@/components/ui/aurora";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -15,22 +16,33 @@ if (typeof window !== "undefined") {
 
 export function AboutPhotographer() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const ctx = gsap.context(() => {
-      // Animate text column items
+      // Animate text column items with a premium blur-in stagger
       gsap.fromTo(
         ".reveal-text-item",
-        { opacity: 0, y: 20 },
+        { opacity: 0, y: 25, filter: "blur(10px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power2.out",
+          filter: "blur(0px)",
+          duration: 1.0,
+          stagger: 0.12,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: el,
             start: "top 85%",
@@ -42,13 +54,13 @@ export function AboutPhotographer() {
       // Animate portraits entrance
       gsap.fromTo(
         ".reveal-image-item",
-        { opacity: 0, y: 30, scale: 0.98 },
+        { opacity: 0, y: 35, scale: 0.97 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1,
-          stagger: 0.2,
+          duration: 1.2,
+          stagger: 0.25,
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
@@ -58,18 +70,18 @@ export function AboutPhotographer() {
         }
       );
 
-      // Parallax scroll glide effect on the floating secondary image
+      // Magnifying/demagnifying scroll effect on the image collage container (crystal clear scale, no blur)
       gsap.fromTo(
-        ".floating-portrait",
-        { y: 35 },
+        ".image-collage-container",
+        { scale: 0.90 },
         {
-          y: -35,
-          ease: "none",
+          scale: 1.03,
+          ease: "sine.out",
           scrollTrigger: {
             trigger: el,
             start: "top bottom",
             end: "bottom top",
-            scrub: 0.8,
+            scrub: 1.2,
           }
         }
       );
@@ -85,7 +97,17 @@ export function AboutPhotographer() {
       ref={containerRef}
       className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#030c16] border-t border-foreground/5 relative overflow-hidden"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center max-w-7xl mx-auto">
+      {/* ── Aurora WebGL Background ── */}
+      <div className="absolute inset-0 pointer-events-none opacity-80 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
+        <Aurora
+          colorStops={["#081730", "#cba358", "#4e7bb0"]}
+          blend={isMobile ? 0.9 : 0.65}
+          amplitude={isMobile ? 0.65 : 1.25}
+          speed={0.45}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center max-w-7xl mx-auto relative z-10">
 
         {/* Left Column — Editorial Text & Philosophy */}
         <div className="lg:col-span-6 lg:pr-6 order-2 lg:order-1">
@@ -95,8 +117,8 @@ export function AboutPhotographer() {
 
           <ScrollReveal
             baseOpacity={0.05}
-            preset="slide"
-            yOffset={18}
+            preset="blur"
+            blurStrength={6}
             textClassName="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.15] mb-4 text-foreground font-normal"
             rotationEnd="bottom center+=20%"
             wordAnimationEnd="bottom center+=45%"
@@ -186,35 +208,73 @@ export function AboutPhotographer() {
         </div>
 
         {/* Right Column — Editorial Dual Photo Layout */}
-        <div className="lg:col-span-6 relative order-1 lg:order-2">
-          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl border border-gold/15 ml-auto opacity-0">
-            <div className="absolute inset-0">
-              <Image
-                src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
-                alt="Madhav Soni — Founder & Lead Photographer of Msfilms"
-                fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 45vw"
-              />
-            </div>
-            <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700" />
+        <div className="lg:col-span-6 relative order-1 lg:order-2 image-collage-container origin-center">
+          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl ml-auto opacity-0">
+            <BorderGlow
+              borderRadius={16}
+              backgroundColor="transparent"
+              glowColor="35 85 75"
+              glowRadius={45}
+              glowIntensity={1.5}
+              edgeSensitivity={20}
+              coneSpread={25}
+              colors={["#c5a880", "#e5d5be", "#ffffff"]}
+              fillOpacity={0.08}
+              className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+              style={{
+                borderRadius: "16px",
+                borderColor: "rgba(197, 168, 128, 0.2)",
+                boxShadow: "none",
+              }}
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
+                  alt="Madhav Soni — Founder & Lead Photographer of Msfilms"
+                  fill
+                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+                <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20 rounded-lg" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none" />
+              </div>
+            </BorderGlow>
           </div>
 
           {/* Overlapping secondary image — parallax floating */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] shadow-2xl border border-gold/15 rounded-2xl group/sub opacity-0 overflow-visible">
+          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] shadow-2xl rounded-2xl group/sub opacity-0 overflow-visible">
             <div className="floating-portrait w-full h-full relative rounded-[inherit] overflow-hidden">
-              <Image
-                src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
-                alt="Madhav Soni in action behind the lens"
-                fill
-                className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-110"
-                sizes="30vw"
-              />
-              <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20" />
-              <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1.5 text-[9px] tracking-[0.2em] uppercase text-white/80 z-20">
-                Madhav Soni
-              </div>
+              <BorderGlow
+                borderRadius={16}
+                backgroundColor="transparent"
+                glowColor="35 85 75"
+                glowRadius={45}
+                glowIntensity={1.5}
+                edgeSensitivity={20}
+                coneSpread={25}
+                colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                fillOpacity={0.08}
+                className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+                style={{
+                  borderRadius: "16px",
+                  borderColor: "rgba(197, 168, 128, 0.2)",
+                  boxShadow: "none",
+                }}
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
+                    alt="Madhav Soni in action behind the lens"
+                    fill
+                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-110"
+                    sizes="30vw"
+                  />
+                  <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20 rounded-lg" />
+                  <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1.5 text-[9px] tracking-[0.2em] uppercase text-white/80 z-20">
+                    Madhav Soni
+                  </div>
+                </div>
+              </BorderGlow>
             </div>
           </div>
         </div>

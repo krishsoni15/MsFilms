@@ -7,6 +7,9 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/sections/hero";
 import { FeaturedWork } from "@/components/sections/featured-work";
+import { WorkGallery } from "@/components/sections/work-gallery";
+import { InteractiveDome } from "@/components/sections/interactive-dome";
+import { InteractiveMenu } from "@/components/sections/interactive-menu";
 import { AboutStudio } from "@/components/sections/about";
 import { AboutPhotographer } from "@/components/sections/photographer";
 import { Testimonials } from "@/components/sections/testimonials";
@@ -29,6 +32,9 @@ export default function Home() {
         <AboutStudio />
         <AboutPhotographer />
         <FeaturedWork />
+        <WorkGallery />
+        <InteractiveDome />
+        <InteractiveMenu />
         <Testimonials />
         <Contact />
         <Footer />
@@ -36,4 +42,7 @@ export default function Home() {
     </>
   );
 }
+
+
+
 

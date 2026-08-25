@@ -203,8 +203,8 @@ export function Navigation({
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
         className={`fixed left-1/2 -translate-x-1/2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!visible
-            ? "opacity-0 -translate-y-24 pointer-events-none"
-            : "opacity-100 translate-y-0"
+          ? "opacity-0 -translate-y-24 pointer-events-none"
+          : "opacity-100 translate-y-0"
           } ${isScrolled
             ? "top-4 w-[92%] sm:w-[88%] lg:w-[82%] max-w-[1100px] rounded-full bg-gradient-to-b from-[#030914]/85 to-[#020710]/75 backdrop-blur-2xl border border-white/[0.08] hover:border-gold/20 shadow-[0_24px_50px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(197,168,128,0.04),inset_0_1px_1px_rgba(255,255,255,0.06)] py-2.5 px-6 lg:px-8"
             : "top-0 w-full rounded-none bg-transparent border-b border-transparent py-5 sm:py-6 px-6 sm:px-10 lg:px-16"
@@ -240,10 +240,10 @@ export function Navigation({
                     href={link.href}
                     onMouseEnter={() => setHoveredSection(sectionId)}
                     className={`relative px-4 py-2 rounded-full text-[11px] tracking-[0.18em] uppercase font-sans font-medium transition-colors duration-300 ${isActive
-                        ? "text-white font-semibold"
-                        : isHighlighted
-                          ? "text-white/90"
-                          : "text-white/45 hover:text-white/80"
+                      ? "text-white font-semibold"
+                      : isHighlighted
+                        ? "text-white/90"
+                        : "text-white/45 hover:text-white/80"
                       }`}
                   >
                     {/* Sliding active/hover pill background */}
@@ -251,8 +251,8 @@ export function Navigation({
                       <motion.span
                         layoutId="navPill"
                         className={`absolute inset-0 rounded-full bg-gradient-to-b from-white/[0.09] to-white/[0.03] ${isActive
-                            ? "border border-white/25 bg-white/[0.02] shadow-[0_0_15px_rgba(255,255,255,0.12),inset_0_1px_1px_rgba(255,255,255,0.1)]"
-                            : "border border-white/[0.1] shadow-[0_0_10px_rgba(255,255,255,0.08),inset_0_1px_1px_rgba(255,255,255,0.05)]"
+                          ? "border border-white/25 bg-white/[0.02] shadow-[0_0_15px_rgba(255,255,255,0.12),inset_0_1px_1px_rgba(255,255,255,0.1)]"
+                          : "border border-white/[0.1] shadow-[0_0_10px_rgba(255,255,255,0.08),inset_0_1px_1px_rgba(255,255,255,0.05)]"
                           }`}
                         transition={{
                           type: "spring",
@@ -288,8 +288,8 @@ export function Navigation({
               <button
                 onClick={() => setConnectOpen(!connectOpen)}
                 className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-white/[0.08] hover:border-gold/30 transition-all duration-500 focus:outline-none ${isScrolled
-                    ? "text-foreground hover:text-gold-light px-5.5 py-2"
-                    : "text-white hover:text-gold-light px-6 py-2.5"
+                  ? "text-foreground hover:text-gold-light px-5.5 py-2"
+                  : "text-white hover:text-gold-light px-6 py-2.5"
                   }`}
                 style={{
                   background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
@@ -431,8 +431,8 @@ export function Navigation({
                     <a
                       href={link.href}
                       className={`relative block py-3 font-laluxes-serif text-4xl sm:text-5xl transition-all duration-300 hover:translate-x-4 flex items-center gap-3.5 ${isActive
-                          ? "text-gold font-medium"
-                          : "text-white/70 hover:text-gold"
+                        ? "text-gold font-medium"
+                        : "text-white/70 hover:text-gold"
                         }`}
                       onClick={() => setMobileOpen(false)}
                     >

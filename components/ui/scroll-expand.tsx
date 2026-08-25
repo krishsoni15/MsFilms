@@ -93,12 +93,12 @@ export function ScrollExpand({
           anticipatePin: 1,
           onEnter: () => {
             if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.play().catch(() => {});
+              media.play().catch(() => { });
             }
           },
           onEnterBack: () => {
             if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.play().catch(() => {});
+              media.play().catch(() => { });
             }
           },
           onLeave: () => {
@@ -137,32 +137,32 @@ export function ScrollExpand({
           onUpdate: () => {
             const p = stateObj.progress; // Goes from 0 to 1 over the entire scroll duration
             const t = p * totalDuration; // Current timeline time (from 0 to totalDuration)
-            
+
             // clipProgress reaches 1 when t reaches 1.0
             const clipProgress = Math.min(1, t);
-            
+
             // Symmetrically interpolate width & height dimensions
             const currentW = startWidth + (100 - startWidth) * clipProgress;
             const currentH = startHeight + (100 - startHeight) * clipProgress;
-            
+
             const curIx = Math.max(0, (100 - currentW) / 2);
             const curIy = Math.max(0, (100 - currentH) / 2);
             const r = startRadius + (endRadius - startRadius) * clipProgress;
 
             frame.style.clipPath = `inset(${curIy}% ${curIx}% ${curIy}% ${curIx}% round ${r}px)`;
-            
+
             // Interpolate media transform over the entire scroll progress p
             // Parallax scale: zooms down from mediaZoom (e.g. 1.22) to a clean 1.05
             // Parallax translation: slides vertically from -40px to 40px
             const currentScale = mediaZoom + (1.05 - mediaZoom) * p;
             const currentY = -40 + 80 * p;
             media.style.transform = `scale(${currentScale}) translateY(${currentY}px)`;
-            
+
             // Apply a subtle blur to the background video during the hold phase (once expanded)
             const holdProgress = Math.max(0, t - 1.0) / Math.max(0.1, holdDistance);
             const currentBlur = 4 * holdProgress;
             media.style.filter = currentBlur > 0.1 ? `blur(${currentBlur}px)` : "none";
-            
+
             if (scrimRef.current) {
               scrimRef.current.style.opacity = `${overlayScrim * clipProgress}`;
             }

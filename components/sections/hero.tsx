@@ -73,7 +73,7 @@ function CategoryImage({
             src={src}
             alt={alt}
             fill
-            className="object-cover"
+            className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
             sizes="(max-width: 768px) 80vw, 35vw"
             quality={75}
             priority
@@ -116,13 +116,13 @@ const categories = [
     description:
       "Professional interior and exterior photography capturing the architectural detail and character of luxury estates.",
     images: [
-      "/drone/imgi_6_2.jpg",
-      "/drone/imgi_7_5.jpg",
-      "/drone/imgi_13_12.jpg",
+      "/real-estate/img_1.jpg",
+      "/real-estate/img_2.jpg",
+      "/real-estate/img_3.jpg",
     ],
     bottomImages: [
-      "/drone/imgi_9_11.jpg",
-      "/drone/imgi_5_10.jpg",
+      "/real-estate/img_4.jpg",
+      "/real-estate/img_5.jpg",
     ],
     videoUrl: heroData.videoSrc,
   },
@@ -253,366 +253,457 @@ export function Hero({
         className="relative w-full h-full flex flex-col overflow-hidden origin-bottom"
       >
         {/* ── Aurora WebGL Background ── */}
-      <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
-        <Aurora
-          colorStops={["#081730", "#cba358", "#4e7bb0"]}
-          blend={isMobile ? 0.9 : 0.65}
-          amplitude={isMobile ? 0.65 : 1.3}
-          speed={0.45}
-        />
-      </div>
-
-      {/* ── Left Social Links ── */}
-      <motion.div
-        initial={{ opacity: 0, y: -15 }}
-        animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1.2, delay: 1 }}
-        className="hidden lg:flex flex-col items-center gap-4 absolute left-12 lg:left-16 top-[32%] -translate-y-1/2 z-30"
-      >
-        <a
-          href="https://www.instagram.com/msfilms._/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
-          aria-label="Instagram"
-        >
-          <InstagramIcon className="w-3.5 h-3.5" />
-        </a>
-        <a
-          href="https://wa.me/1234567890"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
-          aria-label="WhatsApp"
-        >
-          <WhatsAppIcon className="w-3.5 h-3.5" />
-        </a>
-        <a
-          href="mailto:contactus.msfilms@gmail.com"
-          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
-          aria-label="Email"
-        >
-          <Mail size={13} />
-        </a>
-
-        {/* Subtle local connection segment that fades out */}
-        <div className="w-px h-12 bg-gradient-to-b from-white/10 to-transparent mt-2" />
-      </motion.div>
-
-      {/* ── Left Vertical Category Selectors & Scroll Indicator ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isLoaded ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 1.1 }}
-        className="hidden lg:flex flex-col items-center gap-5 absolute left-12 lg:left-16 bottom-20 z-30"
-      >
-        <div className="flex flex-col items-center gap-4">
-          {categories.map((cat, idx) => {
-            const isActive = categoryIndex === idx;
-            const displayLabel =
-              cat.id === "wedding"
-                ? "Wedding"
-                : cat.id === "realestate"
-                  ? "Real Estate"
-                  : "Events";
-
-            return (
-              <button
-                key={cat.id}
-                onClick={() => handleCategoryClick(idx)}
-                className="flex flex-col items-center group focus:outline-none relative"
-              >
-                {/* Active category name floating next to node */}
-                <span className={`absolute left-7 top-1/2 -translate-y-1/2 font-sans text-[8px] tracking-[0.25em] uppercase whitespace-nowrap transition-all duration-500 ${isActive
-                  ? "text-gold opacity-80 translate-x-0 font-semibold"
-                  : "text-white/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-white/30 group-hover:opacity-80 group-hover:translate-x-0"
-                  }`}>
-                  {displayLabel}
-                </span>
-
-                {/* Circular indicator nodes */}
-                <div className="relative flex items-center justify-center w-5 h-5">
-                  <span className={`font-sans text-[10px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-white/20 group-hover:text-white/40"
-                    }`}>
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeCategoryOuterRing"
-                      className="absolute inset-0 rounded-full border border-gold/20 bg-gold/[0.01] shadow-[0_0_6px_rgba(197,168,128,0.05)]"
-                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                    />
-                  )}
-                </div>
-              </button>
-            );
-          })}
+        <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
+          <Aurora
+            colorStops={["#081730", "#cba358", "#4e7bb0"]}
+            blend={isMobile ? 0.9 : 0.65}
+            amplitude={isMobile ? 0.65 : 1.3}
+            speed={0.45}
+          />
         </div>
 
-        {/* Scroll indicator with custom animated mouse wheel */}
-        <div className="flex flex-col items-center gap-2.5 mt-3 pt-4 border-t border-white/5 w-10">
-          <span className="text-white/15 font-sans text-[8px] tracking-[0.15em] uppercase">
-            Scroll
-          </span>
-          <div className="w-4.5 h-7 rounded-full border border-white/10 flex justify-center p-1 relative overflow-hidden bg-white/[0.005]">
-            <motion.div
-              animate={{
-                y: [0, 6, 0],
-                opacity: [0.3, 0.9, 0.3],
-              }}
-              transition={{
-                duration: 1.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-0.5 h-1.5 rounded-full bg-gold/70"
-            />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── Right Vertical Text (large desktop) ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={isLoaded ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 1.2 }}
-        className="hidden lg:flex flex-col items-center gap-4 absolute right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30"
-      >
-        <span
-          className="text-white/[0.12] font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap flex items-center gap-3"
-          style={{ writingMode: "vertical-rl" }}
+        {/* ── Left Social Links ── */}
+        <motion.div
+          initial={{ opacity: 0, y: -15 }}
+          animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1.2, delay: 1 }}
+          className="hidden lg:flex flex-col items-center gap-4 absolute left-12 lg:left-16 top-[32%] -translate-y-1/2 z-30"
         >
-          <span className="text-gold/30 font-serif text-[9px]">✦</span>
-          CAPTURING LOVE — CRAFTING MEMORIES
-          <span className="text-gold/30 font-serif text-[9px]">✦</span>
-        </span>
-      </motion.div>
-
-      {/* ── Main Content ── */}
-      <div className="lg:flex-1 relative max-w-[1440px] mx-auto w-full px-5 lg:px-14 lg:px-20 xl:px-24 pt-20 lg:pt-24 lg:pt-[88px] pb-4 lg:pb-6 lg:flex lg:flex-col">
-        <div className="grid grid-cols-1 lg:grid-cols-[4.5fr_5.5fr] gap-4 lg:gap-6 lg:gap-8 lg:flex-1 relative">
-          {/* ─── LEFT COLUMN: Text Content ─── */}
-          <motion.div
-            initial={{ opacity: 1 }}
-            style={{ y: isMobile ? "0px" : textY }}
-            className="flex flex-col justify-between order-2 lg:order-1 pt-1 pb-4 lg:py-6 lg:py-10 lg:h-full lg:transform lg:translate-x-[16%] lg:-translate-y-[10%]"
+          <a
+            href="https://www.instagram.com/msfilms._/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            aria-label="Instagram"
           >
-            {/* Text Content */}
-            <div className="flex flex-col justify-center flex-1 flex-shrink-0">
-              <div className="relative w-full min-h-[250px] sm:min-h-[270px] lg:min-h-[310px] flex items-center">
-                <motion.div
-                  key={`content-${categoryIndex}`}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={isLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full flex flex-col justify-center"
+            <InstagramIcon className="w-3.5 h-3.5" />
+          </a>
+          <a
+            href="https://wa.me/1234567890"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            aria-label="WhatsApp"
+          >
+            <WhatsAppIcon className="w-3.5 h-3.5" />
+          </a>
+          <a
+            href="mailto:contactus.msfilms@gmail.com"
+            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            aria-label="Email"
+          >
+            <Mail size={13} />
+          </a>
+
+          {/* Subtle local connection segment that fades out */}
+          <div className="w-px h-12 bg-gradient-to-b from-white/10 to-transparent mt-2" />
+        </motion.div>
+
+        {/* ── Left Vertical Category Selectors & Scroll Indicator ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 1.1 }}
+          className="hidden lg:flex flex-col items-center gap-5 absolute left-12 lg:left-16 bottom-20 z-30"
+        >
+          <div className="flex flex-col items-center gap-4">
+            {categories.map((cat, idx) => {
+              const isActive = categoryIndex === idx;
+              const displayLabel =
+                cat.id === "wedding"
+                  ? "Wedding"
+                  : cat.id === "realestate"
+                    ? "Real Estate"
+                    : "Events";
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryClick(idx)}
+                  className="flex flex-col items-center group focus:outline-none relative"
                 >
-                  {/* Eyebrow */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                    animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
-                    transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-                    className="mb-4 lg:mb-5 flex flex-col gap-3"
-                  >
-                    <p className="text-gold/70 font-sans text-[10px] lg:text-[11px] tracking-[0.3em] uppercase">
-                      {currentCategory.eyebrow}
-                    </p>
-                    <div className="gold-rule" />
-                  </motion.div>
+                  {/* Active category name floating next to node */}
+                  <span className={`absolute left-7 top-1/2 -translate-y-1/2 font-sans text-[8px] tracking-[0.25em] uppercase whitespace-nowrap transition-all duration-500 ${isActive
+                    ? "text-gold opacity-80 translate-x-0 font-semibold"
+                    : "text-white/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-white/30 group-hover:opacity-80 group-hover:translate-x-0"
+                    }`}>
+                    {displayLabel}
+                  </span>
 
-                  {/* Title (staggered internally) */}
-                  <div className="mb-4 lg:mb-5">
-                    <h1>
-                      <motion.span
-                        initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
-                        animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
-                        transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                        className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
-                      >
-                        {currentCategory.titleLine1}
-                      </motion.span>
-
-                      <motion.span
-                        initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
-                        animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
-                        transition={{ duration: 0.6, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                        className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
-                      >
-                        {currentCategory.titleLine2}{" "}
-                        <span className="font-laluxes-script text-gold text-[1.15em] normal-case">
-                          {currentCategory.titleHighlight}
-                        </span>
-                      </motion.span>
-                    </h1>
+                  {/* Circular indicator nodes */}
+                  <div className="relative flex items-center justify-center w-5 h-5">
+                    <span className={`font-sans text-[10px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-white/20 group-hover:text-white/40"
+                      }`}>
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeCategoryOuterRing"
+                        className="absolute inset-0 rounded-full border border-gold/20 bg-gold/[0.01] shadow-[0_0_6px_rgba(197,168,128,0.05)]"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      />
+                    )}
                   </div>
+                </button>
+              );
+            })}
+          </div>
 
-                  {/* Description */}
-                  <motion.p
-                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                    animate={isLoaded ? { opacity: 0.45, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
-                    transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-foreground/45 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]"
-                  >
-                    {currentCategory.description}
-                  </motion.p>
-                </motion.div>
-              </div>
-
-              {/* CTAs */}
+          {/* Scroll indicator with custom animated mouse wheel */}
+          <div className="flex flex-col items-center gap-2.5 mt-3 pt-4 border-t border-white/5 w-10">
+            <span className="text-white/15 font-sans text-[8px] tracking-[0.15em] uppercase">
+              Scroll
+            </span>
+            <div className="w-4.5 h-7 rounded-full border border-white/10 flex justify-center p-1 relative overflow-hidden bg-white/[0.005]">
               <motion.div
-                initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
-                animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(6px)" }}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.42,
-                  ease: [0.16, 1, 0.3, 1],
+                animate={{
+                  y: [0, 6, 0],
+                  opacity: [0.3, 0.9, 0.3],
                 }}
-                className="flex flex-wrap items-center gap-5 lg:gap-7"
-              >
-                <div className="relative shrink-0">
-                  <BorderGlow
-                    edgeSensitivity={20}
-                    glowColor="35 85 75"
-                    backgroundColor="transparent"
-                    borderRadius={9999}
-                    glowRadius={30}
-                    glowIntensity={0.3}
-                    coneSpread={25}
-                    animated={false}
-                    colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                    fillOpacity={0}
-                    style={{
-                      borderColor: "transparent",
-                    }}
+                transition={{
+                  duration: 1.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="w-0.5 h-1.5 rounded-full bg-gold/70"
+              />
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── Right Vertical Text (large desktop) ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isLoaded ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="hidden lg:flex flex-col items-center gap-4 absolute right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30"
+        >
+          <span
+            className="text-white/[0.12] font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap flex items-center gap-3"
+            style={{ writingMode: "vertical-rl" }}
+          >
+            <span className="text-gold/30 font-serif text-[9px]">✦</span>
+            CAPTURING LOVE — CRAFTING MEMORIES
+            <span className="text-gold/30 font-serif text-[9px]">✦</span>
+          </span>
+        </motion.div>
+
+        {/* ── Main Content ── */}
+        <div className="lg:flex-1 relative max-w-[1440px] mx-auto w-full px-5 lg:px-14 lg:px-20 xl:px-24 pt-20 lg:pt-24 lg:pt-[88px] pb-4 lg:pb-6 lg:flex lg:flex-col">
+          <div className="grid grid-cols-1 lg:grid-cols-[4.5fr_5.5fr] gap-4 lg:gap-6 lg:gap-8 lg:flex-1 relative">
+            {/* ─── LEFT COLUMN: Text Content ─── */}
+            <motion.div
+              initial={{ opacity: 1 }}
+              style={{ y: isMobile ? "0px" : textY }}
+              className="flex flex-col justify-between order-2 lg:order-1 pt-1 pb-4 lg:py-6 lg:py-10 lg:h-full lg:transform lg:translate-x-[16%] lg:-translate-y-[10%]"
+            >
+              {/* Text Content */}
+              <div className="flex flex-col justify-center flex-1 flex-shrink-0">
+                <div className="relative w-full min-h-[250px] sm:min-h-[270px] lg:min-h-[310px] flex items-center">
+                  <motion.div
+                    key={`content-${categoryIndex}`}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={isLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full flex flex-col justify-center"
                   >
-                    <a
-                      href="#contact"
-                      className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none"
+                    {/* Eyebrow */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                      animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                      transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                      className="mb-4 lg:mb-5 flex flex-col gap-3"
+                    >
+                      <p className="text-gold/70 font-sans text-[10px] lg:text-[11px] tracking-[0.3em] uppercase">
+                        {currentCategory.eyebrow}
+                      </p>
+                      <div className="gold-rule" />
+                    </motion.div>
+
+                    {/* Title (staggered internally) */}
+                    <div className="mb-4 lg:mb-5">
+                      <h1>
+                        <motion.span
+                          initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                          animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
+                          transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                          className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
+                        >
+                          {currentCategory.titleLine1}
+                        </motion.span>
+
+                        <motion.span
+                          initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                          animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
+                          transition={{ duration: 0.6, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                          className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
+                        >
+                          {currentCategory.titleLine2}{" "}
+                          <span className="font-laluxes-script text-gold text-[1.15em] normal-case">
+                            {currentCategory.titleHighlight}
+                          </span>
+                        </motion.span>
+                      </h1>
+                    </div>
+
+                    {/* Description */}
+                    <motion.p
+                      initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                      animate={isLoaded ? { opacity: 0.45, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                      transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-foreground/45 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]"
+                    >
+                      {currentCategory.description}
+                    </motion.p>
+                  </motion.div>
+                </div>
+
+                {/* CTAs */}
+                <motion.div
+                  initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
+                  animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(6px)" }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.42,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="flex flex-wrap items-center gap-5 lg:gap-7"
+                >
+                  <div className="relative shrink-0">
+                    <BorderGlow
+                      edgeSensitivity={20}
+                      glowColor="35 85 75"
+                      backgroundColor="transparent"
+                      borderRadius={9999}
+                      glowRadius={30}
+                      glowIntensity={0.3}
+                      coneSpread={25}
+                      animated={false}
+                      colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                      fillOpacity={0}
                       style={{
-                        background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
+                        borderColor: "transparent",
                       }}
                     >
-                      <span
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
+                      <a
+                        href="#contact"
+                        className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none"
                         style={{
-                          background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.2) 0%, rgba(197, 168, 128, 0.05) 100%)",
+                          background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
                         }}
-                      />
-                      <span className="relative z-10 flex items-center gap-2.5">
-                        Let&apos;s Talk
-                        <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
-                      </span>
-                    </a>
-                  </BorderGlow>
-                </div>
+                      >
+                        <span
+                          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
+                          style={{
+                            background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.2) 0%, rgba(197, 168, 128, 0.05) 100%)",
+                          }}
+                        />
+                        <span className="relative z-10 flex items-center gap-2.5">
+                          Let&apos;s Talk
+                          <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
+                        </span>
+                      </a>
+                    </BorderGlow>
+                  </div>
+                </motion.div>
+
+                {/* Mobile-Only Category Selectors */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={isLoaded ? { opacity: 1 } : {}}
+                  transition={{ duration: 1, delay: 1 }}
+                  className="lg:hidden mt-10 w-full"
+                >
+                  <div className="flex items-center justify-start gap-6 border-t border-white/10 pt-6">
+                    {categories.map((cat, idx) => {
+                      const isActive = categoryIndex === idx;
+                      const displayLabel =
+                        cat.id === "wedding"
+                          ? "Wedding"
+                          : cat.id === "realestate"
+                            ? "Real Estate"
+                            : "Events";
+
+                      return (
+                        <button
+                          key={cat.id}
+                          onClick={() => handleCategoryClick(idx)}
+                          className="flex flex-col items-start gap-1 group focus:outline-none"
+                        >
+                          <span className={`font-sans text-[10px] tracking-[0.25em] uppercase transition-colors duration-300 ${isActive ? "text-gold font-medium" : "text-white/40"
+                            }`}>
+                            {displayLabel}
+                          </span>
+                          <div className="h-[2px] w-full relative mt-0.5">
+                            {isActive ? (
+                              <motion.div
+                                layoutId="activeIndicatorMobileLine"
+                                className="absolute inset-0 bg-gold"
+                                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                              />
+                            ) : (
+                              <div className="absolute inset-0 bg-transparent group-hover:bg-white/10 transition-colors duration-300" />
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              </div>
+              {/* Bottom Spacer to match absolute Bottom-Left Image height */}
+              <div className="hidden lg:block h-[17%] w-full flex-shrink-0" />
+            </motion.div>
+
+            {/* ─── RIGHT COLUMN: Image Collage ─── */}
+            <div className="relative order-1 lg:order-2 min-h-[340px] sm:min-h-[400px] lg:h-full lg:min-h-[480px] xl:min-h-[540px]">
+              {/* Arched Image (center-left of collage) */}
+              <motion.div
+                initial={{ opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
+                animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.45,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] group cursor-pointer"
+                style={{ y: activeY1 }}
+              >
+                <CategoryImage
+                  categoryIndex={categoryIndex}
+                  imageIndex={0}
+                  alt={`${currentCategory.id} hero arched`}
+                  delay={0}
+                />
+                {/* Fine inside arched border frame */}
+                <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20" style={{ borderRadius: "9999px 9999px 0px 0px" }} />
+                {/* Interactive BorderGlow overlay */}
+                <BorderGlow
+                  borderRadius={0}
+                  backgroundColor="transparent"
+                  glowColor="35 85 75"
+                  glowRadius={45}
+                  glowIntensity={1.5}
+                  edgeSensitivity={20}
+                  coneSpread={25}
+                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                  fillOpacity={0.08}
+                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+                  style={{
+                    borderRadius: "9999px 9999px 0px 0px",
+                    borderColor: "rgba(197, 168, 128, 0.3)",
+                    boxShadow: "none",
+                  }}
+                >
+                  <div className="w-full h-full" />
+                </BorderGlow>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
+                animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.55,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="hidden lg:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
+                style={{ y: activeY2 }}
+              >
+                <CategoryImage
+                  categoryIndex={categoryIndex}
+                  imageIndex={1}
+                  alt={`${currentCategory.id} detail top`}
+                  delay={0.1}
+                />
+                {/* Fine inside border frame */}
+                <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
+                {/* Interactive BorderGlow overlay */}
+                <BorderGlow
+                  borderRadius={6}
+                  backgroundColor="transparent"
+                  glowColor="35 85 75"
+                  glowRadius={45}
+                  glowIntensity={1.5}
+                  edgeSensitivity={20}
+                  coneSpread={25}
+                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                  fillOpacity={0.08}
+                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+                  style={{
+                    borderRadius: "6px",
+                    borderColor: "rgba(197, 168, 128, 0.2)",
+                    boxShadow: "none",
+                  }}
+                >
+                  <div className="w-full h-full" />
+                </BorderGlow>
               </motion.div>
 
-              {/* Mobile-Only Category Selectors */}
+              {/* Bottom-Right Image (desktop only) */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={isLoaded ? { opacity: 1 } : {}}
-                transition={{ duration: 1, delay: 1 }}
-                className="lg:hidden mt-10 w-full"
+                initial={{ opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
+                animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.65,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="hidden lg:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
+                style={{ y: activeY5 }}
               >
-                <div className="flex items-center justify-start gap-6 border-t border-white/10 pt-6">
-                  {categories.map((cat, idx) => {
-                    const isActive = categoryIndex === idx;
-                    const displayLabel =
-                      cat.id === "wedding"
-                        ? "Wedding"
-                        : cat.id === "realestate"
-                          ? "Real Estate"
-                          : "Events";
-
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => handleCategoryClick(idx)}
-                        className="flex flex-col items-start gap-1 group focus:outline-none"
-                      >
-                        <span className={`font-sans text-[10px] tracking-[0.25em] uppercase transition-colors duration-300 ${isActive ? "text-gold font-medium" : "text-white/40"
-                          }`}>
-                          {displayLabel}
-                        </span>
-                        <div className="h-[2px] w-full relative mt-0.5">
-                          {isActive ? (
-                            <motion.div
-                              layoutId="activeIndicatorMobileLine"
-                              className="absolute inset-0 bg-gold"
-                              transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                            />
-                          ) : (
-                            <div className="absolute inset-0 bg-transparent group-hover:bg-white/10 transition-colors duration-300" />
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                <CategoryImage
+                  categoryIndex={categoryIndex}
+                  imageIndex={2}
+                  alt={`${currentCategory.id} detail bottom`}
+                  delay={0.4}
+                />
+                {/* Fine inside border frame */}
+                <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
+                {/* Interactive BorderGlow overlay */}
+                <BorderGlow
+                  borderRadius={6}
+                  backgroundColor="transparent"
+                  glowColor="35 85 75"
+                  glowRadius={45}
+                  glowIntensity={1.5}
+                  edgeSensitivity={20}
+                  coneSpread={25}
+                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                  fillOpacity={0.08}
+                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+                  style={{
+                    borderRadius: "6px",
+                    borderColor: "rgba(197, 168, 128, 0.2)",
+                    boxShadow: "none",
+                  }}
+                >
+                  <div className="w-full h-full" />
+                </BorderGlow>
               </motion.div>
             </div>
-            {/* Bottom Spacer to match absolute Bottom-Left Image height */}
-            <div className="hidden lg:block h-[17%] w-full flex-shrink-0" />
-          </motion.div>
 
-          {/* ─── RIGHT COLUMN: Image Collage ─── */}
-          <div className="relative order-1 lg:order-2 min-h-[340px] sm:min-h-[400px] lg:h-full lg:min-h-[480px] xl:min-h-[540px]">
-            {/* Arched Image (center-left of collage) */}
+            {/* ─── BOTTOM IMAGES: Positioned with 1.0% gap and rounded corners ─── */}
+            {/* Bottom-Left Image (desktop only) */}
             <motion.div
-              initial={{ opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
-              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
               transition={{
                 duration: 1.2,
-                delay: 0.45,
+                delay: 0.8,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
-              style={{ y: activeY1 }}
+              style={{ y: activeY5 }}
+              className="hidden lg:block absolute left-[19%] bottom-0 w-[24.3%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
                 imageIndex={0}
-                alt={`${currentCategory.id} hero arched`}
-                delay={0}
+                alt={`${currentCategory.id} bottom detail left`}
+                delay={0.2}
+                useBottomImages={true}
               />
-              {/* Interactive BorderGlow overlay */}
-              <BorderGlow
-                borderRadius={0}
-                backgroundColor="transparent"
-                glowColor="35 85 75"
-                glowRadius={45}
-                glowIntensity={1.5}
-                edgeSensitivity={20}
-                coneSpread={25}
-                colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                fillOpacity={0.08}
-                className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                style={{
-                  borderRadius: "9999px 9999px 0px 0px",
-                  borderColor: "rgba(197, 168, 128, 0.3)",
-                  boxShadow: "none",
-                }}
-              >
-                <div className="w-full h-full" />
-              </BorderGlow>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
-              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
-              transition={{
-                duration: 1.2,
-                delay: 0.55,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="hidden lg:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md"
-              style={{ y: activeY2 }}
-            >
-              <CategoryImage
-                categoryIndex={categoryIndex}
-                imageIndex={1}
-                alt={`${currentCategory.id} detail top`}
-                delay={0.1}
-              />
+              {/* Fine inside border frame */}
+              <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
               {/* Interactive BorderGlow overlay */}
               <BorderGlow
                 borderRadius={6}
@@ -635,24 +726,27 @@ export function Hero({
               </BorderGlow>
             </motion.div>
 
-            {/* Bottom-Right Image (desktop only) */}
+            {/* Bottom-Mid Image (desktop only) */}
             <motion.div
-              initial={{ opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
-              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
               transition={{
                 duration: 1.2,
-                delay: 0.65,
+                delay: 0.8,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="hidden lg:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md"
               style={{ y: activeY5 }}
+              className="hidden lg:block absolute left-[44.3%] bottom-0 w-[33.8%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
-                imageIndex={2}
-                alt={`${currentCategory.id} detail bottom`}
-                delay={0.4}
+                imageIndex={1}
+                alt={`${currentCategory.id} bottom detail right`}
+                delay={0.3}
+                useBottomImages={true}
               />
+              {/* Fine inside border frame */}
+              <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
               {/* Interactive BorderGlow overlay */}
               <BorderGlow
                 borderRadius={6}
@@ -675,103 +769,19 @@ export function Hero({
               </BorderGlow>
             </motion.div>
           </div>
-
-          {/* ─── BOTTOM IMAGES: Positioned with 1.0% gap and rounded corners ─── */}
-          {/* Bottom-Left Image (desktop only) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              duration: 1.2,
-              delay: 0.8,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            style={{ y: activeY5 }}
-            className="hidden lg:block absolute left-[19%] bottom-0 w-[24.3%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
-          >
-            <CategoryImage
-              categoryIndex={categoryIndex}
-              imageIndex={0}
-              alt={`${currentCategory.id} bottom detail left`}
-              delay={0.2}
-              useBottomImages={true}
-            />
-            {/* Interactive BorderGlow overlay */}
-            <BorderGlow
-              borderRadius={6}
-              backgroundColor="transparent"
-              glowColor="35 85 75"
-              glowRadius={45}
-              glowIntensity={1.5}
-              edgeSensitivity={20}
-              coneSpread={25}
-              colors={["#c5a880", "#e5d5be", "#ffffff"]}
-              fillOpacity={0.08}
-              className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-              style={{
-                borderRadius: "6px",
-                borderColor: "rgba(197, 168, 128, 0.2)",
-                boxShadow: "none",
-              }}
-            >
-              <div className="w-full h-full" />
-            </BorderGlow>
-          </motion.div>
-
-          {/* Bottom-Mid Image (desktop only) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{
-              duration: 1.2,
-              delay: 0.8,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            style={{ y: activeY5 }}
-            className="hidden lg:block absolute left-[44.3%] bottom-0 w-[33.8%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
-          >
-            <CategoryImage
-              categoryIndex={categoryIndex}
-              imageIndex={1}
-              alt={`${currentCategory.id} bottom detail right`}
-              delay={0.3}
-              useBottomImages={true}
-            />
-            {/* Interactive BorderGlow overlay */}
-            <BorderGlow
-              borderRadius={6}
-              backgroundColor="transparent"
-              glowColor="35 85 75"
-              glowRadius={45}
-              glowIntensity={1.5}
-              edgeSensitivity={20}
-              coneSpread={25}
-              colors={["#c5a880", "#e5d5be", "#ffffff"]}
-              fillOpacity={0.08}
-              className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-              style={{
-                borderRadius: "6px",
-                borderColor: "rgba(197, 168, 128, 0.2)",
-                boxShadow: "none",
-              }}
-            >
-              <div className="w-full h-full" />
-            </BorderGlow>
-          </motion.div>
         </div>
-      </div>
 
 
 
 
 
-      {/* ── Video Modal ── */}
-      <VideoModal
-        isOpen={isVideoOpen}
-        onClose={() => setIsVideoOpen(false)}
-        videoUrl={currentCategory.videoUrl}
-        title={`${currentCategory.id.charAt(0).toUpperCase() + currentCategory.id.slice(1)} — Director's Reel`}
-      />
+        {/* ── Video Modal ── */}
+        <VideoModal
+          isOpen={isVideoOpen}
+          onClose={() => setIsVideoOpen(false)}
+          videoUrl={currentCategory.videoUrl}
+          title={`${currentCategory.id.charAt(0).toUpperCase() + currentCategory.id.slice(1)} — Director's Reel`}
+        />
       </motion.div>
     </section>
   );

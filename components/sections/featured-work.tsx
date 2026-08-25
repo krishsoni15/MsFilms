@@ -1,9 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
 import { CardStack } from "@/components/ui/card-stack";
 import BorderGlow from "@/components/ui/border-glow";
+import DiagonalMarqueeCarousel from "@/components/ui/great-ui-diagonal-marquee-carousel";
 
 export function FeaturedWork() {
   const landscapeItems = [
@@ -20,6 +22,50 @@ export function FeaturedWork() {
     description: item.alt,
     imageSrc: item.image,
   }));
+
+  const marqueeCards = [
+    { id: 1, url: "/landscape/imgi_2_1.jpg", title: "Valley Horizon" },
+    { id: 2, url: "/landscape/imgi_8_8.jpg", title: "Mist Mountain" },
+    { id: 3, url: "/landscape/imgi_7_4.jpg", title: "Silent Forest" },
+    { id: 4, url: "/landscape/imgi_5_10.jpg", title: "Alpine Lake" },
+    { id: 5, url: "/landscape/imgi_10_6.jpg", title: "Sunset Peak" },
+    { id: 6, url: "/wedding/imgi_6_4.jpg", title: "Wedding Story" },
+    { id: 7, url: "/wedding/imgi_7_3.jpg", title: "Forest Kiss" },
+    { id: 8, url: "/drone/imgi_10_3.jpg", title: "Aerial Horizon" },
+  ];
+
+  // Dynamic responsiveness sizing for CardStack
+  const [dimensions, setDimensions] = useState({ cardWidth: 520, cardHeight: 330 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        // Mobile screens
+        const computedWidth = Math.min(320, width - 40);
+        setDimensions({
+          cardWidth: computedWidth,
+          cardHeight: computedWidth * 0.65, // Preserve landscape proportions
+        });
+      } else if (width < 1024) {
+        // Tablet screens
+        setDimensions({
+          cardWidth: 440,
+          cardHeight: 280,
+        });
+      } else {
+        // Desktop screens
+        setDimensions({
+          cardWidth: 520,
+          cardHeight: 330,
+        });
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
@@ -52,8 +98,8 @@ export function FeaturedWork() {
             items={cardStackItems}
             initialIndex={2}
             maxVisible={5}
-            cardWidth={520}
-            cardHeight={330}
+            cardWidth={dimensions.cardWidth}
+            cardHeight={dimensions.cardHeight}
             overlap={0.48}
             spreadDeg={36}
             perspectivePx={1100}
@@ -121,8 +167,35 @@ export function FeaturedWork() {
             )}
           />
         </div>
+
+        {/* Cinematic Diagonal Marquee Carousel Section */}
+        <div className="mt-28 md:mt-36 border-t border-white/[0.04] pt-20 md:pt-28">
+          <div className="mb-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <p className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
+                Visual Journey
+              </p>
+              <h3 className="font-display text-3xl md:text-4xl text-foreground/90 font-normal leading-[1.2]">
+                Framing life&apos;s cinematic narrative.
+              </h3>
+            </div>
+            <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
+              An immersive showcase of fine art photography, captured with precision and raw emotion.
+            </p>
+          </div>
+          <div className="w-full relative overflow-hidden rounded-3xl border border-white/[0.06] shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
+            <DiagonalMarqueeCarousel
+              className="h-[45vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] w-full"
+              angle={-15}
+              baseSpeed={110}
+              cards={marqueeCards}
+              fadeClassName="from-[#020912] dark:from-[#020912]"
+            />
+          </div>
+        </div>
       </section>
     </>
   );
 }
+
 

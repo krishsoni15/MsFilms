@@ -3,6 +3,7 @@ import { Inter, Instrument_Serif, Playfair_Display, Pinyon_Script } from "next/f
 import "./globals.css";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import GradualBlur from "@/components/ui/GradualBlur";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,7 +45,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         <SmoothScroll />
         {children}
+        <GradualBlur
+          target="page"
+          position="bottom"
+          height="1.6rem"
+          strength={3}
+          divCount={6}
+          curve="bezier"
+          exponential={true}
+          opacity={1}
+          zIndex={90}
+        />
       </body>
     </html>
   );
 }
+
