@@ -138,7 +138,7 @@ export function Contact() {
                       backgroundColor="transparent"
                       borderRadius={9999}
                       glowRadius={30}
-                      glowIntensity={1.5}
+                      glowIntensity={0.3}
                       coneSpread={25}
                       animated={false}
                       colors={["#c5a880", "#e5d5be", "#ffffff"]}

@@ -24,6 +24,11 @@
     rgba(0, 0, 0, 0.1) 0px 32px 64px;
 }
 
+.border-glow-card.cursor-pointer,
+.border-glow-card.cursor-pointer * {
+  cursor: pointer !important;
+}
+
 .border-glow-card::before,
 .border-glow-card::after,
 .border-glow-card>.edge-light {

@@ -20,7 +20,10 @@ export function AboutStudio() {
   }, []);
 
   return (
-    <section id="about" className="relative w-full bg-[#020912] z-15">
+    <section
+      id="about"
+      className="relative w-full bg-[#020912] z-15 overflow-hidden shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.9),0_-15px_30px_-10px_rgba(197,168,128,0.06)] border-t border-white/[0.02]"
+    >
       <ScrollExpand
         src="/mp4/DJI_0168.MP4"
         mediaType="video"
@@ -29,27 +32,28 @@ export function AboutStudio() {
         title="MSFILMS"
         scrollHint="SCROLL TO DISCOVER"
         useWindowScroll={true}
-        startWidth={isMobile ? 85 : 50}
-        startHeight={isMobile ? 55 : 65}
+        startWidth={isMobile ? 82 : 45}
+        startHeight={isMobile ? 54 : 60}
         startRadius={16}
         endRadius={0}
         mediaZoom={1.22}
-        scrollDistance={1.2}
-        holdDistance={0.35}
+        scrollDistance={2.0}
+        holdDistance={0.5}
+        smoothing={1.2}
         overlayScrim={0.88}
       >
         <div className="max-w-4xl mx-auto px-6 text-center text-white flex flex-col items-center justify-center h-full">
           <span className="text-[10px] tracking-[0.25em] uppercase text-gold mb-3 font-semibold">
             The Studio
           </span>
-          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl leading-tight mb-6 max-w-2xl font-normal text-white">
+          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-4 sm:mb-6 max-w-2xl font-normal text-white">
             Crafting Memories That Last a Lifetime
           </h2>
-          <p className="font-sans text-xs md:text-sm text-white/70 max-w-xl leading-relaxed mb-8">
+          <p className="font-sans text-[11px] sm:text-xs md:text-sm text-white/70 max-w-xl leading-relaxed mb-6 sm:mb-8">
             {siteData.aboutText}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl w-full text-left border-t border-white/10 pt-8 mb-12 font-sans">
+          <div className="hidden sm:grid grid-cols-3 gap-5 max-w-3xl w-full text-left border-t border-white/10 pt-8 mb-10 font-sans">
             <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
               <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
                 <Check size={11} strokeWidth={3.5} />
@@ -77,7 +81,7 @@ export function AboutStudio() {
               backgroundColor="transparent"
               borderRadius={9999}
               glowRadius={30}
-              glowIntensity={1.5}
+              glowIntensity={0.3}
               coneSpread={25}
               animated={false}
               colors={["#c5a880", "#e5d5be", "#ffffff"]}

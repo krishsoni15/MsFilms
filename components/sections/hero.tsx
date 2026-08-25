@@ -12,8 +12,25 @@ import { siteData, heroData } from "@/lib/data";
 import { VideoModal } from "@/components/video-modal";
 import { Magnetic } from "@/components/ui/magnetic";
 import { Aurora } from "@/components/ui/aurora";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Play, Mail } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
+
+/* ────────────────────────────────────────────────────────────
+   Custom Brand SVGs for Social Links
+   ──────────────────────────────────────────────────────────── */
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
 
 /* ────────────────────────────────────────────────────────────
    Animated Category Image — crossfade with subtle zoom
@@ -167,6 +184,22 @@ export function Hero({
   const y2 = useTransform(scrollYProgress, [0, 1], ["0px", "-80px"]);
   const y5 = useTransform(scrollYProgress, [0, 1], ["0px", "-40px"]);
 
+  // Global scroll transforms for the sticky roll-up stack effect
+  const { scrollY } = useScroll();
+  const heroScale = useTransform(scrollY, [0, 600], [1, 0.93]);
+  const heroRotateX = useTransform(scrollY, [0, 600], [0, -9]);
+  const blurVal = useTransform(scrollY, [0, 600], [0, 16]);
+  const heroBlur = useTransform(blurVal, (v) => v === 0 ? "none" : `blur(${v}px)`);
+  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
+
+  // Subtle text vertical drift for extra depth layer
+  const textY = useTransform(scrollY, [0, 600], ["0px", "-45px"]);
+
+  // Disable parallax offsets on mobile to prevent performance lag
+  const activeY1 = isMobile ? "0px" : y1;
+  const activeY2 = isMobile ? "0px" : y2;
+  const activeY5 = isMobile ? "0px" : y5;
+
   /* Trigger loaded state from parent (preloader) */
   useEffect(() => {
     if (isParentLoaded) setIsLoaded(true);
@@ -207,9 +240,19 @@ export function Hero({
     <section
       id="home"
       ref={containerRef}
-      className="relative w-full bg-background overflow-hidden lg:min-h-svh lg:flex lg:flex-col"
+      className="sticky top-0 w-full bg-background overflow-hidden h-screen lg:h-svh flex flex-col z-0"
     >
-      {/* ── Aurora WebGL Background ── */}
+      <motion.div
+        style={{
+          scale: heroScale,
+          rotateX: isMobile ? 0 : heroRotateX,
+          transformPerspective: "1200px",
+          filter: isMobile ? "none" : heroBlur,
+          opacity: heroOpacity,
+        }}
+        className="relative w-full h-full flex flex-col overflow-hidden origin-bottom"
+      >
+        {/* ── Aurora WebGL Background ── */}
       <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
         <Aurora
           colorStops={["#081730", "#cba358", "#4e7bb0"]}
@@ -219,14 +262,51 @@ export function Hero({
         />
       </div>
 
-      {/* ── Left Vertical Selectors & Scroll Indicator (Bottom Left Desktop) ── */}
+      {/* ── Left Social Links ── */}
+      <motion.div
+        initial={{ opacity: 0, y: -15 }}
+        animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1.2, delay: 1 }}
+        className="hidden lg:flex flex-col items-center gap-4 absolute left-12 lg:left-16 top-[32%] -translate-y-1/2 z-30"
+      >
+        <a
+          href="https://www.instagram.com/msfilms._/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+          aria-label="Instagram"
+        >
+          <InstagramIcon className="w-3.5 h-3.5" />
+        </a>
+        <a
+          href="https://wa.me/1234567890"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+          aria-label="WhatsApp"
+        >
+          <WhatsAppIcon className="w-3.5 h-3.5" />
+        </a>
+        <a
+          href="mailto:contactus.msfilms@gmail.com"
+          className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+          aria-label="Email"
+        >
+          <Mail size={13} />
+        </a>
+
+        {/* Subtle local connection segment that fades out */}
+        <div className="w-px h-12 bg-gradient-to-b from-white/10 to-transparent mt-2" />
+      </motion.div>
+
+      {/* ── Left Vertical Category Selectors & Scroll Indicator ── */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={isLoaded ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 1 }}
-        className="hidden lg:flex flex-col items-start gap-6 absolute left-8 lg:left-12 bottom-24 z-30"
+        transition={{ duration: 1, delay: 1.1 }}
+        className="hidden lg:flex flex-col items-center gap-5 absolute left-12 lg:left-16 bottom-20 z-30"
       >
-        <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col items-center gap-4">
           {categories.map((cat, idx) => {
             const isActive = categoryIndex === idx;
             const displayLabel =
@@ -240,48 +320,55 @@ export function Hero({
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(idx)}
-                className="flex items-center gap-3 group text-left focus:outline-none"
+                className="flex flex-col items-center group focus:outline-none relative"
               >
-                <div className="flex flex-col items-center">
-                  <span className={`font-sans text-[12px] tracking-wider transition-colors duration-300 ${isActive ? "text-gold font-semibold" : "text-white/25 group-hover:text-white/55"
+                {/* Active category name floating next to node */}
+                <span className={`absolute left-7 top-1/2 -translate-y-1/2 font-sans text-[8px] tracking-[0.25em] uppercase whitespace-nowrap transition-all duration-500 ${isActive
+                  ? "text-gold opacity-80 translate-x-0 font-semibold"
+                  : "text-white/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-white/30 group-hover:opacity-80 group-hover:translate-x-0"
+                  }`}>
+                  {displayLabel}
+                </span>
+
+                {/* Circular indicator nodes */}
+                <div className="relative flex items-center justify-center w-5 h-5">
+                  <span className={`font-sans text-[10px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-white/20 group-hover:text-white/40"
                     }`}>
                     {String(idx + 1).padStart(2, "0")}
                   </span>
                   {isActive && (
                     <motion.div
-                      layoutId="activeIndicatorDesktop"
-                      className="w-4 h-[1px] bg-gold mt-1"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      layoutId="activeCategoryOuterRing"
+                      className="absolute inset-0 rounded-full border border-gold/20 bg-gold/[0.01] shadow-[0_0_6px_rgba(197,168,128,0.05)]"
+                      transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     />
                   )}
                 </div>
-
-                <span className={`font-sans text-[9px] tracking-[0.25em] uppercase transition-all duration-300 ${isActive
-                  ? "text-gold opacity-100 translate-x-0 w-auto font-medium"
-                  : "text-white/0 opacity-0 -translate-x-2 w-0 overflow-hidden pointer-events-none group-hover:text-white/35 group-hover:opacity-100 group-hover:translate-x-0 group-hover:w-auto"
-                  }`}>
-                  {displayLabel}
-                </span>
               </button>
             );
           })}
         </div>
 
-        <div className="flex flex-col items-start gap-2 mt-2 pt-4 border-t border-foreground/10 w-16">
-          <span className="text-foreground/25 font-sans text-[9px] tracking-[0.25em] uppercase">
+        {/* Scroll indicator with custom animated mouse wheel */}
+        <div className="flex flex-col items-center gap-2.5 mt-3 pt-4 border-t border-white/5 w-10">
+          <span className="text-white/15 font-sans text-[8px] tracking-[0.15em] uppercase">
             Scroll
           </span>
-          <svg
-            className="w-3.5 h-3.5 text-foreground/25 animate-bounce-slow ml-1"
-            viewBox="0 0 12 12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          >
-            <path d="M6 1v10M1 6l5 5 5-5" />
-          </svg>
+          <div className="w-4.5 h-7 rounded-full border border-white/10 flex justify-center p-1 relative overflow-hidden bg-white/[0.005]">
+            <motion.div
+              animate={{
+                y: [0, 6, 0],
+                opacity: [0.3, 0.9, 0.3],
+              }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="w-0.5 h-1.5 rounded-full bg-gold/70"
+            />
+          </div>
         </div>
-
       </motion.div>
 
       {/* ── Right Vertical Text (large desktop) ── */}
@@ -289,13 +376,15 @@ export function Hero({
         initial={{ opacity: 0 }}
         animate={isLoaded ? { opacity: 1 } : {}}
         transition={{ duration: 1, delay: 1.2 }}
-        className="hidden lg:flex absolute right-5 xl:right-8 top-1/2 -translate-y-1/2 z-30"
+        className="hidden lg:flex flex-col items-center gap-4 absolute right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30"
       >
         <span
-          className="text-foreground/15 font-sans text-[9px] tracking-[0.4em] uppercase whitespace-nowrap"
+          className="text-white/[0.12] font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap flex items-center gap-3"
           style={{ writingMode: "vertical-rl" }}
         >
-          Capturing Love — Crafting Memories
+          <span className="text-gold/30 font-serif text-[9px]">✦</span>
+          CAPTURING LOVE — CRAFTING MEMORIES
+          <span className="text-gold/30 font-serif text-[9px]">✦</span>
         </span>
       </motion.div>
 
@@ -304,9 +393,8 @@ export function Hero({
         <div className="grid grid-cols-1 lg:grid-cols-[4.5fr_5.5fr] gap-4 lg:gap-6 lg:gap-8 lg:flex-1 relative">
           {/* ─── LEFT COLUMN: Text Content ─── */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={isLoaded ? { opacity: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            initial={{ opacity: 1 }}
+            style={{ y: isMobile ? "0px" : textY }}
             className="flex flex-col justify-between order-2 lg:order-1 pt-1 pb-4 lg:py-6 lg:py-10 lg:h-full lg:transform lg:translate-x-[16%] lg:-translate-y-[10%]"
           >
             {/* Text Content */}
@@ -315,34 +403,39 @@ export function Hero({
                 <motion.div
                   key={`content-${categoryIndex}`}
                   initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  animate={isLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="w-full flex flex-col justify-center"
                 >
                   {/* Eyebrow */}
-                  <div className="mb-4 lg:mb-5 flex flex-col gap-3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                    animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                    transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    className="mb-4 lg:mb-5 flex flex-col gap-3"
+                  >
                     <p className="text-gold/70 font-sans text-[10px] lg:text-[11px] tracking-[0.3em] uppercase">
                       {currentCategory.eyebrow}
                     </p>
                     <div className="gold-rule" />
-                  </div>
+                  </motion.div>
 
                   {/* Title (staggered internally) */}
                   <div className="mb-4 lg:mb-5">
                     <h1>
                       <motion.span
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                        animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
+                        transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
                         className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
                       >
                         {currentCategory.titleLine1}
                       </motion.span>
 
                       <motion.span
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 15, filter: "blur(8px)" }}
+                        animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(8px)" }}
+                        transition={{ duration: 0.6, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
                         className="block font-laluxes-serif text-[clamp(2rem,4.8vw,3.5rem)] leading-[1.1] text-foreground lg:whitespace-nowrap"
                       >
                         {currentCategory.titleLine2}{" "}
@@ -354,19 +447,24 @@ export function Hero({
                   </div>
 
                   {/* Description */}
-                  <p className="text-foreground/45 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]">
+                  <motion.p
+                    initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
+                    animate={isLoaded ? { opacity: 0.45, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                    transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-foreground/45 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]"
+                  >
                     {currentCategory.description}
-                  </p>
+                  </motion.p>
                 </motion.div>
               </div>
 
               {/* CTAs */}
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
+                animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(6px)" }}
                 transition={{
-                  duration: 0.7,
-                  delay: 0.6,
+                  duration: 0.8,
+                  delay: 0.42,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="flex flex-wrap items-center gap-5 lg:gap-7"
@@ -378,7 +476,7 @@ export function Hero({
                     backgroundColor="transparent"
                     borderRadius={9999}
                     glowRadius={30}
-                    glowIntensity={1.5}
+                    glowIntensity={0.3}
                     coneSpread={25}
                     animated={false}
                     colors={["#c5a880", "#e5d5be", "#ffffff"]}
@@ -461,15 +559,15 @@ export function Hero({
           <div className="relative order-1 lg:order-2 min-h-[340px] sm:min-h-[400px] lg:h-full lg:min-h-[480px] xl:min-h-[540px]">
             {/* Arched Image (center-left of collage) */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
+              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 40, scale: 1.06, filter: "blur(12px)" }}
               transition={{
                 duration: 1.2,
-                delay: 0.4,
+                delay: 0.45,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
-              style={{ y: y1 }}
+              style={{ y: activeY1 }}
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
@@ -499,15 +597,15 @@ export function Hero({
               </BorderGlow>
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: -30 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
+              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
               transition={{
                 duration: 1.2,
-                delay: 0.5,
+                delay: 0.55,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="hidden lg:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md"
-              style={{ y: y2 }}
+              style={{ y: activeY2 }}
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
@@ -539,15 +637,15 @@ export function Hero({
 
             {/* Bottom-Right Image (desktop only) */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+              initial={{ opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
+              animate={isLoaded ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : { opacity: 0, y: 30, scale: 1.06, filter: "blur(12px)" }}
               transition={{
                 duration: 1.2,
-                delay: 0.7,
+                delay: 0.65,
                 ease: [0.16, 1, 0.3, 1],
               }}
               className="hidden lg:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md"
-              style={{ y: y5 }}
+              style={{ y: activeY5 }}
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
@@ -588,7 +686,7 @@ export function Hero({
               delay: 0.8,
               ease: [0.16, 1, 0.3, 1],
             }}
-            style={{ y: y5 }}
+            style={{ y: activeY5 }}
             className="hidden lg:block absolute left-[19%] bottom-0 w-[24.3%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
           >
             <CategoryImage
@@ -629,7 +727,7 @@ export function Hero({
               delay: 0.8,
               ease: [0.16, 1, 0.3, 1],
             }}
-            style={{ y: y5 }}
+            style={{ y: activeY5 }}
             className="hidden lg:block absolute left-[44.3%] bottom-0 w-[33.8%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10"
           >
             <CategoryImage
@@ -674,6 +772,7 @@ export function Hero({
         videoUrl={currentCategory.videoUrl}
         title={`${currentCategory.id.charAt(0).toUpperCase() + currentCategory.id.slice(1)} — Director's Reel`}
       />
+      </motion.div>
     </section>
   );
 }

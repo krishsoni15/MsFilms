@@ -156,7 +156,7 @@ export function CustomCursor() {
       x: cursorX.current,
       y: cursorY.current
     });
-    
+
     // Position corners initially
     if (cornersRef.current) {
       Array.from(cornersRef.current).forEach((corner, i) => {
@@ -245,9 +245,9 @@ export function CustomCursor() {
     const enterHandler = (e: MouseEvent) => {
       const target = (e.target as HTMLElement | null)?.closest(targetSelector) as HTMLElement | null;
       if (!target || !cursorRef.current || !cornersRef.current) return;
-      
-      // Exempt header navigation links from snap targeting to keep navbar clean, except the Let's Talk button
-      if (target.closest("header") && !target.textContent?.includes("Let's Talk")) {
+
+      // Exempt header navigation links from snap targeting to keep navbar clean, except the Let's Talk or Let's Connect buttons
+      if (target.closest("header") && !target.textContent?.includes("Let's Talk") && !target.textContent?.includes("Let's Connect")) {
         return;
       }
 
@@ -357,24 +357,24 @@ export function CustomCursor() {
   }
 
   return (
-    <div 
-      ref={cursorRef} 
+    <div
+      ref={cursorRef}
       className="target-cursor-wrapper pointer-events-none hidden lg:block transition-opacity duration-300"
       style={{ opacity: isPreloaderPresent ? 0 : 1 }}
     >
       {/* ═══ Camera Viewfinder Inner Guides (Visible when not showing text badges) ═══ */}
       <AnimatePresence>
         {!cursorText && (
-          <div 
+          <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none"
             style={{ color: isHovering ? cursorColorOnTarget : cursorColor }}
           >
             {/* 1. Viewfinder Circular Focus Ring (spins slowly in background) */}
-            <div 
+            <div
               ref={guidesRef}
-              className="absolute w-[18px] h-[18px] border border-dashed border-current/25 rounded-full pointer-events-none" 
+              className="absolute w-[18px] h-[18px] border border-dashed border-current/25 rounded-full pointer-events-none"
             />
-            
+
             {/* 2. Central Focus Crosshair Ticks (always aligned straight - 0 rotation) */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               {/* Horizontal line */}

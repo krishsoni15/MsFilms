@@ -1,3 +1,17 @@
 .shiny-text {
   display: inline-block;
 }
+
+@keyframes shine-sweep {
+  0% {
+    background-position: 150% center;
+  }
+  100% {
+    background-position: -50% center;
+  }
+}
+
+.shiny-logo-anim {
+  animation: shine-sweep var(--shine-duration, 2s) linear infinite;
+}
+
