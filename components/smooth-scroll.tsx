@@ -76,11 +76,18 @@ export function SmoothScroll() {
       }, 200);
     }
 
+    // Sync ScrollTrigger when the body height changes (due to lazy loading, image mounts, etc.)
+    const resizeObserver = new ResizeObserver(() => {
+      ScrollTrigger.refresh();
+    });
+    resizeObserver.observe(document.body);
+
     return () => {
       delete (window as any).lenis;
       lenis.destroy();
       gsap.ticker.remove(updateLenis);
       document.removeEventListener("click", handleAnchorClick);
+      resizeObserver.disconnect();
     };
   }, []);
 
