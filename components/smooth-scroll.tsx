@@ -78,6 +78,7 @@ export function SmoothScroll() {
 
     // Sync ScrollTrigger when the body height changes (due to lazy loading, image mounts, etc.)
     const resizeObserver = new ResizeObserver(() => {
+      lenis.resize();
       ScrollTrigger.refresh();
     });
     resizeObserver.observe(document.body);
