@@ -46,8 +46,19 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
     return () => clearTimeout(timer);
   }, [items]);
 
+  const isProgrammaticScrollRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
+
   // Monitor scroll positioning to update active item based on center-proximity and loop infinitely
   const handleScroll = () => {
+    if (isProgrammaticScrollRef.current) return;
+
     const container = scrollRef.current;
     if (!container) return;
 
@@ -100,11 +111,20 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
     if (cards[targetClonedIndex]) {
       const card = cards[targetClonedIndex] as HTMLElement;
       const targetScroll = card.offsetLeft - container.clientWidth / 2 + card.clientWidth / 2;
+
+      isProgrammaticScrollRef.current = true;
+      setActiveIndex(index);
+
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
       container.scrollTo({
         left: targetScroll,
         behavior: "smooth",
       });
-      setActiveIndex(index);
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScrollRef.current = false;
+      }, 600);
     }
   };
 
