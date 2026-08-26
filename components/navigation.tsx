@@ -97,25 +97,19 @@ export function Navigation({
 
       const isAtBottom =
         window.innerHeight + currentScrollY >=
-        document.documentElement.scrollHeight - 20;
+        document.documentElement.scrollHeight - 50;
       if (isAtBottom) {
         setActiveSection("contact");
         return;
       }
 
       let currentSection = "home";
-      let minDistance = Infinity;
       for (const id of sectionIds) {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= threshold && rect.bottom >= threshold) {
-            currentSection = id;
-            break;
-          }
-          const distance = Math.abs(rect.top - threshold);
-          if (distance < minDistance) {
-            minDistance = distance;
+          // If the top of the section has scrolled past the threshold, it is active
+          if (rect.top <= threshold) {
             currentSection = id;
           }
         }
