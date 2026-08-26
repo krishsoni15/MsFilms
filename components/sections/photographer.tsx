@@ -280,6 +280,25 @@ export function AboutPhotographer() {
         </div>
 
       </div>
+
+      {/* Scroll-down arrow indicator */}
+      <div className="relative z-10 flex justify-center mt-16 md:mt-24">
+        <button
+          onClick={() => {
+            const nextSection = containerRef.current?.nextElementSibling;
+            if (nextSection instanceof HTMLElement) {
+              nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }}
+          aria-label="Scroll to next section"
+          className="group flex flex-col items-center gap-2 text-foreground/30 hover:text-gold/70 transition-colors duration-500 focus:outline-none"
+        >
+          <span className="text-[9px] tracking-[0.3em] uppercase font-sans">Scroll</span>
+          <span className="relative w-8 h-12 rounded-full border border-foreground/15 group-hover:border-gold/30 transition-colors duration-500 flex items-start justify-center pt-2">
+            <span className="w-[3px] h-[3px] rounded-full bg-current animate-bounce" />
+          </span>
+        </button>
+      </div>
     </section>
   );
 }
