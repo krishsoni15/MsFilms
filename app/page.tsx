@@ -33,14 +33,8 @@ const GradientSlider = dynamic(
   () => import("@/components/sections/gradient-slider"),
   { ssr: false }
 );
-const CircularShowcase = dynamic(
-  () => import("@/components/sections/circular-showcase"),
-  { ssr: false }
-);
-const DriftShowcase = dynamic(
-  () => import("@/components/sections/drift-showcase"),
-  { ssr: false }
-);
+import { CircularShowcase } from "@/components/sections/circular-showcase";
+import { DriftShowcase } from "@/components/sections/drift-showcase";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);

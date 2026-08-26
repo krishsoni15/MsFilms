@@ -100,6 +100,12 @@ export function DriftWall({
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
     mq.addEventListener('change', onChange);
+
+    // Refresh ScrollTrigger to sync scroll heights after dynamic wall injection
+    import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+      ScrollTrigger.refresh();
+    });
+
     return () => mq.removeEventListener('change', onChange);
   }, []);
 

@@ -771,6 +771,11 @@ function CircularGallery({
         scrollSpeed,
         scrollEase
       });
+
+      // Refresh ScrollTrigger to sync scroll heights after dynamic canvas injection
+      import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+        ScrollTrigger.refresh();
+      });
     });
 
     return () => {
