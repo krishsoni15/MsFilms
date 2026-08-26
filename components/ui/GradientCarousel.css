@@ -110,6 +110,7 @@
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   background-color: #030c16;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 /* Border Glow Gradient Line */
@@ -134,14 +135,16 @@
 .gradient-carousel-card-inner {
   position: absolute;
   inset: 1px;
-  border-radius: 23px;
+  border-radius: inherit;
   overflow: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .gradient-carousel-card-image {
   object-fit: cover;
   transform: scale(1.02);
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: inherit;
 }
 
 .gradient-carousel-card-wrapper:hover .gradient-carousel-card-image {
@@ -159,6 +162,7 @@
     transparent 100%
   );
   z-index: 2;
+  border-radius: inherit;
 }
 
 /* Card Overlay Content */

@@ -56,7 +56,7 @@ const Card = ({ card, className }: { card: CardItem; className?: string }) => {
   return (
     <div
       className={cn(
-        "group relative h-[300px] w-[400px] shrink-0 cursor-pointer overflow-hidden rounded-xl shadow-2xl transition-transform duration-500 hover:scale-105",
+        "group relative w-[240px] h-[180px] sm:w-[300px] sm:h-[225px] md:w-[360px] md:h-[270px] lg:w-[400px] lg:h-[300px] shrink-0 cursor-pointer overflow-hidden rounded-xl shadow-2xl transition-transform duration-500 hover:scale-105",
         className,
       )}
     >

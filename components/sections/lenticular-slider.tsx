@@ -14,24 +14,32 @@ export function LenticularSlider() {
     {
       id: "wedding-story",
       image: "/wedding/imgi_3_5.png",
+      imageA: "/wedding/imgi_3_5.png",
+      imageB: "/wedding/imgi_7_3.jpg",
       subtitle: "REAL LOVE STORIES",
       title: "Wedding Day Moments",
     },
     {
       id: "horizons",
       image: "/landscape/imgi_8_8.jpg",
+      imageA: "/landscape/imgi_8_8.jpg",
+      imageB: "/landscape/imgi_7_4.jpg",
       subtitle: "NATURAL ENVIRONMENT",
       title: "Landscape Sceneries",
     },
     {
       id: "drone-view",
       image: "/drone/imgi_10_3.jpg",
+      imageA: "/drone/imgi_10_3.jpg",
+      imageB: "/drone/imgi_12_9.jpg",
       subtitle: "AERIAL PERSPECTIVES",
       title: "Dronography Symmetry",
     },
     {
       id: "character-light",
       image: "/me/013A5316.jpg",
+      imageA: "/me/013A5316.jpg",
+      imageB: "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg",
       subtitle: "PORTRAIT STUDIES",
       title: "Character & Light",
     },
@@ -39,7 +47,7 @@ export function LenticularSlider() {
 
   return (
     <section className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
-      <div className="mb-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div className="mb-16 md:mb-20 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
             Interactive Showcase

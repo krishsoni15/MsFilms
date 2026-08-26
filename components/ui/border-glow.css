@@ -159,9 +159,11 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  border-radius: inherit;
   z-index: 1;
   width: 100%;
   height: 100%;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 /* Upgraded Form Input Styling resets (overrides browser focus rings & plugin boxes) */

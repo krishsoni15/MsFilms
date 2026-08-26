@@ -55,12 +55,17 @@ const LenticularSlice = memo(function LenticularSlice({
   currentAngle,
   finalLeftOpacity,
   finalRightOpacity,
+  parallaxOffset,
 }: SliceProps) {
   const sliceWidth = width / slicesCount;
   const colLeft = index * sliceWidth;
 
   // Each slice gets its own useTransform — called at component top level (legal!)
   const negatedAngle = useTransform(currentAngle, (val: number) => -val);
+
+  // Compute background positions dynamically via Framer Motion to bypass CSS variables
+  const backgroundPositionA = useTransform(parallaxOffset, (offset) => `calc(-${colLeft}px - ${offset}) 0px`);
+  const backgroundPositionB = useTransform(parallaxOffset, (offset) => `calc(-${colLeft + sliceWidth / 2}px - ${offset}) 0px`);
 
   return (
     <div
@@ -75,7 +80,7 @@ const LenticularSlice = memo(function LenticularSlice({
         className="lenticular-face lenticular-face-left"
         style={{
           backgroundImage: `url(${imgA})`,
-          backgroundPosition: `calc(-${colLeft}px - var(--parallax-offset)) 0px`,
+          backgroundPosition: backgroundPositionA,
           backgroundSize: `${width}px ${height}px`,
           rotateY: negatedAngle,
           scaleX: 1.02,
@@ -87,7 +92,7 @@ const LenticularSlice = memo(function LenticularSlice({
         className="lenticular-face lenticular-face-right"
         style={{
           backgroundImage: `url(${imgB})`,
-          backgroundPosition: `calc(-${colLeft + sliceWidth / 2}px - var(--parallax-offset)) 0px`,
+          backgroundPosition: backgroundPositionB,
           backgroundSize: `${width}px ${height}px`,
           rotateY: currentAngle,
           scaleX: 1.02,

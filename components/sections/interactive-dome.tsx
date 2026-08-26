@@ -21,8 +21,8 @@ export function InteractiveDome() {
   ];
 
   return (
-    <section className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
-      <div className="mb-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section className="py-24 md:py-36 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
+      <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
             3D Dome Gallery
@@ -45,13 +45,13 @@ export function InteractiveDome() {
       </div>
 
       {/* Interactive Dome viewport */}
-      <div className="max-w-7xl mx-auto w-full h-[60vh] sm:h-[70vh] md:h-[80vh] relative overflow-hidden rounded-3xl border border-white/[0.05] shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
+      <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] relative overflow-hidden">
         <DomeGallery
           images={domeImages}
-          fit={0.5}
+          fit={0.68}
           fitBasis="auto"
-          minRadius={550}
-          maxRadius={1200}
+          minRadius={700}
+          maxRadius={1350}
           overlayBlurColor="#020912"
           grayscale={false}
           openedImageWidth="300px"

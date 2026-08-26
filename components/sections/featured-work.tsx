@@ -69,10 +69,10 @@ export function FeaturedWork() {
 
   return (
     <>
-      <section id="work" className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background overflow-x-hidden">
-        <div className="mb-16 md:mb-20 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <section id="work" className="py-24 md:py-36 bg-[#020912] border-t border-white/[0.03] overflow-x-hidden">
+        <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
-            <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">
+            <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
               Selected Stories
             </AnimatedText>
             <ScrollReveal
@@ -93,7 +93,7 @@ export function FeaturedWork() {
         </div>
 
         {/* 3D Card Stack replacing Accordion Gallery */}
-        <div className="max-w-4xl mx-auto relative z-10 flex justify-center items-center py-6">
+        <div className="max-w-4xl mx-auto px-5 md:px-10 lg:px-16 relative z-10 flex justify-center items-center py-6">
           <CardStack
             items={cardStackItems}
             initialIndex={2}
@@ -129,13 +129,13 @@ export function FeaturedWork() {
                   fillOpacity={active ? 0.08 : 0.0}
                   className="w-full h-full"
                 >
-                  <div className="relative h-full w-full">
+                  <div className="relative h-full w-full rounded-[inherit] overflow-hidden">
                     {/* Card Image */}
                     {item.imageSrc ? (
                       <img
                         src={item.imageSrc}
                         alt={item.title}
-                        className="h-full w-full object-cover select-none pointer-events-none"
+                        className="h-full w-full object-cover select-none pointer-events-none rounded-[inherit]"
                         draggable={false}
                         loading="eager"
                       />
@@ -145,7 +145,7 @@ export function FeaturedWork() {
                       </div>
                     )}
                     {/* Shadow overlay */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020912]/85 via-[#020912]/30 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020912]/85 via-[#020912]/30 to-transparent rounded-[inherit]" />
 
                     {/* Content */}
                     <div className="relative z-10 flex h-full flex-col justify-end p-6 select-none">
@@ -170,7 +170,7 @@ export function FeaturedWork() {
 
         {/* Cinematic Diagonal Marquee Carousel Section */}
         <div className="mt-28 md:mt-36 border-t border-white/[0.04] pt-20 md:pt-28">
-          <div className="mb-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <p className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
                 Visual Journey
@@ -183,7 +183,7 @@ export function FeaturedWork() {
               An immersive showcase of fine art photography, captured with precision and raw emotion.
             </p>
           </div>
-          <div className="w-full relative overflow-hidden rounded-3xl border border-white/[0.06] shadow-[0_24px_80px_rgba(0,0,0,0.95)]">
+          <div className="w-full relative overflow-hidden">
             <DiagonalMarqueeCarousel
               className="h-[45vh] sm:h-[55vh] md:h-[65vh] lg:h-[75vh] w-full"
               angle={-15}

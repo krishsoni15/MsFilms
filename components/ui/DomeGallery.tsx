@@ -646,6 +646,34 @@ export default function DomeGallery({
     return () => observer.disconnect();
   }, []);
 
+  // Auto-rotation when there is no user interaction (dragging or open/enlarging) and visible
+  useEffect(() => {
+    let active = true;
+    let lastTime = performance.now();
+
+    const tick = (time: number) => {
+      if (!active) return;
+
+      const delta = time - lastTime;
+      lastTime = time;
+
+      const isEnlarging = rootRef.current?.getAttribute("data-enlarging") === "true";
+      if (!draggingRef.current && !isEnlarging && !inertiaRAF.current && isVisibleRef.current) {
+        // Slow automated rotation: ~0.4 degrees per second (0.007 degrees per millisecond)
+        const nextY = wrapAngleSigned(rotationRef.current.y + 0.007 * delta);
+        rotationRef.current = { ...rotationRef.current, y: nextY };
+        applyTransform(rotationRef.current.x, nextY);
+      }
+
+      requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div
       ref={rootRef}

@@ -33,6 +33,14 @@ const GradientSlider = dynamic(
   () => import("@/components/sections/gradient-slider"),
   { ssr: false }
 );
+const CircularShowcase = dynamic(
+  () => import("@/components/sections/circular-showcase"),
+  { ssr: false }
+);
+const DriftShowcase = dynamic(
+  () => import("@/components/sections/drift-showcase"),
+  { ssr: false }
+);
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +71,12 @@ export default function Home() {
         </LazySection>
         <LazySection rootMargin="400px" minHeight="500px">
           <GradientSlider />
+        </LazySection>
+        <LazySection rootMargin="400px" minHeight="600px">
+          <CircularShowcase />
+        </LazySection>
+        <LazySection rootMargin="400px" minHeight="600px">
+          <DriftShowcase />
         </LazySection>
         <Testimonials />
         <Contact />

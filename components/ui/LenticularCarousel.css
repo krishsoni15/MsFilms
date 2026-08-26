@@ -55,6 +55,7 @@
   cursor: grab;
   overflow: hidden;
   will-change: transform;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .lenticular-card:active {
@@ -67,9 +68,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
+  border-radius: inherit;
   overflow: hidden;
   transform-style: preserve-3d;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 /* A single vertical column */
@@ -89,6 +91,7 @@
   background-repeat: no-repeat;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  border-radius: inherit;
 }
 
 .lenticular-face-left {
@@ -108,7 +111,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border-radius: 20px;
+  border-radius: inherit;
   z-index: 5;
   mix-blend-mode: overlay;
   opacity: 0;
@@ -131,7 +134,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border-radius: 20px;
+  border-radius: inherit;
   z-index: 10;
   mix-blend-mode: color-dodge;
   opacity: 0;
@@ -152,7 +155,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border-radius: 20px;
+  border-radius: inherit;
   z-index: 4;
   mix-blend-mode: screen;
   opacity: 0;
@@ -199,8 +202,8 @@
     transparent 100%
   );
   z-index: 6;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
   pointer-events: none;
   display: flex;
   flex-direction: column;
