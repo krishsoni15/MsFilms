@@ -158,11 +158,6 @@ export function ScrollExpand({
             const currentY = -40 + 80 * p;
             media.style.transform = `scale(${currentScale}) translateY(${currentY}px)`;
 
-            // Apply a subtle blur to the background video during the hold phase (once expanded)
-            const holdProgress = Math.max(0, t - 1.0) / Math.max(0.1, holdDistance);
-            const currentBlur = 4 * holdProgress;
-            media.style.filter = currentBlur > 0.1 ? `blur(${currentBlur}px)` : "none";
-
             if (scrimRef.current) {
               scrimRef.current.style.opacity = `${overlayScrim * clipProgress}`;
             }

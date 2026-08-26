@@ -601,6 +601,7 @@ class ArcballControl {
 class InfiniteGridMenu {
   TARGET_FRAME_DURATION = 1000 / 60;
   SPHERE_RADIUS = 2;
+  isVisible = true;
 
   #time = 0;
   #deltaTime = 0;
@@ -688,8 +689,11 @@ class InfiniteGridMenu {
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
     this.#frames += this.#deltaFrames;
 
-    this.#animate(this.#deltaTime);
-    this.#render();
+    // Skip animate + render when offscreen to save GPU cycles
+    if (this.isVisible) {
+      this.#animate(this.#deltaTime);
+      this.#render();
+    }
 
     requestAnimationFrame((t) => this.run(t));
   }
@@ -1001,6 +1005,7 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }: InfiniteMenuPr
   useEffect(() => {
     const canvas = canvasRef.current;
     let sketch: InfiniteGridMenu | undefined;
+    let observer: IntersectionObserver | undefined;
 
     const handleActiveItem = (index: number) => {
       const itemIndex = index % items.length;
@@ -1016,6 +1021,17 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }: InfiniteMenuPr
         (sk) => sk.run(),
         scale
       );
+
+      // Visibility gating — pause WebGL rendering when offscreen
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (sketch) {
+            sketch.isVisible = entry.isIntersecting;
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(canvas);
     }
 
     const handleResize = () => {
@@ -1029,6 +1045,7 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }: InfiniteMenuPr
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      observer?.disconnect();
     };
   }, [items, scale]);
 

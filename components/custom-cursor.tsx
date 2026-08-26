@@ -172,13 +172,30 @@ export function CustomCursor() {
       repeat: -1
     });
 
-    // Single high-performance requestAnimationFrame loop with zero DOM reads
+    // Single high-performance requestAnimationFrame loop with idle throttling
     let rafId = 0;
+    let lastMoveTime = performance.now();
+    let isIdle = false;
+
     const tick = () => {
       const targetCursorX = mousePositionRef.current.x - offsetX;
       const targetCursorY = mousePositionRef.current.y - offsetY;
-      cursorX.current += (targetCursorX - cursorX.current) * 0.15;
-      cursorY.current += (targetCursorY - cursorY.current) * 0.15;
+
+      // Check if cursor has converged — skip DOM writes when idle
+      const dx = targetCursorX - cursorX.current;
+      const dy = targetCursorY - cursorY.current;
+      const timeSinceMove = performance.now() - lastMoveTime;
+      const hasConverged = Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5;
+
+      if (hasConverged && timeSinceMove > 150 && !targetCornerPositions) {
+        isIdle = true;
+        rafId = requestAnimationFrame(tick);
+        return;
+      }
+      isIdle = false;
+
+      cursorX.current += dx * 0.15;
+      cursorY.current += dy * 0.15;
 
       gsap.set(cursor, { x: cursorX.current, y: cursorY.current });
 
@@ -206,6 +223,7 @@ export function CustomCursor() {
 
     const moveHandler = (e: MouseEvent) => {
       mousePositionRef.current = { x: e.clientX, y: e.clientY };
+      lastMoveTime = performance.now();
     };
     window.addEventListener("mousemove", moveHandler, { passive: true });
 

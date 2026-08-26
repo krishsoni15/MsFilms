@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import "./Masonry.css";
 
@@ -80,7 +81,7 @@ const preloadImages = async (urls: string[]) => {
     urls.map(
       (src) =>
         new Promise<void>((resolve) => {
-          const img = new Image();
+          const img = new globalThis.Image();
           img.src = src;
           img.onload = img.onerror = () => resolve();
         })
@@ -266,14 +267,23 @@ const Masonry = ({
             key={item.id}
             data-key={item.id}
             className="item-wrapper"
+            style={{ width: item.w, height: item.h }}
             onClick={() => window.open(item.url, "_blank", "noopener")}
             onMouseEnter={(e) => handleMouseEnter(e, item)}
             onMouseLeave={(e) => handleMouseLeave(e, item)}
           >
             <div
-              className="item-img"
-              style={{ backgroundImage: `url(${item.img})` }}
+              className="item-img relative w-full h-full overflow-hidden"
+              style={{ borderRadius: "8px" }}
             >
+              <Image
+                src={item.img}
+                alt="MSFilms Portfolio Item"
+                fill
+                sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
+                className="object-cover"
+                quality={75}
+              />
               {colorShiftOnHover && (
                 <div
                   className="color-overlay"
@@ -288,6 +298,7 @@ const Masonry = ({
                     opacity: 0,
                     pointerEvents: "none",
                     borderRadius: "8px",
+                    zIndex: 2,
                   }}
                 />
               )}

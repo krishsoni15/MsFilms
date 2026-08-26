@@ -179,6 +179,7 @@ export default function DomeGallery({
   const openingRef = useRef(false);
   const openStartedAtRef = useRef(0);
   const lastDragEndAt = useRef(0);
+  const isVisibleRef = useRef(true);
 
   const scrollLockedRef = useRef(false);
   const lockScroll = useCallback(() => {
@@ -324,7 +325,12 @@ export default function DomeGallery({
         const nextY = wrapAngleSigned(rotationRef.current.y + vX / 200);
         rotationRef.current = { x: nextX, y: nextY };
         applyTransform(nextX, nextY);
-        inertiaRAF.current = requestAnimationFrame(step);
+        // Skip rAF when offscreen to save GPU
+        if (isVisibleRef.current) {
+          inertiaRAF.current = requestAnimationFrame(step);
+        } else {
+          inertiaRAF.current = null;
+        }
       };
       stopInertia();
       inertiaRAF.current = requestAnimationFrame(step);
@@ -626,6 +632,20 @@ export default function DomeGallery({
     };
   }, []);
 
+  // Visibility gating — pause inertia when offscreen
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       ref={rootRef}
@@ -638,6 +658,8 @@ export default function DomeGallery({
           "--tile-radius": imageBorderRadius,
           "--enlarge-radius": openedImageBorderRadius,
           "--image-filter": grayscale ? "grayscale(1)" : "none",
+          contentVisibility: "auto",
+          containIntrinsicSize: "auto 80vh",
         } as React.CSSProperties
       }
     >

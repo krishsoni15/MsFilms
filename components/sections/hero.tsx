@@ -76,7 +76,7 @@ function CategoryImage({
             className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
             sizes="(max-width: 768px) 80vw, 35vw"
             quality={75}
-            priority
+            priority={categoryIndex === 0}
           />
         </motion.div>
       </AnimatePresence>
@@ -188,8 +188,6 @@ export function Hero({
   const { scrollY } = useScroll();
   const heroScale = useTransform(scrollY, [0, 600], [1, 0.93]);
   const heroRotateX = useTransform(scrollY, [0, 600], [0, -9]);
-  const blurVal = useTransform(scrollY, [0, 600], [0, 16]);
-  const heroBlur = useTransform(blurVal, (v) => v === 0 ? "none" : `blur(${v}px)`);
   const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
 
   // Subtle text vertical drift for extra depth layer
@@ -247,7 +245,6 @@ export function Hero({
           scale: heroScale,
           rotateX: isMobile ? 0 : heroRotateX,
           transformPerspective: "1200px",
-          filter: isMobile ? "none" : heroBlur,
           opacity: heroOpacity,
         }}
         className="relative w-full h-full flex flex-col overflow-hidden origin-bottom"
@@ -577,26 +574,6 @@ export function Hero({
                 />
                 {/* Fine inside arched border frame */}
                 <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20" style={{ borderRadius: "9999px 9999px 0px 0px" }} />
-                {/* Interactive BorderGlow overlay */}
-                <BorderGlow
-                  borderRadius={0}
-                  backgroundColor="transparent"
-                  glowColor="35 85 75"
-                  glowRadius={45}
-                  glowIntensity={1.5}
-                  edgeSensitivity={20}
-                  coneSpread={25}
-                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                  fillOpacity={0.08}
-                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                  style={{
-                    borderRadius: "9999px 9999px 0px 0px",
-                    borderColor: "rgba(197, 168, 128, 0.3)",
-                    boxShadow: "none",
-                  }}
-                >
-                  <div className="w-full h-full" />
-                </BorderGlow>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: -30, scale: 1.06, filter: "blur(12px)" }}
@@ -617,26 +594,6 @@ export function Hero({
                 />
                 {/* Fine inside border frame */}
                 <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
-                {/* Interactive BorderGlow overlay */}
-                <BorderGlow
-                  borderRadius={6}
-                  backgroundColor="transparent"
-                  glowColor="35 85 75"
-                  glowRadius={45}
-                  glowIntensity={1.5}
-                  edgeSensitivity={20}
-                  coneSpread={25}
-                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                  fillOpacity={0.08}
-                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                  style={{
-                    borderRadius: "6px",
-                    borderColor: "rgba(197, 168, 128, 0.2)",
-                    boxShadow: "none",
-                  }}
-                >
-                  <div className="w-full h-full" />
-                </BorderGlow>
               </motion.div>
 
               {/* Bottom-Right Image (desktop only) */}
@@ -659,26 +616,6 @@ export function Hero({
                 />
                 {/* Fine inside border frame */}
                 <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
-                {/* Interactive BorderGlow overlay */}
-                <BorderGlow
-                  borderRadius={6}
-                  backgroundColor="transparent"
-                  glowColor="35 85 75"
-                  glowRadius={45}
-                  glowIntensity={1.5}
-                  edgeSensitivity={20}
-                  coneSpread={25}
-                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                  fillOpacity={0.08}
-                  className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                  style={{
-                    borderRadius: "6px",
-                    borderColor: "rgba(197, 168, 128, 0.2)",
-                    boxShadow: "none",
-                  }}
-                >
-                  <div className="w-full h-full" />
-                </BorderGlow>
               </motion.div>
             </div>
 
@@ -704,26 +641,6 @@ export function Hero({
               />
               {/* Fine inside border frame */}
               <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
-              {/* Interactive BorderGlow overlay */}
-              <BorderGlow
-                borderRadius={6}
-                backgroundColor="transparent"
-                glowColor="35 85 75"
-                glowRadius={45}
-                glowIntensity={1.5}
-                edgeSensitivity={20}
-                coneSpread={25}
-                colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                fillOpacity={0.08}
-                className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                style={{
-                  borderRadius: "6px",
-                  borderColor: "rgba(197, 168, 128, 0.2)",
-                  boxShadow: "none",
-                }}
-              >
-                <div className="w-full h-full" />
-              </BorderGlow>
             </motion.div>
 
             {/* Bottom-Mid Image (desktop only) */}
@@ -747,26 +664,6 @@ export function Hero({
               />
               {/* Fine inside border frame */}
               <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-md" />
-              {/* Interactive BorderGlow overlay */}
-              <BorderGlow
-                borderRadius={6}
-                backgroundColor="transparent"
-                glowColor="35 85 75"
-                glowRadius={45}
-                glowIntensity={1.5}
-                edgeSensitivity={20}
-                coneSpread={25}
-                colors={["#c5a880", "#e5d5be", "#ffffff"]}
-                fillOpacity={0.08}
-                className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
-                style={{
-                  borderRadius: "6px",
-                  borderColor: "rgba(197, 168, 128, 0.2)",
-                  boxShadow: "none",
-                }}
-              >
-                <div className="w-full h-full" />
-              </BorderGlow>
             </motion.div>
           </div>
         </div>

@@ -81,9 +81,10 @@ export function Navigation({
       } else if (currentScrollY <= 50) {
         setVisible(true);
       } else {
-        if (diff > 12) {
+        // More sensitive scroll-hiding threshold (from 12 to 5) so it hides instantly on scroll down
+        if (diff > 5) {
           setVisible(false); // scrolling down
-        } else if (diff < -12) {
+        } else if (diff < -5) {
           setVisible(true); // scrolling up
         }
       }
@@ -206,8 +207,8 @@ export function Navigation({
           ? "opacity-0 -translate-y-24 pointer-events-none"
           : "opacity-100 translate-y-0"
           } ${isScrolled
-            ? "top-4 w-[92%] sm:w-[88%] lg:w-[82%] max-w-[1100px] rounded-full bg-gradient-to-b from-[#030914]/85 to-[#020710]/75 backdrop-blur-2xl border border-white/[0.08] hover:border-gold/20 shadow-[0_24px_50px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(197,168,128,0.04),inset_0_1px_1px_rgba(255,255,255,0.06)] py-2.5 px-6 lg:px-8"
-            : "top-0 w-full rounded-none bg-transparent border-b border-transparent py-5 sm:py-6 px-6 sm:px-10 lg:px-16"
+            ? "top-2.5 w-[92%] sm:w-[88%] lg:w-[82%] max-w-[1100px] rounded-full bg-gradient-to-b from-[#030914]/50 to-[#020710]/40 backdrop-blur-xl border border-gold/15 hover:border-gold/30 shadow-[0_24px_50px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(197,168,128,0.04),inset_0_1px_1px_rgba(255,255,255,0.06)] py-1.5 px-6 lg:px-8"
+            : "top-0 w-full rounded-none bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
           }`}
       >
         <div className="flex items-center justify-between w-full mx-auto">
@@ -218,7 +219,7 @@ export function Navigation({
               alt="Ms films"
               width={180}
               height={48}
-              className={`w-auto object-contain brightness-100 transition-all duration-500 ${isScrolled ? "h-[25px] sm:h-[28px]" : "h-[31px] sm:h-[35px] lg:h-[39px]"
+              className={`w-auto object-contain brightness-100 transition-all duration-500 ${isScrolled ? "h-[18px] sm:h-[21px]" : "h-[25px] sm:h-[28px] lg:h-[31px]"
                 }`}
               priority
             />
@@ -239,7 +240,11 @@ export function Navigation({
                     key={link.label}
                     href={link.href}
                     onMouseEnter={() => setHoveredSection(sectionId)}
-                    className={`relative px-4 py-2 rounded-full text-[11px] tracking-[0.18em] uppercase font-sans font-medium transition-colors duration-300 ${isActive
+                    className={`relative rounded-full uppercase font-sans font-medium transition-all duration-300 ${
+                      isScrolled
+                        ? "px-3.5 py-1 text-[10px] tracking-[0.16em]"
+                        : "px-4 py-1.5 text-[11px] tracking-[0.18em]"
+                    } ${isActive
                       ? "text-white font-semibold"
                       : isHighlighted
                         ? "text-white/90"

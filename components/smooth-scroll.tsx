@@ -26,18 +26,15 @@ export function SmoothScroll() {
     // Expose lenis instance globally for scroll-to-top access
     (window as any).lenis = lenis;
 
-    // Animate Lenis on every frame
-    let rafId: number;
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-    rafId = requestAnimationFrame(raf);
-
     // Sync Lenis scroll updates with GSAP ScrollTrigger
-    lenis.on("scroll", () => {
-      ScrollTrigger.update();
-    });
+    lenis.on("scroll", ScrollTrigger.update);
+
+    // Sync Lenis updates with the GSAP ticker to eliminate scroll animation jitter
+    const updateLenis = (time: number) => {
+      lenis.raf(time * 1000); // GSAP Ticker provides seconds, Lenis expects milliseconds
+    };
+    gsap.ticker.add(updateLenis);
+    gsap.ticker.lagSmoothing(0);
 
     // Bind link clicks to Lenis smooth scroll anchors
     const handleAnchorClick = (e: MouseEvent) => {
@@ -82,7 +79,7 @@ export function SmoothScroll() {
     return () => {
       delete (window as any).lenis;
       lenis.destroy();
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(updateLenis);
       document.removeEventListener("click", handleAnchorClick);
     };
   }, []);

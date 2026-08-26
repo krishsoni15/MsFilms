@@ -1,0 +1,217 @@
+.lenticular-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 3D Perspective Context */
+.lenticular-scene {
+  perspective: 1200px;
+  perspective-origin: center center;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* Track holding the cards */
+.lenticular-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Individual card wrapper in the carousel */
+.lenticular-card-container {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Actual 3D card which tilts on hover */
+.lenticular-card {
+  position: relative;
+  border-radius: 20px;
+  transform-style: preserve-3d;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8),
+              0 0 0 1px rgba(255, 255, 255, 0.05);
+  cursor: grab;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.lenticular-card:active {
+  cursor: grabbing;
+}
+
+/* Slices container */
+.lenticular-slices-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+/* A single vertical column */
+.lenticular-column {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* Left & Right faces inside a column */
+.lenticular-face {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.lenticular-face-left {
+  left: 0;
+  width: 50.5%; /* Slight overlap to prevent 1px subpixel gaps */
+  transform-origin: right center;
+}
+
+.lenticular-face-right {
+  left: 50%;
+  width: 50.5%; /* Slight overlap to prevent 1px subpixel gaps */
+  transform-origin: left center;
+}
+
+/* Realistic vertical ridge lenticular sheet texture overlay */
+.lenticular-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  z-index: 5;
+  mix-blend-mode: overlay;
+  opacity: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.25) 0px,
+    rgba(255, 255, 255, 0.25) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  transition: opacity 0.3s ease;
+}
+
+.lenticular-card:hover .lenticular-sheen {
+  opacity: 0.35;
+}
+
+/* Dynamic glare effect that follows mouse */
+.lenticular-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  z-index: 10;
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+  background: radial-gradient(
+    circle at var(--glare-x, 50%) var(--glare-y, 50%),
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lenticular-card:hover .lenticular-glare {
+  opacity: 1;
+}
+
+/* Holographic Rainbow Sheen */
+.lenticular-holo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 20px;
+  z-index: 4;
+  mix-blend-mode: screen;
+  opacity: 0;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.25) 0px,
+      rgba(255, 255, 255, 0.25) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    linear-gradient(
+      115deg,
+      transparent 10%,
+      rgba(255, 0, 0, 0.5) 20%,
+      rgba(255, 120, 0, 0.5) 30%,
+      rgba(255, 255, 0, 0.5) 40%,
+      rgba(0, 255, 100, 0.5) 50%,
+      rgba(0, 200, 255, 0.5) 60%,
+      rgba(120, 0, 255, 0.5) 70%,
+      rgba(255, 0, 255, 0.5) 80%,
+      transparent 90%
+    );
+  background-size: auto, 200% 200%;
+  background-repeat: repeat, no-repeat;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lenticular-card:hover .lenticular-holo {
+  opacity: 0.78;
+}
+
+/* Card Caption (Inside the Card) */
+.lenticular-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.3) 60%,
+    transparent 100%
+  );
+  z-index: 6;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lenticular-card:hover .lenticular-card-content,
+.lenticular-card-container.active .lenticular-card-content {
+  opacity: 1;
+  transform: translateY(0);
+}
