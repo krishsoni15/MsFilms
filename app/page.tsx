@@ -14,6 +14,7 @@ import { AboutPhotographer } from "@/components/sections/photographer";
 import { Testimonials } from "@/components/sections/testimonials";
 import { Contact } from "@/components/sections/contact";
 import { LazySection } from "@/components/ui/LazySection";
+import { TrustStats } from "@/components/sections/trust-stats";
 
 // Lazy-load the 3 heaviest sections — their JS bundles + WebGL contexts
 // won't even download until the user scrolls near them
@@ -50,6 +51,7 @@ export default function Home() {
       <Navigation isParentLoaded={!isLoading} />
       <main className="overflow-x-clip w-full max-w-full relative bg-[#020912]">
         <Hero isParentLoaded={!isLoading} />
+        <TrustStats />
         <AboutStudio />
         <AboutPhotographer />
         <FeaturedWork />
