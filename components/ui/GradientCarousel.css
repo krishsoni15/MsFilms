@@ -67,12 +67,14 @@
 /* Spacer padding at start/end of track to allow first/last cards to center */
 .gradient-carousel-scroll-spacer {
   flex-shrink: 0;
-  width: calc(50vw - 160px); /* Adjust based on card width (320px / 2 = 160px) */
+  width: calc(50vw - 160px);
+  /* Adjust based on card width (320px / 2 = 160px) */
 }
 
 @media (min-width: 768px) {
   .gradient-carousel-scroll-spacer {
-    width: calc(50vw - 210px); /* Adjust for larger cards (420px / 2 = 210px) */
+    width: calc(50vw - 210px);
+    /* Adjust for larger cards (420px / 2 = 210px) */
   }
 }
 
@@ -87,7 +89,7 @@
   transform: scale(0.88);
   opacity: 0.55;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   transform-style: preserve-3d;
 }
 
@@ -118,7 +120,8 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px; /* Border thickness */
+  padding: 1px;
+  /* Border thickness */
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -155,12 +158,10 @@
 .gradient-carousel-card-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(2, 9, 18, 0.95) 0%,
-    rgba(2, 9, 18, 0.4) 40%,
-    transparent 100%
-  );
+  background: linear-gradient(to top,
+      rgba(2, 9, 18, 0.95) 0%,
+      rgba(2, 9, 18, 0.4) 40%,
+      transparent 100%);
   z-index: 2;
   border-radius: inherit;
 }
@@ -211,11 +212,11 @@
   .gradient-carousel-card-wrapper {
     width: 420px;
   }
-  
+
   .gradient-carousel-card-title {
     font-size: 1.85rem;
   }
-  
+
   .gradient-carousel-card-desc {
     font-size: 12px;
   }

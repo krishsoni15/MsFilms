@@ -340,3 +340,77 @@ body {
   border-radius: inherit;
   transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+
+/* ─── Chroma Border Grid Effect ─── */
+.chroma-card {
+  position: relative;
+  border-radius: 12px;
+  padding: 1.5px; /* border thickness */
+  background: rgba(255, 255, 255, 0.05); /* fallback border color */
+  overflow: hidden;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+}
+
+.chroma-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.45);
+}
+
+.chroma-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    #ff0055,
+    #7a00ff,
+    #00e5ff,
+    #00ff66,
+    #ffaf00,
+    #ff0055
+  );
+  animation: rotate-chroma 5s linear infinite;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes rotate-chroma {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.chroma-card:hover::before {
+  opacity: 0.95;
+}
+
+/* Inner wrapper to hide the center of the spinning gradient, leaving only the border */
+.chroma-card-inner {
+  position: relative;
+  background: #020912; /* matches our main page background */
+  border-radius: 10.5px; /* fits perfectly inside padding */
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Default image state is grayscale inside the card */
+.chroma-card img {
+  filter: grayscale(1) contrast(1.02);
+  transition: filter 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* On card hover, transition the image to full color */
+.chroma-card:hover img {
+  filter: grayscale(0) contrast(1.05) brightness(1.02);
+}

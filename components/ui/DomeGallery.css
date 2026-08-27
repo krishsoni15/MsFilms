@@ -79,9 +79,7 @@ main.sphere-main {
   transform-origin: 50% 50%;
   backface-visibility: hidden;
   transition: transform 300ms;
-  transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg)))
-    rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg)))
-    translateZ(var(--radius));
+  transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) translateZ(var(--radius));
 }
 
 .item__image {
@@ -92,7 +90,7 @@ main.sphere-main {
   background: transparent;
   overflow: hidden;
   backface-visibility: hidden;
-  transition: transform 300ms;
+  transition: transform 500ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 500ms ease, opacity 500ms cubic-bezier(0.25, 1, 0.5, 1);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
@@ -195,4 +193,13 @@ main.sphere-main {
 
 .edge-fade--bottom {
   bottom: 0;
+}
+
+/* ─── Work Intro Background Specific Customizations ─── */
+.work-bg-dome .item__image {
+  opacity: 0.16;
+}
+
+.work-bg-dome .item__image:hover {
+  opacity: 1;
 }

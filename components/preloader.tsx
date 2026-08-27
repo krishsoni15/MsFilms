@@ -15,7 +15,13 @@ const IMAGES_TO_PRELOAD = [
   "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg",
 ];
 
-export function Preloader({ onComplete }: { onComplete: () => void }) {
+export function Preloader({
+  onComplete,
+  imagesToPreload = IMAGES_TO_PRELOAD,
+}: {
+  onComplete: () => void;
+  imagesToPreload?: string[];
+}) {
   const [progress, setProgress] = useState(0);
   const [animatedProgress, setAnimatedProgress] = useState(0);
   const [isReady, setIsReady] = useState(false);
@@ -49,7 +55,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   // Preload logic
   useEffect(() => {
     let loadedCount = 0;
-    const totalCount = IMAGES_TO_PRELOAD.length;
+    const totalCount = imagesToPreload.length;
 
     if (totalCount === 0) {
       setProgress(100);
@@ -67,13 +73,13 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       setProgress((loadedCount / totalCount) * 100);
     };
 
-    IMAGES_TO_PRELOAD.forEach((src) => {
+    imagesToPreload.forEach((src) => {
       const img = new Image();
       img.src = src;
       img.onload = handleImageLoad;
       img.onerror = handleImageError;
     });
-  }, []);
+  }, [imagesToPreload]);
 
   // Smooth progress animation & minimum duration enforcement (400ms)
   useEffect(() => {

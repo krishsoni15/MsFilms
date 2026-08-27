@@ -149,7 +149,7 @@ export function Aurora(props: AuroraProps) {
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    
+
     const canvas = gl.canvas as HTMLCanvasElement;
     canvas.style.backgroundColor = 'transparent';
 

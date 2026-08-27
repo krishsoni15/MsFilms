@@ -42,7 +42,7 @@ async function loadFontFromStylesheet(url: string): Promise<string> {
   const faceBlocks = cssText.match(/@font-face\s*{[^}]*}/g) || [];
   let family: string | null = null;
   const fontFaces: FontFace[] = [];
-  
+
   for (const block of faceBlocks) {
     const familyMatch = block.match(/font-family:\s*['"]?([^;'"]+)['"]?/);
     const urlMatch = block.match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/);
@@ -57,7 +57,7 @@ async function loadFontFromStylesheet(url: string): Promise<string> {
     if (rangeMatch) descriptors.unicodeRange = rangeMatch[1].trim();
     fontFaces.push(new FontFace(family, `url(${urlMatch[1]})`, descriptors));
   }
-  
+
   if (!family) throw new Error('No @font-face rule found in the stylesheet');
   await Promise.allSettled(
     fontFaces.map(async face => {
@@ -103,14 +103,14 @@ async function resolveFont(font: string, fontUrl?: string): Promise<string> {
         (link as HTMLLinkElement).href = effectiveUrl;
         document.head.appendChild(link);
       }
-      
+
       const urlParams = new URLSearchParams(effectiveUrl.split('?')[1] || '');
       const familyParam = urlParams.get('family');
       let family = 'Figtree';
       if (familyParam) {
         family = familyParam.split(':')[0].replace(/\+/g, ' ');
       }
-      
+
       const sizeMatch = font.match(/^\s*(.*?\d+px)/);
       const prefix = sizeMatch ? sizeMatch[1].trim() : 'bold 30px';
       return `${prefix} "${family}"`;
@@ -157,14 +157,14 @@ function createTextTexture(gl: any, text: string, font: string = 'bold 30px mono
   const textHeight = Math.ceil(getFontSize(font) * 1.2);
   canvas.width = textWidth + 20;
   canvas.height = textHeight + 20;
-  
+
   context.font = font;
   context.fillStyle = color;
   context.textBaseline = 'middle';
   context.textAlign = 'center';
   context.clearRect(0, 0, canvas.width, canvas.height);
   context.fillText(text, canvas.width / 2, canvas.height / 2);
-  
+
   const texture = new Texture(gl, { generateMipmaps: false });
   texture.image = canvas;
   return { texture, width: canvas.width, height: canvas.height };
@@ -227,7 +227,7 @@ class Title {
       uniforms: { tMap: { value: texture } },
       transparent: true
     });
-    
+
     this.mesh = new Mesh(this.gl, { geometry, program });
     const aspect = width / height;
     const textHeight = this.plane.scale.y * 0.15;
@@ -271,11 +271,11 @@ class Media {
   textColor: string;
   borderRadius: number;
   font: string;
-  
+
   program!: Program;
   plane!: Mesh;
   title!: Title;
-  
+
   speed: number = 0;
   isBefore: boolean = false;
   isAfter: boolean = false;
@@ -325,7 +325,7 @@ class Media {
     const texture = new Texture(this.gl, {
       generateMipmaps: true
     });
-    
+
     this.program = new Program(this.gl, {
       depthTest: false,
       depthWrite: false,
@@ -387,7 +387,7 @@ class Media {
       },
       transparent: true
     });
-    
+
     const img = new Image();
     if (this.image.startsWith('http') || this.image.startsWith('https')) {
       img.crossOrigin = 'anonymous';
@@ -450,7 +450,7 @@ class Media {
     const viewportOffset = this.viewport.width / 2;
     this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
     this.isAfter = this.plane.position.x - planeOffset > viewportOffset;
-    
+
     if (direction === 'right' && this.isBefore) {
       this.extra -= this.widthTotal;
       this.isBefore = this.isAfter = false;
@@ -504,7 +504,7 @@ class App {
   screen!: { width: number; height: number };
   viewport!: { width: number; height: number };
   raf!: number;
-  
+
   boundOnResize!: () => void;
   boundOnWheel!: (e: any) => void;
   boundOnTouchDown!: (e: any) => void;
@@ -758,12 +758,12 @@ function CircularGallery({
   scrollEase = 0.05
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     if (!containerRef.current) return;
     let app: App | undefined;
     let isMounted = true;
-    
+
     resolveFont(font, fontUrl).then(resolvedFont => {
       if (!isMounted || !containerRef.current) return;
       app = new App(containerRef.current, {

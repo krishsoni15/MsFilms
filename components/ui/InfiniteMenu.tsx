@@ -86,7 +86,34 @@ void main() {
     st = st * cellSize + cellOffset;
     
     outColor = texture(uTex, st);
-    outColor.a *= vAlpha;
+    
+    // Add border, inner glow, and anti-aliased edge styling
+    float dist = length(vUvs - vec2(0.5));
+    
+    // Gold theme color #c5a880 (R=0.7725, G=0.6588, B=0.5020)
+    vec3 borderColor = vec3(0.7725, 0.6588, 0.5020);
+    
+    // Sleek border at the edge (radius is 0.5)
+    float borderWidth = 0.012; 
+    float borderStart = 0.5 - borderWidth;
+    float borderEdge = 0.5;
+    
+    // Draw gold border using smoothstep for antialiasing
+    float borderMask = smoothstep(borderStart - 0.003, borderStart, dist) - 
+                       smoothstep(borderEdge - 0.003, borderEdge, dist);
+    
+    // Add subtle gold inner glow inside the border
+    float glowWidth = 0.06;
+    float glowMask = smoothstep(borderStart - glowWidth, borderStart, dist);
+    float innerGlow = glowMask * 0.25; // 25% intensity glow
+    
+    // Mix the image color with the gold border and add inner glow
+    outColor.rgb = mix(outColor.rgb, borderColor, borderMask);
+    outColor.rgb += borderColor * innerGlow * (1.0 - borderMask);
+    
+    // Anti-alias the outer boundary of the disc to keep edges perfectly smooth
+    float edgeAlpha = 1.0 - smoothstep(0.495, 0.5, dist);
+    outColor.a *= vAlpha * edgeAlpha;
 }
 `;
 
@@ -664,8 +691,8 @@ class InfiniteGridMenu {
   ) {
     this.canvas = canvas;
     this.items = items || [];
-    this.onActiveItemChange = onActiveItemChange || (() => {});
-    this.onMovementChange = onMovementChange || (() => {});
+    this.onActiveItemChange = onActiveItemChange || (() => { });
+    this.onMovementChange = onMovementChange || (() => { });
     this.scaleFactor = scale;
     this.camera.position[2] = 3 * scale;
     this.#init(onInit);
@@ -699,7 +726,7 @@ class InfiniteGridMenu {
   }
 
   #init(onInit?: ((sketch: InfiniteGridMenu) => void) | null) {
-    const glCtx = this.canvas.getContext("webgl2", { antialias: true, alpha: false });
+    const glCtx = this.canvas.getContext("webgl2", { antialias: true, alpha: true });
     if (!glCtx) {
       throw new Error("No WebGL 2 context!");
     }
@@ -862,7 +889,7 @@ class InfiniteGridMenu {
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
-    gl.clearColor(0, 0, 0, 0);
+    gl.clearColor(0.00784, 0.03529, 0.07058, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     gl.uniformMatrix4fv(this.discLocations.uWorldMatrix, false, this.worldMatrix);

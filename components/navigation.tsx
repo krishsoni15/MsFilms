@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { siteData } from "@/lib/data";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -57,11 +58,12 @@ export function Navigation({
 }: {
   isParentLoaded?: boolean;
 }) {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [connectOpen, setConnectOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState(pathname === "/work" ? "work" : "home");
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const connectRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
@@ -92,6 +94,11 @@ export function Navigation({
       lastScrollY.current = currentScrollY;
 
       // Detect active section on scroll
+      if (pathname !== "/") {
+        setActiveSection("work");
+        return;
+      }
+
       const sectionIds = ["home", "about", "work", "contact"];
       const threshold = window.innerHeight * 0.35;
 
@@ -146,10 +153,10 @@ export function Navigation({
   }, [mobileOpen]);
 
   const links = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Work", href: "#work" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: pathname === "/" ? "#home" : "/#home" },
+    { label: "About", href: pathname === "/" ? "#about" : "/#about" },
+    { label: "Work", href: "/work" },
+    { label: "Contact", href: pathname === "/" ? "#contact" : "/#contact" },
   ];
 
   // Variants for staggered children dropdown animation
@@ -197,12 +204,12 @@ export function Navigation({
         animate={isParentLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed left-1/2 -translate-x-1/2 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!visible
+        className={`fixed left-0 top-0 w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!visible
           ? "opacity-0 -translate-y-24 pointer-events-none"
           : "opacity-100 translate-y-0"
           } ${isScrolled
-            ? "top-2.5 w-[92%] sm:w-[88%] lg:w-[82%] max-w-[1100px] rounded-full bg-gradient-to-b from-[#030914]/50 to-[#020710]/40 backdrop-blur-xl border border-gold/15 hover:border-gold/30 shadow-[0_24px_50px_-15px_rgba(0,0,0,0.85),0_0_35px_rgba(197,168,128,0.04),inset_0_1px_1px_rgba(255,255,255,0.06)] py-1.5 px-6 lg:px-8"
-            : "top-0 w-full rounded-none bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
+            ? "bg-[#020912]/25 backdrop-blur-md border-b border-white/[0.04] py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16"
+            : "bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
           }`}
       >
         <div className="flex items-center justify-between w-full mx-auto">
@@ -213,7 +220,7 @@ export function Navigation({
               alt="Ms films"
               width={180}
               height={48}
-              className={`w-auto object-contain brightness-100 transition-all duration-500 ${isScrolled ? "h-[18px] sm:h-[21px]" : "h-[25px] sm:h-[28px] lg:h-[31px]"
+              className={`w-auto object-contain brightness-100 transition-all duration-500 ${isScrolled ? "h-[24px] sm:h-[27px] lg:h-[30px]" : "h-[28px] sm:h-[31px] lg:h-[34px]"
                 }`}
               priority
             />
@@ -226,19 +233,17 @@ export function Navigation({
               className="flex items-center gap-1.5 px-1 py-1"
             >
               {links.map((link) => {
-                const sectionId = link.href.substring(1);
+                const sectionId = link.href.includes("#")
+                  ? link.href.split("#")[1]
+                  : link.href.replace("/", "");
                 const isActive = activeSection === sectionId;
                 const isHighlighted = hoveredSection !== null ? hoveredSection === sectionId : isActive;
                 return (
-                  <a
+                  <Link
                     key={link.label}
                     href={link.href}
                     onMouseEnter={() => setHoveredSection(sectionId)}
-                    className={`relative rounded-full uppercase font-sans font-medium transition-all duration-300 ${
-                      isScrolled
-                        ? "px-3.5 py-1 text-[10px] tracking-[0.16em]"
-                        : "px-4 py-1.5 text-[11px] tracking-[0.18em]"
-                    } ${isActive
+                    className={`relative rounded-full uppercase font-sans font-medium transition-all duration-300 px-4 py-1.5 text-[11px] tracking-[0.18em] ${isActive
                       ? "text-white font-semibold"
                       : isHighlighted
                         ? "text-white/90"
@@ -261,7 +266,7 @@ export function Navigation({
                       />
                     )}
                     <span className="relative z-10">{link.label}</span>
-                  </a>
+                  </Link>
                 );
               })}
             </div>
@@ -286,10 +291,7 @@ export function Navigation({
             >
               <button
                 onClick={() => setConnectOpen(!connectOpen)}
-                className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-white/[0.08] hover:border-gold/30 transition-all duration-500 focus:outline-none ${isScrolled
-                  ? "text-foreground hover:text-gold-light px-5.5 py-2"
-                  : "text-white hover:text-gold-light px-6 py-2.5"
-                  }`}
+                className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-white/[0.08] hover:border-gold/30 transition-all duration-500 focus:outline-none text-white hover:text-gold-light px-6 py-2.5`}
                 style={{
                   background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
                 }}
@@ -414,7 +416,10 @@ export function Navigation({
               />
 
               {links.map((link, i) => {
-                const isActive = activeSection === link.href.substring(1);
+                const sectionId = link.href.includes("#")
+                  ? link.href.split("#")[1]
+                  : link.href.replace("/", "");
+                const isActive = activeSection === sectionId;
                 return (
                   <motion.div
                     key={link.label}
@@ -427,7 +432,7 @@ export function Navigation({
                       ease: [0.16, 1, 0.3, 1]
                     }}
                   >
-                    <a
+                    <Link
                       href={link.href}
                       className={`relative block py-3 font-laluxes-serif text-4xl sm:text-5xl transition-all duration-300 hover:translate-x-4 flex items-center gap-3.5 ${isActive
                         ? "text-gold font-medium"
@@ -443,7 +448,7 @@ export function Navigation({
                         />
                       )}
                       {link.label}
-                    </a>
+                    </Link>
                   </motion.div>
                 );
               })}

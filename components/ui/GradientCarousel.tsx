@@ -66,7 +66,7 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
     if (cards.length === 0) return;
 
     // Measure single card spacing dynamically (width + left/right margins)
-    const singleCardWidth = cards[0].clientWidth + 24; 
+    const singleCardWidth = cards[0].clientWidth + 24;
     const setWidth = items.length * singleCardWidth;
     const currentScroll = container.scrollLeft;
 
@@ -165,10 +165,10 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
         onScroll={handleScroll}
       >
         <div className="gradient-carousel-scroll-spacer" />
-        
+
         {clonedItems.map((item, index) => {
           const isActive = index === items.length + activeIndex;
-          
+
           return (
             <div
               key={`${item.id}-${index}`}
@@ -183,7 +183,7 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
                     background: `linear-gradient(135deg, ${item.gradientColors[0]}, ${item.gradientColors[1] || item.gradientColors[0]})`,
                   }}
                 />
-                
+
                 {/* Card Inner Content */}
                 <div className="gradient-carousel-card-inner">
                   {/* Next.js Optimized Image */}
