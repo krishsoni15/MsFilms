@@ -97,13 +97,13 @@ const categories = [
     description:
       "We capture timeless moments and turn them into memories you'll cherish forever.",
     images: [
-      "/wedding/1 (1).png",
-      "/wedding/1 (2).png",
-      "/wedding/1 (3).png",
+      "/wedding/1_1.png",
+      "/wedding/1_2.png",
+      "/wedding/1_3.png",
     ],
     bottomImages: [
-      "/wedding/1 (4).png",
-      "/wedding/1 (5).png",
+      "/wedding/1_4.png",
+      "/wedding/1_5.png",
     ],
     videoUrl: heroData.videoSrc,
   },

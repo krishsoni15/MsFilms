@@ -6,11 +6,11 @@ import ShinyText from "@/components/ui/ShinyText";
 
 const IMAGES_TO_PRELOAD = [
   "/logo/logo.png",
-  "/wedding/1 (1).png",
-  "/wedding/1 (2).png",
-  "/wedding/1 (3).png",
-  "/wedding/1 (4).png",
-  "/wedding/1 (5).png",
+  "/wedding/1_1.png",
+  "/wedding/1_2.png",
+  "/wedding/1_3.png",
+  "/wedding/1_4.png",
+  "/wedding/1_5.png",
   "/wedding/imgi_2_2.png",
   "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg",
 ];

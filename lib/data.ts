@@ -61,7 +61,7 @@ export const projects = [
     images: [
       "/wedding/imgi_7_3.jpg",
       "/wedding/imgi_6_4.jpg",
-      "/wedding/imgi_4_7 (1).jpg",
+      "/wedding/imgi_4_7_1.jpg",
       "/wedding/imgi_8_6.jpg",
       "/wedding/8.jpg",
     ],
@@ -90,14 +90,14 @@ export const projects = [
     category: "Landscape",
     location: "Saskatchewan & Banff",
     year: "2026",
-    cover: "/landscape/imgi_2_1 (1).jpg",
+    cover: "/landscape/imgi_2_1_1.jpg",
     images: [
       "/landscape/imgi_8_8.jpg",
       "/landscape/imgi_7_4.jpg",
-      "/landscape/imgi_5_10 (1).jpg",
+      "/landscape/imgi_5_10_1.jpg",
       "/landscape/imgi_10_6.jpg",
-      "/landscape/imgi_4_7 (2).jpg",
-      "/landscape/imgi_6_2 (1).jpg",
+      "/landscape/imgi_4_7_2.jpg",
+      "/landscape/imgi_6_2_1.jpg",
     ],
     description: "Visually stunning panoramic landscape photography capturing sweeping natural horizons and natural ambient light.",
   },
@@ -158,12 +158,12 @@ export const services = [
   {
     id: "02",
     title: "Wedding Videography",
-    image: "/wedding/imgi_4_7 (1).jpg",
+    image: "/wedding/imgi_4_7_1.jpg",
   },
   {
     id: "03",
     title: "Engagement",
-    image: "/landscape/imgi_6_2 (1).jpg",
+    image: "/landscape/imgi_6_2_1.jpg",
   },
   {
     id: "04",
@@ -188,7 +188,7 @@ export const services = [
 export const socialImages = [
   "/wedding/imgi_2_2.png",
   "/drone/imgi_11_6.jpg",
-  "/landscape/imgi_2_1 (1).jpg",
+  "/landscape/imgi_2_1_1.jpg",
   "/wedding/imgi_6_4.jpg",
   "/drone/imgi_10_3.jpg",
   "/landscape/imgi_8_9.jpg",
