@@ -229,7 +229,7 @@ export function AboutPhotographer() {
             >
               <div className="relative w-full h-full">
                 <Image
-                  src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
+                  src="/me/013A5316.jpg"
                   alt="Madhav Soni — Founder & Lead Photographer of Msfilms"
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-105"
