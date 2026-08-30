@@ -98,7 +98,7 @@ export function Services() {
 
               <div className="flex items-center gap-6 md:gap-10 relative z-10">
                 <span className="text-[10px] tracking-[0.2em] text-gold/70 font-sans w-5 transition-colors duration-300">{service.id}</span>
-                <h3 className="font-serif text-xl md:text-2xl lg:text-3xl group-hover:translate-x-3 transition-transform duration-500 ease-out uppercase tracking-wide">
+                <h3 className="font-serif text-lg md:text-xl lg:text-2xl group-hover:translate-x-3 transition-transform duration-500 ease-out uppercase tracking-wide">
                   {service.title}
                 </h3>
               </div>

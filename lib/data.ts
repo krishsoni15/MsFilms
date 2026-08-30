@@ -152,33 +152,18 @@ export const films = [
 export const services = [
   {
     id: "01",
-    title: "Wedding Photography",
+    title: "Wedding Photography & Videography",
     image: "/wedding/imgi_7_3.jpg",
   },
   {
     id: "02",
-    title: "Wedding Videography",
-    image: "/wedding/imgi_4_7_1.jpg",
+    title: "Real Estate Photography & Videography",
+    image: "/real-estate/L_1.jpg",
   },
   {
     id: "03",
-    title: "Engagement",
-    image: "/landscape/imgi_6_2_1.jpg",
-  },
-  {
-    id: "04",
-    title: "Portrait Photography",
-    image: "/landscape/imgi_9_3.jpg",
-  },
-  {
-    id: "05",
-    title: "Family Photography Sessions",
-    image: "/landscape/imgi_10_6.jpg",
-  },
-  {
-    id: "06",
-    title: "Dronography",
-    image: "/drone/imgi_4_7.jpg",
+    title: "Events (Engagement, Baby Shower, Birthday, Corporate Party, etc.)",
+    image: "/wedding/imgi_6_4.jpg",
   },
 ];
 
