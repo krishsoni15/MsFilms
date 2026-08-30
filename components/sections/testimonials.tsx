@@ -68,7 +68,7 @@ const CLONED_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
 
 export const TestimonialCard = ({ item, className }: { item: TestimonialItem; className?: string }) => {
   return (
-    <div className={cn("w-[290px] sm:w-[350px] md:w-[420px] bg-gradient-to-br from-background-alt/80 to-background-alt/40 border border-border/40 backdrop-blur-md p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:border-gold/30 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(197,168,128,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] group shrink-0 select-none", className)}>
+    <div className={cn("w-[300px] sm:w-[370px] md:w-[440px] bg-gradient-to-br from-background-alt/80 to-background-alt/40 border border-gold/15 backdrop-blur-md p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:border-gold/45 hover:scale-[1.02] shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_45px_rgba(197,168,128,0.08),inset_0_1px_1px_rgba(255,255,255,0.05)] group shrink-0 select-none", className)}>
       <div>
         {/* Card Header: Rating Stars & Quote Icon */}
         <div className="flex items-center justify-between mb-4">
@@ -128,7 +128,7 @@ export function Testimonials() {
 
     // Use a tiny timeout to ensure layout width and metrics are calculated
     const timer = setTimeout(() => {
-      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
       container.scrollLeft = cardWidth * TESTIMONIALS.length;
     }, 100);
 
@@ -141,7 +141,7 @@ export function Testimonials() {
     if (!container) return;
 
     const handleResize = () => {
-      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
       container.scrollLeft = cardWidth * TESTIMONIALS.length;
     };
 
@@ -176,7 +176,7 @@ export function Testimonials() {
     const container = scrollRef.current;
     if (!container) return;
 
-    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
     const totalWidth = TESTIMONIALS.length * cardWidth;
     const currentScroll = container.scrollLeft;
 
@@ -240,7 +240,7 @@ export function Testimonials() {
       const ease = 1 - Math.pow(1 - progress, 3);
       const currentScroll = start + change * ease;
       
-      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
       const totalWidth = TESTIMONIALS.length * cardWidth;
       
       let wrappedScroll = currentScroll;
@@ -269,7 +269,7 @@ export function Testimonials() {
     const container = scrollRef.current;
     if (!container) return;
     isInteractingRef.current = true;
-    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
     animateScrollTo(container.scrollLeft - cardWidth);
   };
 
@@ -277,7 +277,7 @@ export function Testimonials() {
     const container = scrollRef.current;
     if (!container) return;
     isInteractingRef.current = true;
-    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    const cardWidth = container.clientWidth < 640 ? 324 : container.clientWidth < 768 ? 394 : 464;
     animateScrollTo(container.scrollLeft + cardWidth);
   };
 
