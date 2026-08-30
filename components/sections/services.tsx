@@ -20,7 +20,7 @@ export function Services() {
 
   return (
     <section id="services" className="py-24 md:py-32 px-5 md:px-10 lg:px-16 bg-background border-t border-foreground/5">
-      <div className="mb-16 md:mb-20">
+      <div className="mb-12 md:mb-16">
         <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">What We Do</AnimatedText>
         <ScrollReveal
           baseOpacity={0.05}
@@ -33,6 +33,26 @@ export function Services() {
         >
           Services
         </ScrollReveal>
+      </div>
+
+      {/* Under Construction / Coming Soon Banner */}
+      <div className="max-w-4xl mb-12 p-6 md:p-8 rounded-2xl border border-gold/20 bg-foreground/[0.02] backdrop-blur-md relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full border border-gold/40 bg-gold/10 flex items-center justify-center text-gold shrink-0">
+            <span className="font-mono text-xs font-bold">✦</span>
+          </div>
+          <div className="text-left">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gold font-bold font-sans">
+              Services & Pricing
+            </span>
+            <h4 className="font-serif text-xl md:text-2xl text-foreground font-normal uppercase mt-0.5">
+              Detailed Packages Under Construction — Coming Soon
+            </h4>
+          </div>
+        </div>
+        <span className="text-[10px] tracking-[0.2em] uppercase px-4 py-2 rounded-full border border-gold/30 text-gold font-mono font-semibold bg-gold/5 shrink-0">
+          Under Construction
+        </span>
       </div>
 
       <div

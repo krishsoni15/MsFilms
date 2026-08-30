@@ -187,9 +187,17 @@ export function WorkIntro() {
         {/* Emotional Tagline */}
         <div
           ref={subtitleRef}
-          className="font-laluxes-serif text-2xl sm:text-3xl lg:text-4xl text-white/90 italic tracking-wider font-light"
+          className="font-laluxes-serif text-2xl sm:text-3xl lg:text-4xl text-foreground/90 italic tracking-wider font-light"
         >
           &ldquo;We capture what you felt.&rdquo;
+        </div>
+
+        {/* Under Construction Badge */}
+        <div className="mt-6 px-5 py-2.5 rounded-full border border-gold/30 bg-foreground/[0.03] backdrop-blur-md flex items-center gap-2.5 shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+          <span className="text-[10px] tracking-[0.25em] uppercase text-gold font-sans font-semibold">
+            Full Work Showcase Under Construction — Coming Soon
+          </span>
         </div>
       </div>
 

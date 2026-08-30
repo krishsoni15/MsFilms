@@ -172,8 +172,8 @@ export function Navigation({
   const links = [
     { label: "Home", href: pathname === "/" ? "#home" : "/#home" },
     { label: "About", href: pathname === "/" ? "#about" : "/#about" },
-    { label: "Work", href: "/work" },
-    { label: "Services", href: "/services" },
+    { label: "Work", href: pathname === "/" ? "#work" : "/#work" },
+    { label: "Services", href: pathname === "/" ? "#services" : "/#services" },
     { label: "Contact", href: pathname === "/" ? "#contact" : "/#contact" },
   ];
 
