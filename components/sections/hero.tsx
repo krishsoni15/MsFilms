@@ -111,7 +111,7 @@ const categories = [
       "/wedding/1_4.png",
       "/wedding/1_5.png",
     ],
-    imagePositions: ["left center", "center", "center"],
+    imagePositions: ["80% center", "center", "center"],
     bottomImagePositions: ["90% center", "center"],
     videoUrl: heroData.videoSrc,
   },
