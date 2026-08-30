@@ -119,6 +119,7 @@ export function Testimonials() {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const isInteractingRef = useRef(false);
+  const scrollAnimRef = useRef<number | null>(null);
 
   // Position the track to the middle set of elements on mount
   useEffect(() => {
@@ -132,6 +133,20 @@ export function Testimonials() {
     }, 100);
 
     return () => clearTimeout(timer);
+  }, []);
+
+  // Recalculate scroll alignment on window resize to prevent alignment drift
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleResize = () => {
+      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      container.scrollLeft = cardWidth * TESTIMONIALS.length;
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Continuous Autoplay scroll animation
@@ -148,7 +163,12 @@ export function Testimonials() {
     };
 
     animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      if (scrollAnimRef.current) {
+        cancelAnimationFrame(scrollAnimRef.current);
+      }
+    };
   }, [isHovered]);
 
   // Infinite wrapping bounds checking
@@ -203,17 +223,54 @@ export function Testimonials() {
     isInteractingRef.current = false;
   };
 
+  // Programmatic smooth scroll to prevent conflicts with native smooth-scroll rendering engine
+  const animateScrollTo = (targetScrollLeft: number, duration: number = 400) => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const start = container.scrollLeft;
+    const change = targetScrollLeft - start;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const currentScroll = start + change * ease;
+      
+      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      const totalWidth = TESTIMONIALS.length * cardWidth;
+      
+      let wrappedScroll = currentScroll;
+      if (currentScroll < totalWidth - container.clientWidth / 2) {
+        wrappedScroll = currentScroll + totalWidth;
+      } else if (currentScroll > totalWidth * 2 - container.clientWidth / 2) {
+        wrappedScroll = currentScroll - totalWidth;
+      }
+      
+      container.scrollLeft = wrappedScroll;
+
+      if (progress < 1) {
+        scrollAnimRef.current = requestAnimationFrame(animate);
+      } else {
+        isInteractingRef.current = false;
+      }
+    };
+
+    if (scrollAnimRef.current) {
+      cancelAnimationFrame(scrollAnimRef.current);
+    }
+    scrollAnimRef.current = requestAnimationFrame(animate);
+  };
+
   const handlePrev = () => {
     const container = scrollRef.current;
     if (!container) return;
     isInteractingRef.current = true;
     const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
-    container.scrollBy({ left: -cardWidth, behavior: "smooth" });
-
-    // Reset interacting ref after smooth scroll finishes
-    setTimeout(() => {
-      isInteractingRef.current = false;
-    }, 600);
+    animateScrollTo(container.scrollLeft - cardWidth);
   };
 
   const handleNext = () => {
@@ -221,12 +278,7 @@ export function Testimonials() {
     if (!container) return;
     isInteractingRef.current = true;
     const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
-    container.scrollBy({ left: cardWidth, behavior: "smooth" });
-
-    // Reset interacting ref after smooth scroll finishes
-    setTimeout(() => {
-      isInteractingRef.current = false;
-    }, 600);
+    animateScrollTo(container.scrollLeft + cardWidth);
   };
 
   return (
