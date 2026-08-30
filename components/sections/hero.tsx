@@ -52,6 +52,11 @@ function CategoryImage({
 }: CategoryImageProps) {
   const cat = categories[categoryIndex];
   const src = useBottomImages ? cat.bottomImages[imageIndex] : cat.images[imageIndex];
+  
+  // Resolve custom object position from category data
+  const objectPosition = useBottomImages
+    ? (cat.bottomImagePositions?.[imageIndex] || "center")
+    : (cat.imagePositions?.[imageIndex] || "center");
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-[inherit] bg-black/10">
@@ -74,6 +79,7 @@ function CategoryImage({
             alt={alt}
             fill
             className="object-cover transition-transform duration-[1.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+            style={{ objectPosition }}
             sizes="(max-width: 768px) 80vw, 35vw"
             quality={75}
             priority={categoryIndex === 0}
@@ -105,6 +111,8 @@ const categories = [
       "/wedding/1_4.png",
       "/wedding/1_5.png",
     ],
+    imagePositions: ["center", "center", "center"],
+    bottomImagePositions: ["75% center", "center"],
     videoUrl: heroData.videoSrc,
   },
   {
@@ -124,6 +132,8 @@ const categories = [
       "/real-estate/img_4.jpg",
       "/real-estate/img_5.jpg",
     ],
+    imagePositions: ["center", "center", "center"],
+    bottomImagePositions: ["center", "center"],
     videoUrl: heroData.videoSrc,
   },
   {
@@ -143,6 +153,8 @@ const categories = [
       "/drone/imgi_10_3.jpg",
       "/drone/imgi_4_7.jpg",
     ],
+    imagePositions: ["center", "center", "center"],
+    bottomImagePositions: ["center", "center"],
     videoUrl: heroData.videoSrc,
   },
 ];
