@@ -82,6 +82,33 @@ html.light .border-white\/5 {
   border-color: rgba(0, 0, 0, 0.08);
 }
 
+/* Light mode: hardcoded dark backgrounds in book pages */
+html.light .bg-neutral-950 {
+  background-color: #fdfcf9 !important;
+}
+html.light .bg-\[\#131313\] {
+  background-color: #fdfcf9 !important;
+}
+html.light .bg-\[\#111111\] {
+  background-color: #fdfcf9 !important;
+}
+html.light .bg-neutral-900\/40 {
+  background-color: rgba(245, 243, 236, 0.8) !important;
+}
+html.light .bg-neutral-900 {
+  background-color: #fdfcf9 !important;
+}
+
+/* Light mode: book page text on dark bg (image overlays stay dark as images are always on top) */
+html.light .border-neutral-950 {
+  border-color: #e5e2db !important;
+}
+
+/* Light mode: blog section card shadow */
+html.light .shadow-\[0_8px_40px_rgba\(0\,0\,0\,0\.3\)\] {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06) !important;
+}
+
 
 @theme inline {
   --color-background: var(--background);

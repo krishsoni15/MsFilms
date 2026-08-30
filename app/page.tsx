@@ -11,7 +11,10 @@ import { AboutPhotographer } from "@/components/sections/photographer";
 import { Contact } from "@/components/sections/contact";
 import { TrustStats } from "@/components/sections/trust-stats";
 import { WorkIntro } from "@/components/work/work-intro";
+import { WorkGallery } from "@/components/sections/work-gallery";
+import { CircularGallerySection } from "@/components/sections/circular-gallery-section";
 import { Services } from "@/components/sections/services";
+import { Blog } from "@/components/sections/blog";
 import { Testimonials } from "@/components/sections/testimonials";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -48,7 +51,10 @@ export default function Home() {
         <AboutStudio />
         <AboutPhotographer />
         <WorkIntro />
+        <WorkGallery />
+        <CircularGallerySection />
         <Services />
+        <Blog />
         <Testimonials />
         <Contact />
         <Footer />

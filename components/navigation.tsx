@@ -116,7 +116,7 @@ export function Navigation({
         return;
       }
 
-      const sectionIds = ["home", "about", "work", "services", "contact"];
+      const sectionIds = ["home", "about", "work", "services", "blog", "contact"];
       const threshold = window.innerHeight * 0.35;
 
       const isAtBottom =
@@ -174,6 +174,7 @@ export function Navigation({
     { label: "About", href: pathname === "/" ? "#about" : "/#about" },
     { label: "Work", href: pathname === "/" ? "#work" : "/#work" },
     { label: "Services", href: pathname === "/" ? "#services" : "/#services" },
+    { label: "Blog", href: pathname === "/" ? "#blog" : "/#blog" },
     { label: "Contact", href: pathname === "/" ? "#contact" : "/#contact" },
   ];
 

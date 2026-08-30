@@ -74,23 +74,23 @@ export function Services() {
                       <span className="text-[10px] tracking-[0.25em] font-sans font-bold text-gold uppercase">
                         Service {service.id}
                       </span>
-                      <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl text-white font-normal uppercase leading-tight tracking-wide">
+                      <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl text-foreground font-normal uppercase leading-tight tracking-wide">
                         {service.title}
                       </h3>
-                      <p className="font-sans text-[10px] md:text-xs tracking-wider text-white/50 uppercase mt-1">
+                      <p className="font-sans text-[10px] md:text-xs tracking-wider text-foreground/50 uppercase mt-1">
                         {details.subtitle}
                       </p>
                     </div>
 
                     <div className="flex flex-col items-start mt-6 lg:mt-10">
-                      <p className="font-sans text-xs md:text-sm text-white/70 leading-relaxed max-w-sm">
+                      <p className="font-sans text-xs md:text-sm text-foreground/70 leading-relaxed max-w-sm">
                         {details.description}
                       </p>
 
                       {/* Interactive Button */}
                       <a
                         href="#contact"
-                        className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/20 text-white font-sans text-[10px] uppercase tracking-widest mt-6 hover:border-gold hover:text-gold transition-colors duration-300 bg-white/5 hover:bg-gold/10"
+                        className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-foreground/20 text-foreground font-sans text-[10px] uppercase tracking-widest mt-6 hover:border-gold hover:text-gold transition-colors duration-300 bg-foreground/5 hover:bg-gold/10"
                       >
                         <span>{details.cta}</span>
                         <span className="group-hover:translate-x-1.5 transition-transform duration-300">→</span>

@@ -192,11 +192,11 @@ export function WorkIntro() {
           &ldquo;We capture what you felt.&rdquo;
         </div>
 
-        {/* Under Construction Badge */}
+        {/* Interactive Badge */}
         <div className="mt-6 px-5 py-2.5 rounded-full border border-gold/30 bg-foreground/[0.03] backdrop-blur-md flex items-center gap-2.5 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
           <span className="text-[10px] tracking-[0.25em] uppercase text-gold font-sans font-semibold">
-            Full Work Showcase Under Construction — Coming Soon
+            Interactive Lookbook Portfolio Below
           </span>
         </div>
       </div>
