@@ -30,10 +30,12 @@ export function Preloader({
   const [startMask, setStartMask] = useState(false);
   const [logoFadeOut, setLogoFadeOut] = useState(false);
   const [maxRadius, setMaxRadius] = useState(1200);
+  const [isLightMode, setIsLightMode] = useState(false);
 
   // Measure screen diagonal to calculate exact radius needed to cover the viewport
   useEffect(() => {
     if (typeof window !== "undefined") {
+      setIsLightMode(document.documentElement.classList.contains("light"));
       const handleResize = () => {
         const diag = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2);
         setMaxRadius(diag / 2 + 100); // add safety padding
@@ -136,6 +138,7 @@ export function Preloader({
       }, 1100); // 350ms delay + 750ms mask expansion animation duration
 
       return () => {
+        document.documentElement.classList.remove("preloader-active");
         clearTimeout(logoTimer);
         clearTimeout(maskTimer);
         clearTimeout(completeTimer);
@@ -150,6 +153,9 @@ export function Preloader({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4, ease: "easeInOut" }}
       className="fixed inset-0 z-[99999] flex flex-col items-center justify-center select-none overflow-hidden pointer-events-none"
+      style={{
+        backgroundColor: isLightMode ? "#f5f2eb" : "#020912"
+      }}
     >
       {/* SVG Mask Background - creates a feathered circular camera iris cutout reveal */}
       <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
@@ -174,11 +180,11 @@ export function Preloader({
               />
             </mask>
           </defs>
-          {/* Black background rect that gets masked and fades out gently for ultimate smoothness */}
+          {/* background rect that gets masked and fades out gently for ultimate smoothness */}
           <motion.rect
             width="100%"
             height="100%"
-            fill="#020912"
+            fill={isLightMode ? "#f5f2eb" : "#020912"}
             mask="url(#preloader-reveal-mask)"
             animate={startMask ? { opacity: 0 } : { opacity: 1 }}
             transition={{ duration: 0.75, ease: "easeInOut" }}
@@ -197,8 +203,8 @@ export function Preloader({
           imageWidth={320}
           imageHeight={88}
           speed={2.2}
-          color="rgba(255, 255, 255, 0.22)" // Sleek silver-metallic base logo
-          shineColor="#ffffff" // Brilliant pure white shine sweep
+          color={isLightMode ? "rgba(2, 9, 18, 0.22)" : "rgba(255, 255, 255, 0.22)"}
+          shineColor={isLightMode ? "#020912" : "#ffffff"}
           spread={100}
           alt="Msfilms Logo"
         />
@@ -207,7 +213,7 @@ export function Preloader({
       {/* Subtle Atmospheric Light Effect */}
       <motion.div
         animate={logoFadeOut ? { opacity: 0 } : { opacity: 1 }}
-        className="absolute inset-0 bg-radial-[circle_at_center,rgba(255,255,255,0.01)_0%,transparent_60%] pointer-events-none"
+        className="absolute inset-0 bg-radial-[circle_at_center,rgba(197,168,128,0.08)_0%,transparent_60%] pointer-events-none"
       />
     </motion.div>
   );

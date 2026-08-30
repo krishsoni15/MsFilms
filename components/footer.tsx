@@ -30,7 +30,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-[#020912] text-foreground py-16 md:py-20 relative overflow-hidden w-full max-w-full border-t border-white/[0.03]">
+    <footer className="bg-background text-foreground py-16 md:py-20 relative overflow-hidden w-full max-w-full border-t border-border">
       {/* Ambient background glow inside the footer */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[150px] bg-gold/[0.02] blur-[100px] rounded-full pointer-events-none z-0" />
 
@@ -50,7 +50,7 @@ export function Footer() {
                 alt={siteData.name}
                 width={180}
                 height={54}
-                className="h-9 sm:h-11 w-auto object-contain brightness-100"
+                className="h-9 sm:h-11 w-auto object-contain brightness-100 logo"
               />
             </div>
             <p className="font-laluxes-script text-xl md:text-2xl text-gold/70 mb-4">
@@ -110,7 +110,7 @@ export function Footer() {
         </motion.div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <p className="text-[9px] tracking-[0.18em] uppercase text-foreground/20 font-mono">
             {siteData.copyright}
           </p>

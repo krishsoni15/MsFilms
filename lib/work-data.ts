@@ -83,8 +83,8 @@ export const workCategories: WorkCategoryData[] = [
       }
     ],
     theme: {
-      bg: "bg-[#020912]", // Deep dark Navy
-      text: "text-[#f4f1eb]",
+      bg: "bg-background", // Deep dark Navy
+      text: "text-foreground",
       accent: "#c5a880"
     },
     metadata: {
@@ -150,8 +150,8 @@ export const workCategories: WorkCategoryData[] = [
       }
     ],
     theme: {
-      bg: "bg-[#0b0c10]", // Obsidian Dark Gray
-      text: "text-[#f4f1eb]",
+      bg: "bg-background-alt", // Obsidian Dark Gray
+      text: "text-foreground",
       accent: "#e5d5be"
     },
     metadata: {
@@ -211,8 +211,8 @@ export const workCategories: WorkCategoryData[] = [
       }
     ],
     theme: {
-      bg: "bg-[#070b12]", // Deep Slate Black
-      text: "text-[#f4f1eb]",
+      bg: "bg-background-alt-2", // Deep Slate Black
+      text: "text-foreground",
       accent: "#c5a880"
     },
     metadata: {
@@ -272,8 +272,8 @@ export const workCategories: WorkCategoryData[] = [
       }
     ],
     theme: {
-      bg: "bg-[#040810]", // Cold Midnight Blue
-      text: "text-[#f4f1eb]",
+      bg: "bg-background-alt", // Cold Midnight Blue
+      text: "text-foreground",
       accent: "#e5d5be"
     },
     metadata: {

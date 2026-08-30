@@ -5,6 +5,7 @@ import Image from "next/image";
 import { projects } from "@/lib/data";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -49,22 +51,22 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 z-[9990] bg-[#03111d] overflow-y-auto"
+          className="fixed inset-0 z-[9990] bg-background-alt-2 overflow-y-auto"
         >
           {/* Header Bar */}
-          <div className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 bg-[#03111d]/90 backdrop-blur-md border-b border-white/10">
+          <div className="sticky top-0 z-50 flex items-center justify-between px-6 md:px-12 py-6 bg-background-alt-2/90 backdrop-blur-md border-b border-border">
             <div>
               <p className="text-[9px] tracking-[0.25em] uppercase text-gold/80 font-sans mb-0.5">
                 {project.category} Story
               </p>
-              <h3 className="font-display text-xl md:text-2xl text-white">
+              <h3 className="font-display text-xl md:text-2xl text-foreground">
                 {project.title}
               </h3>
             </div>
 
             <button
               onClick={onClose}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:border-white transition-colors"
+              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-foreground/70 hover:text-foreground hover:border-foreground transition-colors"
               aria-label="Close story"
             >
               <X size={20} />
@@ -80,13 +82,13 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mb-12 max-w-3xl"
             >
-              <p className="font-serif text-lg md:text-xl italic text-white/60 mb-4">
+              <p className="font-serif text-lg md:text-xl italic text-foreground/60 mb-4">
                 &ldquo;{project.subtitle}&rdquo;
               </p>
-              <p className="font-sans text-sm md:text-base text-white/80 leading-relaxed mb-6">
+              <p className="font-sans text-sm md:text-base text-foreground/80 leading-relaxed mb-6">
                 {project.description}
               </p>
-              <div className="flex items-center gap-6 text-[10px] tracking-[0.2em] uppercase text-white/40 font-sans border-t border-white/10 pt-4">
+              <div className="flex items-center gap-6 text-[10px] tracking-[0.2em] uppercase text-foreground/40 font-sans border-t border-border pt-4">
                 <span>Location: {project.location}</span>
                 <span>Year: {project.year}</span>
               </div>
@@ -120,16 +122,16 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
             </div>
 
             {/* Modal Bottom CTA */}
-            <div className="border-t border-white/10 pt-12 flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div className="border-t border-border pt-12 flex flex-col sm:flex-row justify-between items-center gap-6">
               <div>
-                <p className="font-serif text-xl text-white mb-1">Inspired by this story?</p>
-                <p className="text-xs text-white/50 font-sans">Let&apos;s capture your moments with the same care.</p>
+                <p className="font-serif text-xl text-foreground mb-1">Inspired by this story?</p>
+                <p className="text-xs text-foreground/50 font-sans">Let&apos;s capture your moments with the same care.</p>
               </div>
 
               <a
                 href="#contact"
                 onClick={onClose}
-                className="relative inline-flex items-center gap-3 border border-white/20 px-9 py-4 text-[12px] tracking-[0.25em] uppercase font-sans text-white overflow-hidden group transition-colors duration-500 hover:text-[#061a2b] hover:border-gold"
+                className="relative inline-flex items-center gap-3 border border-border px-9 py-4 text-[12px] tracking-[0.25em] uppercase font-sans text-foreground overflow-hidden group transition-colors duration-500 hover:text-background hover:border-gold"
               >
                 <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[0.16,1,0.3,1] pointer-events-none" />
                 <span className="relative z-10 flex items-center gap-3">

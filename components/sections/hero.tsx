@@ -14,6 +14,7 @@ import { Magnetic } from "@/components/ui/magnetic";
 import { Aurora } from "@/components/ui/aurora";
 import { ArrowRight, Play, Mail } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
+import { useTheme } from "@/components/theme-provider";
 
 /* ────────────────────────────────────────────────────────────
    Custom Brand SVGs for Social Links
@@ -169,6 +170,7 @@ export function Hero({
 }: {
   isParentLoaded?: boolean;
 }) {
+  const { theme } = useTheme();
   const [isLoaded, setIsLoaded] = useState(false);
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -264,7 +266,7 @@ export function Hero({
         {/* ── Aurora WebGL Background ── */}
         <div className="absolute inset-0 pointer-events-none opacity-95 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
           <Aurora
-            colorStops={["#081730", "#cba358", "#4e7bb0"]}
+            colorStops={theme === "light" ? ["#b9c9d6", "#ebd5b0", "#f5f3ec"] : ["#081730", "#cba358", "#4e7bb0"]}
             blend={isMobile ? 0.9 : 0.65}
             amplitude={isMobile ? 0.65 : 1.3}
             speed={0.45}
@@ -282,7 +284,7 @@ export function Hero({
             href="https://www.instagram.com/msfilms._/"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            className="w-8 h-8 rounded-full border border-border bg-foreground/[0.01] flex items-center justify-center text-foreground/50 hover:text-gold hover:border-gold/45 hover:bg-gold/[0.06] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
             aria-label="Instagram"
           >
             <InstagramIcon className="w-3.5 h-3.5" />
@@ -291,21 +293,21 @@ export function Hero({
             href="https://wa.me/1234567890"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            className="w-8 h-8 rounded-full border border-border bg-foreground/[0.01] flex items-center justify-center text-foreground/50 hover:text-gold hover:border-gold/45 hover:bg-gold/[0.06] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
             aria-label="WhatsApp"
           >
             <WhatsAppIcon className="w-3.5 h-3.5" />
           </a>
           <a
             href="mailto:contactus.msfilms@gmail.com"
-            className="w-8 h-8 rounded-full border border-white/[0.03] bg-white/[0.01] flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/20 hover:bg-gold/[0.03] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
+            className="w-8 h-8 rounded-full border border-border bg-foreground/[0.01] flex items-center justify-center text-foreground/50 hover:text-gold hover:border-gold/45 hover:bg-gold/[0.06] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none"
             aria-label="Email"
           >
             <Mail size={13} />
           </a>
 
           {/* Subtle local connection segment that fades out */}
-          <div className="w-px h-12 bg-gradient-to-b from-white/10 to-transparent mt-2" />
+          <div className="w-px h-12 bg-gradient-to-b from-foreground/10 to-transparent mt-2" />
         </motion.div>
 
         {/* ── Left Vertical Category Selectors & Scroll Indicator ── */}
@@ -334,14 +336,14 @@ export function Hero({
                   {/* Active category name floating next to node */}
                   <span className={`absolute left-7 top-1/2 -translate-y-1/2 font-sans text-[8px] tracking-[0.25em] uppercase whitespace-nowrap transition-all duration-500 ${isActive
                     ? "text-gold opacity-80 translate-x-0 font-semibold"
-                    : "text-white/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-white/30 group-hover:opacity-80 group-hover:translate-x-0"
+                    : "text-foreground/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-foreground/30 group-hover:opacity-80 group-hover:translate-x-0"
                     }`}>
                     {displayLabel}
                   </span>
 
                   {/* Circular indicator nodes */}
                   <div className="relative flex items-center justify-center w-5 h-5">
-                    <span className={`font-sans text-[10px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-white/20 group-hover:text-white/40"
+                    <span className={`font-sans text-[10px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-foreground/20 group-hover:text-foreground/40"
                       }`}>
                       {String(idx + 1).padStart(2, "0")}
                     </span>
@@ -359,11 +361,11 @@ export function Hero({
           </div>
 
           {/* Scroll indicator with custom animated mouse wheel */}
-          <div className="flex flex-col items-center gap-2.5 mt-3 pt-4 border-t border-white/5 w-10">
-            <span className="text-white/15 font-sans text-[8px] tracking-[0.15em] uppercase">
+          <div className="flex flex-col items-center gap-2.5 mt-3 pt-4 border-t border-border w-10">
+            <span className="text-foreground/15 font-sans text-[8px] tracking-[0.15em] uppercase">
               Scroll
             </span>
-            <div className="w-4.5 h-7 rounded-full border border-white/10 flex justify-center p-1 relative overflow-hidden bg-white/[0.005]">
+            <div className="w-4.5 h-7 rounded-full border border-border flex justify-center p-1 relative overflow-hidden bg-foreground/[0.005]">
               <motion.div
                 animate={{
                   y: [0, 6, 0],
@@ -388,7 +390,7 @@ export function Hero({
           className="hidden lg:flex flex-col items-center gap-4 absolute right-12 lg:right-16 top-1/2 -translate-y-1/2 z-30"
         >
           <span
-            className="text-white/[0.12] font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap flex items-center gap-3"
+            className="text-foreground/12 font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap flex items-center gap-3"
             style={{ writingMode: "vertical-rl" }}
           >
             <span className="text-gold/30 font-serif text-[9px]">✦</span>
@@ -458,9 +460,9 @@ export function Hero({
                     {/* Description */}
                     <motion.p
                       initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                      animate={isLoaded ? { opacity: 0.45, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
+                      animate={isLoaded ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 12, filter: "blur(6px)" }}
                       transition={{ duration: 0.6, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                      className="text-foreground/45 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]"
+                      className="text-foreground/75 font-sans text-[13px] lg:text-[14px] leading-[1.7] max-w-[380px]"
                     >
                       {currentCategory.description}
                     </motion.p>
@@ -488,7 +490,7 @@ export function Hero({
                       glowIntensity={0.3}
                       coneSpread={25}
                       animated={false}
-                      colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                      colors={theme === "light" ? ["#c5a880", "#bba282", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
                       fillOpacity={0}
                       style={{
                         borderColor: "transparent",
@@ -496,7 +498,7 @@ export function Hero({
                     >
                       <a
                         href="#contact"
-                        className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none"
+                        className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-foreground/80 border border-border hover:border-gold/30 hover:text-foreground transition-all duration-300 font-sans focus:outline-none"
                         style={{
                           background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
                         }}
@@ -523,7 +525,7 @@ export function Hero({
                   transition={{ duration: 1, delay: 1 }}
                   className="lg:hidden mt-10 w-full"
                 >
-                  <div className="flex items-center justify-start gap-6 border-t border-white/10 pt-6">
+                  <div className="flex items-center justify-start gap-6 border-t border-border pt-6">
                     {categories.map((cat, idx) => {
                       const isActive = categoryIndex === idx;
                       const displayLabel =
@@ -539,7 +541,7 @@ export function Hero({
                           onClick={() => handleCategoryClick(idx)}
                           className="flex flex-col items-start gap-1 group focus:outline-none"
                         >
-                          <span className={`font-sans text-[10px] tracking-[0.25em] uppercase transition-colors duration-300 ${isActive ? "text-gold font-medium" : "text-white/40"
+                          <span className={`font-sans text-[10px] tracking-[0.25em] uppercase transition-colors duration-300 ${isActive ? "text-gold font-medium" : "text-foreground/40"
                             }`}>
                             {displayLabel}
                           </span>
@@ -551,7 +553,7 @@ export function Hero({
                                 transition={{ type: "spring", stiffness: 380, damping: 30 }}
                               />
                             ) : (
-                              <div className="absolute inset-0 bg-transparent group-hover:bg-white/10 transition-colors duration-300" />
+                              <div className="absolute inset-0 bg-transparent group-hover:bg-foreground/10 transition-colors duration-300" />
                             )}
                           </div>
                         </button>
@@ -575,7 +577,7 @@ export function Hero({
                   delay: 0.45,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.6)] group cursor-pointer"
+                className="absolute left-1/2 -translate-x-1/2 lg:left-[10%] lg:translate-x-0 bottom-0 md:top-0 w-[75%] lg:w-[48.7%] h-[95%] lg:h-[71%] rounded-t-full overflow-hidden z-10 shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] group cursor-pointer"
                 style={{ y: activeY1 }}
               >
                 <CategoryImage
@@ -595,7 +597,7 @@ export function Hero({
                   delay: 0.55,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="hidden lg:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
+                className="hidden lg:block absolute right-0 top-0 w-[39.3%] h-[68%] z-20 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
                 style={{ y: activeY2 }}
               >
                 <CategoryImage
@@ -617,7 +619,7 @@ export function Hero({
                   delay: 0.65,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="hidden lg:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
+                className="hidden lg:block absolute right-0 bottom-0 w-[39.3%] h-[30%] z-10 overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.6)] rounded-md group cursor-pointer"
                 style={{ y: activeY5 }}
               >
                 <CategoryImage
@@ -642,7 +644,7 @@ export function Hero({
                 ease: [0.16, 1, 0.3, 1],
               }}
               style={{ y: activeY5 }}
-              className="hidden lg:block absolute left-[19%] bottom-0 w-[24.3%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
+              className="hidden lg:block absolute left-[19%] bottom-0 w-[24.3%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
             >
               <CategoryImage
                 categoryIndex={categoryIndex}
@@ -665,7 +667,7 @@ export function Hero({
                 ease: [0.16, 1, 0.3, 1],
               }}
               style={{ y: activeY5 }}
-              className="hidden lg:block absolute left-[44.3%] bottom-0 w-[33.8%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
+              className="hidden lg:block absolute left-[44.3%] bottom-0 w-[33.8%] h-[27%] z-20 overflow-hidden rounded-md shadow-[0_12px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.5)] bg-black/10 group cursor-pointer"
             >
               <CategoryImage
                 categoryIndex={categoryIndex}

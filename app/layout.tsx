@@ -4,6 +4,7 @@ import "./globals.css";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import GradualBlur from "@/components/ui/GradualBlur";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -41,21 +42,48 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${instrumentSerif.variable} ${playfairDisplay.variable} ${pinyonScript.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans" suppressHydrationWarning>
-        <ScrollProgress />
-        <SmoothScroll />
-        {children}
-        <GradualBlur
-          target="page"
-          position="bottom"
-          height="1.6rem"
-          strength={3}
-          divCount={6}
-          curve="bezier"
-          exponential={true}
-          opacity={1}
-          zIndex={90}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('theme');
+                  var theme = saved;
+                  if (!theme) {
+                    var mql = window.matchMedia('(prefers-color-scheme: light)');
+                    theme = mql.matches ? 'light' : 'dark';
+                  }
+                  if (theme === 'light') {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
         />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans" suppressHydrationWarning>
+        <ThemeProvider>
+          <ScrollProgress />
+          <SmoothScroll />
+          {children}
+          <GradualBlur
+            target="page"
+            position="bottom"
+            height="1.6rem"
+            strength={3}
+            divCount={6}
+            curve="bezier"
+            exponential={true}
+            opacity={1}
+            zIndex={90}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

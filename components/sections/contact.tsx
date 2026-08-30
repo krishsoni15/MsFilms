@@ -7,6 +7,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
+import { useTheme } from "@/components/theme-provider";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
   return (
@@ -17,11 +18,11 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
         name={id}
         placeholder=" "
         required={required}
-        className="block w-full border-t-0 border-x-0 border-b border-white/10 bg-transparent py-4 text-white text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent"
+        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent"
       />
       <label
         htmlFor={id}
-        className="absolute left-0 top-4 text-[10px] text-white/60 tracking-[0.2em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px] pointer-events-none"
+        className="absolute left-0 top-4 text-[10px] text-foreground/60 tracking-[0.2em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px] pointer-events-none"
       >
         {label}
       </label>
@@ -32,6 +33,7 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
 }
 
 export function Contact() {
+  const { theme } = useTheme();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -81,12 +83,12 @@ export function Contact() {
               <span className="text-[10px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-4 block">
                 {siteData.contactHeadline}
               </span>
-              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-[1.1] mb-6">
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-foreground tracking-tight leading-[1.1] mb-6">
                 Let{"'"}s Create Something <br />
                 <span className="italic font-normal text-gold/90">Extraordinary.</span>
               </h2>
-              <p className="font-sans text-xs text-white/80 leading-relaxed max-w-md">
-                Based in Saskatoon, Saskatchewan, we offer premium wedding photography, videography, and dronography services available <strong className="text-white font-semibold">across all of Canada</strong>. Whether you are planning an intimate local ceremony or a grand destination celebration from coast to coast, we are dedicated to capturing your most meaningful stories. Please share the details of your upcoming event below, and we will craft a personalized proposal tailored to your vision.
+              <p className="font-sans text-xs text-foreground/80 leading-relaxed max-w-md">
+                Based in Saskatoon, Saskatchewan, we offer premium wedding photography, videography, and dronography services available <strong className="text-foreground font-semibold">across all of Canada</strong>. Whether you are planning an intimate local ceremony or a grand destination celebration from coast to coast, we are dedicated to capturing your most meaningful stories. Please share the details of your upcoming event below, and we will craft a personalized proposal tailored to your vision.
               </p>
             </div>
 
@@ -99,30 +101,30 @@ export function Contact() {
             </div>
 
             {/* Direct Channels (Flexible wrap layout for high visibility / responsiveness) */}
-            <div className="pt-6 border-t border-white/[0.06] flex flex-wrap gap-x-10 gap-y-6 max-w-md">
+            <div className="pt-6 border-t border-border flex flex-wrap gap-x-10 gap-y-6 max-w-md">
               <div className="flex gap-3">
-                <div className="w-9 h-9 rounded-full border border-white/5 bg-white/[0.01] flex items-center justify-center text-gold/80 flex-shrink-0">
+                <div className="w-9 h-9 rounded-full border border-border bg-foreground/[0.01] flex items-center justify-center text-gold/80 flex-shrink-0">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                     <circle cx="12" cy="10" r="3" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[9px] tracking-[0.2em] uppercase text-white/40 font-semibold mb-1">Location</h4>
-                  <p className="text-xs text-white/90 font-sans leading-normal whitespace-nowrap">{siteData.location}</p>
+                  <h4 className="text-[9px] tracking-[0.2em] uppercase text-foreground/40 font-semibold mb-1">Location</h4>
+                  <p className="text-xs text-foreground/90 font-sans leading-normal whitespace-nowrap">{siteData.location}</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                <div className="w-9 h-9 rounded-full border border-white/5 bg-white/[0.01] flex items-center justify-center text-gold/80 flex-shrink-0">
+                <div className="w-9 h-9 rounded-full border border-border bg-foreground/[0.01] flex items-center justify-center text-gold/80 flex-shrink-0">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="16" x="2" y="4" rx="2" />
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[9px] tracking-[0.2em] uppercase text-white/40 font-semibold mb-1">Direct Inquiry</h4>
-                  <a href={`mailto:${siteData.email}`} className="text-xs text-white/90 hover:text-gold transition-colors font-sans border-b border-white/10 hover:border-gold leading-normal whitespace-nowrap">
+                  <h4 className="text-[9px] tracking-[0.2em] uppercase text-foreground/40 font-semibold mb-1">Direct Inquiry</h4>
+                  <a href={`mailto:${siteData.email}`} className="text-xs text-foreground/90 hover:text-gold transition-colors font-sans border-b border-border hover:border-gold leading-normal whitespace-nowrap">
                     {siteData.email}
                   </a>
                 </div>
@@ -135,13 +137,13 @@ export function Contact() {
             <BorderGlow
               edgeSensitivity={20}
               glowColor="40 50 60"
-              backgroundColor="#020912"
+              backgroundColor={theme === "light" ? "var(--background-alt-2)" : "#020912"}
               borderRadius={16}
               glowRadius={50}
-              glowIntensity={0.6}
+              glowIntensity={theme === "light" ? 0.3 : 0.6}
               coneSpread={30}
-              colors={["#c5a880", "#e5d5be", "#ffffff"]}
-              fillOpacity={0.03}
+              colors={theme === "light" ? ["#c5a880", "#bba282", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
+              fillOpacity={theme === "light" ? 0.95 : 0.03}
               className="w-full"
             >
               <div className="p-8 md:p-12 relative z-10">
@@ -173,11 +175,11 @@ export function Contact() {
                           name="message"
                           placeholder=" "
                           rows={4}
-                          className="block w-full border-t-0 border-x-0 border-b border-white/10 bg-transparent py-4 text-white text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent resize-none"
+                          className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent resize-none"
                         />
                         <label
                           htmlFor="message"
-                          className="absolute left-0 top-4 text-[10px] text-white/60 tracking-[0.2em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px] pointer-events-none"
+                          className="absolute left-0 top-4 text-[10px] text-foreground/60 tracking-[0.2em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px] pointer-events-none"
                         >
                           Tell us about your plans (Optional)
                         </label>
@@ -195,7 +197,7 @@ export function Contact() {
                             glowIntensity={0.3}
                             coneSpread={30}
                             animated={true}
-                            colors={["#ffffff", "#c5a880", "#ffffff"]}
+                            colors={theme === "light" ? ["#020912", "#cba358", "#020912"] : ["#ffffff", "#cba358", "#ffffff"]}
                             fillOpacity={0}
                             style={{
                               borderColor: "transparent",
@@ -204,7 +206,7 @@ export function Contact() {
                             <button
                               type="submit"
                               disabled={submitting}
-                              className="relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-white/[0.08] hover:border-gold/30 hover:text-white transition-all duration-500 focus:outline-none px-8 py-3.5 text-white/80 font-sans font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-border hover:border-gold/30 hover:text-gold transition-all duration-500 focus:outline-none px-8 py-3.5 text-foreground/80 font-sans font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                               style={{
                                 background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
                               }}
@@ -236,7 +238,7 @@ export function Contact() {
                         </svg>
                       </div>
 
-                      <h3 className="font-display text-4xl font-light tracking-wide text-white mb-4">Thank you.</h3>
+                      <h3 className="font-display text-4xl font-light tracking-wide text-foreground mb-4">Thank you.</h3>
                       <p className="font-display text-xl italic text-gold/80 mb-6">
                         Your story is on its way to us.
                       </p>

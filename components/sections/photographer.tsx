@@ -9,12 +9,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Check } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
 import { Aurora } from "@/components/ui/aurora";
+import { useTheme } from "@/components/theme-provider";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
 export function AboutPhotographer() {
+  const { theme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -95,12 +97,12 @@ export function AboutPhotographer() {
   return (
     <section
       ref={containerRef}
-      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#030c16] border-t border-foreground/5 relative overflow-hidden"
+      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background-alt border-t border-foreground/5 relative overflow-hidden"
     >
       {/* ── Aurora WebGL Background ── */}
       <div className="absolute inset-0 pointer-events-none opacity-80 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
         <Aurora
-          colorStops={["#081730", "#cba358", "#4e7bb0"]}
+          colorStops={theme === "light" ? ["#b9c9d6", "#ebd5b0", "#f5f3ec"] : ["#081730", "#cba358", "#4e7bb0"]}
           blend={isMobile ? 0.9 : 0.65}
           amplitude={isMobile ? 0.65 : 1.25}
           speed={0.45}
@@ -148,23 +150,23 @@ export function AboutPhotographer() {
               Why Collaborate With Us?
             </p>
             <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
                 <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
                   <Check size={11} strokeWidth={3.5} />
                 </div>
-                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">6+ Years of Industry Experience</span>
+                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">6+ Years of Industry Experience</span>
               </div>
-              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
                 <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
                   <Check size={11} strokeWidth={3.5} />
                 </div>
-                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">Cinema & Photography Combined</span>
+                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">Cinema & Photography Combined</span>
               </div>
-              <div className="flex items-center gap-3.5 bg-white/[0.02] border border-white/[0.05] rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
+              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
                 <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
                   <Check size={11} strokeWidth={3.5} />
                 </div>
-                <span className="text-[10px] md:text-[11px] text-white/80 tracking-[0.15em] uppercase font-semibold">Collaborative, Client-Focused Process</span>
+                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">Collaborative, Client-Focused Process</span>
               </div>
             </div>
           </div>
@@ -229,7 +231,7 @@ export function AboutPhotographer() {
             >
               <div className="relative w-full h-full">
                 <Image
-                  src="/me/013A5316.jpg"
+                  src="/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg"
                   alt="Madhav Soni — Founder & Lead Photographer of Msfilms"
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-105"
@@ -241,8 +243,8 @@ export function AboutPhotographer() {
             </BorderGlow>
           </div>
 
-          {/* Overlapping secondary image — parallax floating */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-10 -left-4 lg:-left-8 w-[48%] aspect-[3/4] shadow-2xl rounded-2xl group/sub opacity-0 overflow-visible">
+          {/* Overlapping secondary image — parallax floating on bottom-left */}
+          <div className="reveal-image-item hidden sm:block absolute -bottom-8 -left-6 lg:-left-12 w-[44%] aspect-[3/4] shadow-2xl rounded-2xl group/sub opacity-0 overflow-visible z-20">
             <div className="floating-portrait w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
@@ -273,6 +275,40 @@ export function AboutPhotographer() {
                   <div className="absolute bottom-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1.5 text-[9px] tracking-[0.2em] uppercase text-white/80 z-20">
                     Madhav Soni
                   </div>
+                </div>
+              </BorderGlow>
+            </div>
+          </div>
+
+          {/* Overlapping third image — parallax floating on bottom-right */}
+          <div className="reveal-image-item hidden sm:block absolute -bottom-12 -right-6 lg:-right-10 w-[45%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 opacity-0 overflow-visible z-20">
+            <div className="floating-portrait-delayed w-full h-full relative rounded-[inherit] overflow-hidden">
+              <BorderGlow
+                borderRadius={16}
+                backgroundColor="transparent"
+                glowColor="35 85 75"
+                glowRadius={45}
+                glowIntensity={1.5}
+                edgeSensitivity={20}
+                coneSpread={25}
+                colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                fillOpacity={0.08}
+                className="absolute inset-0 w-full h-full z-10 pointer-events-auto"
+                style={{
+                  borderRadius: "16px",
+                  borderColor: "rgba(197, 168, 128, 0.2)",
+                  boxShadow: "none",
+                }}
+              >
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/me/013A5316.jpg"
+                    alt="Madhav Soni — Lead Visualist"
+                    fill
+                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub2:scale-110"
+                    sizes="25vw"
+                  />
+                  <div className="absolute inset-2 border border-gold/10 pointer-events-none z-20 rounded-lg" />
                 </div>
               </BorderGlow>
             </div>

@@ -1,9 +1,19 @@
+:root {
+  --carousel-bg-rgb: 245, 242, 235;
+  --carousel-bg-hex: #f5f2eb;
+}
+
+:root.dark, html.dark, .dark {
+  --carousel-bg-rgb: 2, 9, 18;
+  --carousel-bg-hex: #020912;
+}
+
 .gradient-carousel-container {
   position: relative;
   width: 100%;
   padding: 4rem 0;
   overflow: hidden;
-  background-color: #020912;
+  background-color: var(--carousel-bg-hex);
   transition: background-color 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
@@ -52,14 +62,14 @@
 
 .gradient-carousel-side-overlay-left {
   left: 0;
-  background: linear-gradient(to right, #020912 0%, rgba(2, 9, 18, 0.75) 40%, transparent 100%);
+  background: linear-gradient(to right, var(--carousel-bg-hex) 0%, rgba(var(--carousel-bg-rgb), 0.75) 40%, transparent 100%);
   mask-image: linear-gradient(to right, black 40%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, black 40%, transparent 100%);
 }
 
 .gradient-carousel-side-overlay-right {
   right: 0;
-  background: linear-gradient(to left, #020912 0%, rgba(2, 9, 18, 0.75) 40%, transparent 100%);
+  background: linear-gradient(to left, var(--carousel-bg-hex) 0%, rgba(var(--carousel-bg-rgb), 0.75) 40%, transparent 100%);
   mask-image: linear-gradient(to left, black 40%, transparent 100%);
   -webkit-mask-image: linear-gradient(to left, black 40%, transparent 100%);
 }
@@ -111,7 +121,7 @@
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-  background-color: #030c16;
+  background-color: var(--background-alt);
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
@@ -234,9 +244,9 @@
 }
 
 .gradient-carousel-nav-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(var(--foreground-rgb), 0.03);
+  border: 1px solid rgba(var(--foreground-rgb), 0.08);
+  color: rgba(var(--foreground-rgb), 0.6);
   border-radius: 50%;
   width: 44px;
   height: 44px;
@@ -248,9 +258,9 @@
 }
 
 .gradient-carousel-nav-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: rgba(var(--foreground-rgb), 0.08);
+  border-color: rgba(var(--foreground-rgb), 0.2);
+  color: var(--foreground);
   transform: scale(1.05);
 }
 
@@ -267,7 +277,7 @@
 }
 
 .gradient-carousel-dot {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(var(--foreground-rgb), 0.15);
   border: none;
   border-radius: 4px;
   height: 4px;
@@ -277,6 +287,6 @@
 }
 
 .gradient-carousel-dot.active {
-  background: #ffffff;
+  background: var(--foreground);
   width: 28px;
 }

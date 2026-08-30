@@ -123,7 +123,7 @@ export function WorkIntro() {
     <div
       id="work"
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden flex flex-col justify-center items-center bg-[#020912]"
+      className="relative w-full h-screen overflow-hidden flex flex-col justify-center items-center bg-background"
     >
       {/* 3D Dome Gallery Background */}
       <div
@@ -137,7 +137,7 @@ export function WorkIntro() {
           fitBasis="auto"
           minRadius={550}
           maxRadius={1100}
-          overlayBlurColor="#020912"
+          overlayBlurColor="var(--background)"
           grayscale={true}
           openedImageWidth="280px"
           openedImageHeight="385px"
@@ -161,7 +161,7 @@ export function WorkIntro() {
           priority
         />
         {/* Dark Vignette Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020912] via-[#020912]/40 to-[#020912]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background" />
       </div>
 
       {/* Editorial Content */}
@@ -175,7 +175,7 @@ export function WorkIntro() {
         </div>
 
         {/* Large Editorial Headline */}
-        <h1 className="font-serif text-[11vw] sm:text-[9vw] leading-[0.95] text-[#f4f1eb] tracking-tight uppercase flex items-center justify-center gap-[4vw] overflow-visible select-none mb-6">
+        <h1 className="font-serif text-[11vw] sm:text-[9vw] leading-[0.95] text-foreground tracking-tight uppercase flex items-center justify-center gap-[4vw] overflow-visible select-none mb-6">
           <span ref={titleLeftRef} className="inline-block origin-right will-change-transform">
             OUR
           </span>

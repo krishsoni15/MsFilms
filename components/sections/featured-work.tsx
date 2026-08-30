@@ -6,8 +6,10 @@ import { AnimatedText } from "@/components/animated-text";
 import { CardStack } from "@/components/ui/card-stack";
 import BorderGlow from "@/components/ui/border-glow";
 import DiagonalMarqueeCarousel from "@/components/ui/great-ui-diagonal-marquee-carousel";
+import { useTheme } from "@/components/theme-provider";
 
 export function FeaturedWork() {
+  const { theme } = useTheme();
   const landscapeItems = [
     { image: "/landscape/imgi_2_1.jpg", label: "Valley Horizon", alt: "Valley Horizon Study" },
     { image: "/landscape/imgi_8_8.jpg", label: "Mist Mountain", alt: "Mist Mountain Study" },
@@ -69,7 +71,7 @@ export function FeaturedWork() {
 
   return (
     <>
-      <section id="work" className="py-24 md:py-36 bg-[#020912] border-t border-white/[0.03] overflow-x-hidden">
+      <section id="work" className="py-24 md:py-36 bg-background border-t border-border overflow-x-hidden">
         <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div>
             <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
@@ -119,13 +121,13 @@ export function FeaturedWork() {
               <div className="relative h-full w-full rounded-2xl overflow-hidden bg-background">
                 <BorderGlow
                   borderRadius={16}
-                  backgroundColor="#020912"
+                  backgroundColor={theme === "light" ? "var(--background)" : "#020912"}
                   glowColor="40 50 60"
                   glowRadius={40}
                   glowIntensity={active ? 1.5 : 0.4}
                   edgeSensitivity={20}
                   coneSpread={25}
-                  colors={["#c5a880", "#e5d5be", "#ffffff"]}
+                  colors={theme === "light" ? ["#c5a880", "#bba282", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
                   fillOpacity={active ? 0.08 : 0.0}
                   className="w-full h-full"
                 >
@@ -145,15 +147,15 @@ export function FeaturedWork() {
                       </div>
                     )}
                     {/* Shadow overlay */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#020912]/85 via-[#020912]/30 to-transparent rounded-[inherit]" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/85 via-background/30 to-transparent rounded-[inherit]" />
 
                     {/* Content */}
                     <div className="relative z-10 flex h-full flex-col justify-end p-6 select-none">
-                      <div className="font-display text-xl font-normal text-white mb-1 tracking-wide">
+                      <div className="font-display text-xl font-normal text-foreground mb-1 tracking-wide">
                         {item.title}
                       </div>
                       {item.description ? (
-                        <div className="text-[11px] text-white/60 font-sans tracking-wide leading-relaxed">
+                        <div className="text-[11px] text-foreground/70 font-sans tracking-wide leading-relaxed">
                           {item.description}
                         </div>
                       ) : null}
@@ -169,7 +171,7 @@ export function FeaturedWork() {
         </div>
 
         {/* Cinematic Diagonal Marquee Carousel Section */}
-        <div className="mt-28 md:mt-36 border-t border-white/[0.04] pt-20 md:pt-28">
+        <div className="mt-28 md:mt-36 border-t border-border pt-20 md:pt-28">
           <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <p className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
@@ -189,7 +191,7 @@ export function FeaturedWork() {
               angle={-15}
               baseSpeed={110}
               cards={marqueeCards}
-              fadeClassName="from-[#020912] dark:from-[#020912]"
+              fadeClassName="from-background dark:from-background"
             />
           </div>
         </div>

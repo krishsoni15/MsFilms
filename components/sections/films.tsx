@@ -147,7 +147,7 @@ export function Films() {
 
   return (
     <>
-      <section id="films" className="bg-[#03111d] text-foreground py-24 md:py-32 px-5 md:px-10 lg:px-16">
+      <section id="films" className="bg-background-alt-2 text-foreground py-24 md:py-32 px-5 md:px-10 lg:px-16">
         <div className="mb-12 md:mb-16">
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">Films</AnimatedText>
           <ScrollReveal

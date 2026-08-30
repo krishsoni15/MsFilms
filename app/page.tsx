@@ -40,7 +40,7 @@ export default function Home() {
       </AnimatePresence>
 
       <Navigation isParentLoaded={!isLoading} />
-      <main className="overflow-x-clip w-full max-w-full relative bg-[#020912]">
+      <main className="overflow-x-clip w-full max-w-full relative bg-background">
         <Hero isParentLoaded={!isLoading} />
         <TrustStats />
         <AboutStudio />

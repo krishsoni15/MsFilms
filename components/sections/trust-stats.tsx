@@ -79,15 +79,15 @@ export function TrustStats() {
 
 
   return (
-    <section className="relative w-full bg-[#020912] overflow-hidden z-10">
+    <section className="relative w-full bg-background overflow-hidden z-10">
       {/* ── Background Aura Glow ── */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full bg-gold/5 blur-[120px] pointer-events-none mix-blend-screen animate-pulse" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full bg-gold/5 blur-[120px] pointer-events-none dark:mix-blend-screen mix-blend-normal animate-pulse" />
 
       {/* Main Stats Row (Full-width Horizontal Glass Bar) */}
-      <div className="relative w-full border-t border-b border-white/[0.05] bg-white/[0.01] backdrop-blur-md py-12 md:py-16 shadow-[0_12px_40px_rgba(0,0,0,0.8)]">
+      <div className="relative w-full border-t border-b border-border bg-foreground/[0.01] backdrop-blur-md py-12 md:py-16 shadow-[0_12px_40px_rgba(0,0,0,0.15)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.8)]">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/[0.01] to-transparent pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0 items-center md:divide-x divide-white/[0.06]">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0 items-center md:divide-x divide-border">
           {stats.map((stat, idx) => (
             <motion.div
               key={stat.label}

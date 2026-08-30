@@ -33,7 +33,7 @@ export function InteractiveMenu() {
   ];
 
   return (
-    <section className="py-24 md:py-36 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
+    <section className="py-24 md:py-36 bg-background border-t border-border overflow-hidden">
       <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
@@ -57,7 +57,7 @@ export function InteractiveMenu() {
       </div>
 
       {/* InfiniteMenu viewport */}
-      <div className="w-full h-[400px] sm:h-[500px] md:h-[600px] relative overflow-hidden bg-[#020912] border-y border-white/[0.03]">
+      <div className="w-full h-[400px] sm:h-[500px] md:h-[600px] relative overflow-hidden bg-background border-y border-border">
         <InfiniteMenu items={menuItems} scale={1.0} />
       </div>
     </section>

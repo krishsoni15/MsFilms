@@ -150,7 +150,7 @@ export function GradientCarousel({ items, className = "" }: GradientCarouselProp
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0 z-0 pointer-events-none"
           style={{
-            background: `radial-gradient(circle at 50% 50%, ${activeItem.gradientColors[0]} 0%, ${activeItem.gradientColors[1] || "#020912"} 80%)`,
+            background: `radial-gradient(circle at 50% 50%, ${activeItem.gradientColors[0]} 0%, ${activeItem.gradientColors[1] || "var(--background)"} 80%)`,
           }}
         />
       </AnimatePresence>

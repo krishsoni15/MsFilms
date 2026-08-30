@@ -8,7 +8,7 @@ import { Footer } from "@/components/footer";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
-export default function ServicesPage() {
+export default function WorkPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -32,7 +32,7 @@ export default function ServicesPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-[#c5a880] font-bold uppercase mb-4 block"
           >
-            OUR SERVICES
+            OUR WORK
           </motion.span>
           
           <motion.h1 
@@ -50,7 +50,7 @@ export default function ServicesPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="font-sans text-xs md:text-sm text-foreground/70 max-w-md leading-relaxed mb-12"
           >
-            We are currently curating premium cinematic photography and film packages for Saskatoon and destination clients.
+            We are currently curating our full portfolio of cinematic wedding films, engagement documentations, and commercial visual stories.
           </motion.p>
           
           <motion.div

@@ -18,22 +18,82 @@
 
 :root {
   --background: #020912;
+  --background-alt: #030c16;
+  --background-alt-2: #03111d;
+  --cream-dark: #020813;
   --foreground: #f4f1eb;
   --accent: #1e293b;
   --gold: #c5a880;
   --gold-light: #e5d5be;
-  --cream-dark: #020813;
   --white: #ffffff;
+  
+  --cursor-color: rgba(255, 255, 255, 0.65);
+  --cursor-color-target: #ffffff;
+  
+  --scrollbar-thumb: rgba(255, 255, 255, 0.25);
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.65);
+  
+  --border-color: rgba(255, 255, 255, 0.08);
 }
+
+html.light {
+  --background: #fdfcf9; /* Smooth editorial warm-cream background */
+  --background-alt: #f5f3ec; /* Warm secondary light cream background */
+  --background-alt-2: #eae7dd; /* Warm tertiary background for depth */
+  --cream-dark: #ffffff; /* Solid white for cards/menus to pop */
+  --foreground: #0e121a; /* Very dark slate/charcoal for reading comfort */
+  --accent: #e5e9f0; /* Light slate/cream accent */
+  --gold: #b28e5c; /* Refined warm luxury gold for light background */
+  --gold-light: #c5a880;
+  --white: #000000;
+  
+  --cursor-color: rgba(14, 18, 26, 0.65);
+  --cursor-color-target: #0e121a;
+  
+  --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --scrollbar-thumb-hover: rgba(0, 0, 0, 0.5);
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Legibility Overrides for Light Mode Typography & Borders */
+html.light .text-foreground\/20 {
+  color: rgba(14, 18, 26, 0.45);
+}
+html.light .text-foreground\/30 {
+  color: rgba(14, 18, 26, 0.55);
+}
+html.light .text-foreground\/40 {
+  color: rgba(14, 18, 26, 0.65);
+}
+html.light .text-foreground\/50 {
+  color: rgba(14, 18, 26, 0.72);
+}
+html.light .text-foreground\/60 {
+  color: rgba(14, 18, 26, 0.8);
+}
+html.light .text-foreground\/70 {
+  color: rgba(14, 18, 26, 0.88);
+}
+html.light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.15);
+}
+html.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-alt: var(--background-alt);
+  --color-background-alt-2: var(--background-alt-2);
+  --color-cream-dark: var(--cream-dark);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
-  --color-cream-dark: var(--cream-dark);
   --color-white: var(--white);
+  --color-border: var(--border-color);
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-display: var(--font-playfair-display), ui-serif, Georgia, serif;
@@ -185,17 +245,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #020810;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.25); /* Muted white thumb */
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
-  border: 2px solid #020810;
+  border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.65); /* Bright white on hover */
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ─── Reduced motion ─── */
@@ -413,4 +473,8 @@ body {
 /* On card hover, transition the image to full color */
 .chroma-card:hover img {
   filter: grayscale(0) contrast(1.05) brightness(1.02);
+}
+
+html.light img[src*="logo.png"]:not(#preloader img) {
+  filter: invert(1) brightness(0) contrast(2);
 }

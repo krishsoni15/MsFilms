@@ -20,9 +20,9 @@ export function AboutStudio() {
   }, []);
 
   return (
-    <div id="about" className="relative w-full bg-[#020912]">
+    <div id="about" className="relative w-full bg-background">
       <section
-        className="relative w-full overflow-hidden shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.9),0_-15px_30px_-10px_rgba(197,168,128,0.06)] border-t border-white/[0.02]"
+        className="relative w-full overflow-hidden shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.15),0_-15px_30px_-10px_rgba(197,168,128,0.02)] dark:shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.9),0_-15px_30px_-10px_rgba(197,168,128,0.06)] border-t border-border"
       >
       <ScrollExpand
         src="/mp4/DJI_0094_optimized.mp4"

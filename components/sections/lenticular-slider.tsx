@@ -46,7 +46,7 @@ export function LenticularSlider() {
   ];
 
   return (
-    <section className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
+    <section className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background border-t border-border overflow-hidden">
       <div className="mb-16 md:mb-20 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">

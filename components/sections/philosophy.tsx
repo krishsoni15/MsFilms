@@ -4,7 +4,7 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export function Philosophy() {
   return (
-    <section className="py-32 md:py-48 px-5 md:px-10 lg:px-16 bg-[#030c16] border-y border-gold/10 relative overflow-hidden flex flex-col items-center justify-center">
+    <section className="py-32 md:py-48 px-5 md:px-10 lg:px-16 bg-background-alt border-y border-gold/10 relative overflow-hidden flex flex-col items-center justify-center">
       {/* Background ambient lighting */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
         <div 

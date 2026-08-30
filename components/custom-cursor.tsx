@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import { gsap } from "gsap";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "@/components/theme-provider";
 
 // Helper to find containing blocks that could interfere with absolute positioning coordinates
 const getContainingBlock = (element: HTMLElement | null): HTMLElement | null => {
@@ -32,10 +33,11 @@ const getContainingBlockOffset = (block: HTMLElement | null) => {
 };
 
 export function CustomCursor() {
+  const { theme } = useTheme();
   const targetSelector = "a, button, [data-cursor-text], [data-cursor], .cursor-pointer, input, select, textarea";
   const hideDefaultCursor = true;
-  const cursorColor = "rgba(255, 255, 255, 0.65)";
-  const cursorColorOnTarget = "#ffffff"; // Target white
+  const cursorColor = theme === "light" ? "rgba(2, 9, 18, 0.65)" : "rgba(255, 255, 255, 0.65)";
+  const cursorColorOnTarget = theme === "light" ? "#020912" : "#ffffff";
 
   const cursorRef = useRef<HTMLDivElement>(null);
   const cornersRef = useRef<NodeListOf<HTMLDivElement> | null>(null);
@@ -324,7 +326,7 @@ export function CustomCursor() {
         }
         if (dotRef.current) {
           gsap.to(dotRef.current, {
-            backgroundColor: "#FFFFFF",
+            backgroundColor: theme === "light" ? "#020912" : "#FFFFFF",
             duration: 0.15,
             ease: "power2.out"
           });
@@ -433,7 +435,7 @@ export function CustomCursor() {
             scale: cursorText ? 0 : 1
           }}
           transition={{ type: "spring", stiffness: 350, damping: 25 }}
-          className="w-1.5 h-1.5 rounded-full bg-white will-change-transform pointer-events-none absolute"
+          className="w-1.5 h-1.5 rounded-full bg-foreground will-change-transform pointer-events-none absolute"
         />
       </div>
 
@@ -442,7 +444,7 @@ export function CustomCursor() {
         <div className="target-cursor-corner corner-tl pointer-events-none" style={{ borderColor: "inherit" }}>
           {/* Pulsing RED REC indicator for videos */}
           {cursorText === "PLAY FILM" && (
-            <div className="absolute bottom-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-red-500 tracking-wider select-none whitespace-nowrap bg-[#061a2b]/60 border border-red-500/30 px-1 py-0.5 rounded-[2px] pointer-events-none">
+            <div className="absolute bottom-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-red-500 tracking-wider select-none whitespace-nowrap bg-background/80 border border-red-500/30 px-1 py-0.5 rounded-[2px] pointer-events-none">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse pointer-events-none" />
               REC
             </div>
@@ -453,8 +455,8 @@ export function CustomCursor() {
         <div className="target-cursor-corner corner-bl pointer-events-none" style={{ borderColor: "inherit" }}>
           {/* Green AF-S (Auto-Focus Single) lock status indicator for photos */}
           {cursorText === "VIEW STORY" && (
-            <div className="absolute top-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-emerald-400 tracking-wider select-none whitespace-nowrap bg-[#061a2b]/60 border border-emerald-500/25 px-1 py-0.5 rounded-[2px] pointer-events-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 pointer-events-none" />
+            <div className="absolute top-3 left-0 flex items-center gap-1.5 text-[8px] font-bold font-mono text-emerald-500 dark:text-emerald-400 tracking-wider select-none whitespace-nowrap bg-background/80 border border-emerald-500/25 px-1 py-0.5 rounded-[2px] pointer-events-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 pointer-events-none" />
               AF-S
             </div>
           )}

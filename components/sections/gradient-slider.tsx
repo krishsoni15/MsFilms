@@ -4,8 +4,12 @@ import React from "react";
 import GradientCarousel, { GradientCarouselItem } from "@/components/ui/GradientCarousel";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
+import { useTheme } from "@/components/theme-provider";
 
 export function GradientSlider() {
+  const { theme } = useTheme();
+  const bgStop = theme === "light" ? "#f5f2eb" : "#020912";
+
   const items: GradientCarouselItem[] = [
     {
       id: 1,
@@ -13,7 +17,7 @@ export function GradientSlider() {
       title: "Wedding Day Milestones",
       subtitle: "REAL LOVE STORIES",
       description: "Preserving raw emotion, candid laughs, and timeless vows under Saskatchewan skies.",
-      gradientColors: ["#2d2417", "#020912"], // Deep muted wedding bronze + dark slate
+      gradientColors: theme === "light" ? ["#ebdcd0", bgStop] : ["#2d2417", bgStop],
     },
     {
       id: 2,
@@ -21,7 +25,7 @@ export function GradientSlider() {
       title: "Banff Mountain Horizons",
       subtitle: "NATURAL FRONTIERS",
       description: "Misty forests, deep alpine lakes, and dramatic ridgelines in the Canadian Rockies.",
-      gradientColors: ["#142a2d", "#020912"], // Muted deep mountain teal + dark slate
+      gradientColors: theme === "light" ? ["#c0e0e6", bgStop] : ["#142a2d", bgStop],
     },
     {
       id: 3,
@@ -29,7 +33,7 @@ export function GradientSlider() {
       title: "Aerial Symmetries",
       subtitle: "PERSPECTIVES FROM ABOVE",
       description: "Cinematic drone compositions capturing geographic textures from a higher perspective.",
-      gradientColors: ["#112535", "#020912"], // Muted deep ocean slate + dark slate
+      gradientColors: theme === "light" ? ["#c6d9eb", bgStop] : ["#112535", bgStop],
     },
     {
       id: 4,
@@ -37,7 +41,7 @@ export function GradientSlider() {
       title: "Candid Fine Art Portraits",
       subtitle: "CHARACTER & LIGHT",
       description: "Intimate portrait compositions focusing on natural lighting and genuine emotion.",
-      gradientColors: ["#331b25", "#020912"], // Dark muted plum wine + dark slate
+      gradientColors: theme === "light" ? ["#e0cad2", bgStop] : ["#331b25", bgStop],
     },
     {
       id: 5,
@@ -45,12 +49,12 @@ export function GradientSlider() {
       title: "Prairie Forest Woodlands",
       subtitle: "LOCAL NATURE",
       description: "Golden light filtering through local forests and rivers in the heart of Saskatchewan.",
-      gradientColors: ["#212b1c", "#020912"], // Dark muted moss green + dark slate
+      gradientColors: theme === "light" ? ["#cfdec9", bgStop] : ["#212b1c", bgStop],
     },
   ];
 
   return (
-    <section className="py-24 md:py-36 bg-[#020912] border-t border-white/[0.03] overflow-hidden">
+    <section className="py-24 md:py-36 bg-background border-t border-border overflow-hidden">
       <div className="mb-16 md:mb-20 max-w-7xl mx-auto px-5 md:px-10 lg:px-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div>
           <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">

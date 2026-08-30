@@ -40,9 +40,9 @@ interface AccordionGalleryProps {
 export function AccordionGallery({
   items,
   defaultIndex = 2,
-  accentColor = "#ffffff",
-  overlayColor = "#020912",
-  textColor = "#ffffff",
+  accentColor = "var(--gold)",
+  overlayColor = "var(--background)",
+  textColor = "var(--foreground)",
   height = 500,
   gap = 12,
   radius = 8,
