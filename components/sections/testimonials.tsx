@@ -195,12 +195,12 @@ export function Testimonials() {
     const currentScroll = container.scrollLeft;
 
     // Wrap around boundaries:
-    // Left boundary: we scrolled into Set 1, jump forward to Set 2
-    if (currentScroll < totalWidth - container.clientWidth / 2) {
+    // Left boundary: we scrolled below Set 2, jump forward to Set 2
+    if (currentScroll < totalWidth) {
       container.scrollLeft = currentScroll + totalWidth;
     }
-    // Right boundary: we scrolled into Set 3, jump backward to Set 2
-    else if (currentScroll > totalWidth * 2 - container.clientWidth / 2) {
+    // Right boundary: we scrolled past Set 2, jump backward to Set 2
+    else if (currentScroll >= totalWidth * 2) {
       container.scrollLeft = currentScroll - totalWidth;
     }
   };
@@ -258,9 +258,9 @@ export function Testimonials() {
       const totalWidth = TESTIMONIALS.length * cardWidth;
       
       let wrappedScroll = currentScroll;
-      if (currentScroll < totalWidth - container.clientWidth / 2) {
+      if (currentScroll < totalWidth) {
         wrappedScroll = currentScroll + totalWidth;
-      } else if (currentScroll > totalWidth * 2 - container.clientWidth / 2) {
+      } else if (currentScroll >= totalWidth * 2) {
         wrappedScroll = currentScroll - totalWidth;
       }
       
