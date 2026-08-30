@@ -18,7 +18,7 @@
 .scroll-expand__frame {
   position: absolute;
   inset: 0;
-  will-change: clip-path;
+  will-change: clip-path, mask-image, -webkit-mask-image;
   overflow: hidden;
   z-index: 10;
 }
@@ -39,9 +39,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: rgba(2, 9, 18, 0.72); /* Premium uniform dark backdrop overlay */
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(2, 9, 18, 0.82); /* Premium uniform dark backdrop overlay */
   opacity: 0;
   z-index: 15;
   will-change: opacity;

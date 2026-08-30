@@ -39,7 +39,7 @@ export function WorkIntro() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const domeContainerRef = useRef<HTMLDivElement>(null);
 
-  useIsomorphicLayoutEffect(() => {
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
@@ -51,7 +51,7 @@ export function WorkIntro() {
           end: "+=120%",
           pin: true,
           scrub: 1,
-          anticipatePin: 1,
+          refreshPriority: 5,
         },
       });
 
@@ -114,13 +114,16 @@ export function WorkIntro() {
       );
     }, container);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, []);
 
   return (
     <div
+      id="work"
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden flex flex-col justify-center items-center bg-[#020912] z-40"
+      className="relative w-full h-screen overflow-hidden flex flex-col justify-center items-center bg-[#020912]"
     >
       {/* 3D Dome Gallery Background */}
       <div
@@ -174,7 +177,7 @@ export function WorkIntro() {
         {/* Large Editorial Headline */}
         <h1 className="font-serif text-[11vw] sm:text-[9vw] leading-[0.95] text-[#f4f1eb] tracking-tight uppercase flex items-center justify-center gap-[4vw] overflow-visible select-none mb-6">
           <span ref={titleLeftRef} className="inline-block origin-right will-change-transform">
-            THE
+            OUR
           </span>
           <span ref={titleRightRef} className="inline-block origin-left will-change-transform">
             WORK

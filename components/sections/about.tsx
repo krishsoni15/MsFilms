@@ -20,22 +20,23 @@ export function AboutStudio() {
   }, []);
 
   return (
-    <section
-      id="about"
-      className="relative w-full bg-[#020912] z-15 overflow-hidden shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.9),0_-15px_30px_-10px_rgba(197,168,128,0.06)] border-t border-white/[0.02]"
-    >
+    <div id="about" className="relative w-full bg-[#020912]">
+      <section
+        className="relative w-full overflow-hidden shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.9),0_-15px_30px_-10px_rgba(197,168,128,0.06)] border-t border-white/[0.02]"
+      >
       <ScrollExpand
-        src="/mp4/DJI_0168.MP4"
+        src="/mp4/DJI_0094_optimized.mp4"
         mediaType="video"
         poster="/drone/imgi_6_2.jpg"
         alt="Saskatoon Wedding Cinema — Msfilms Studio"
         title="MSFILMS"
         scrollHint="SCROLL TO DISCOVER"
         useWindowScroll={true}
-        startWidth={isMobile ? 82 : 45}
-        startHeight={isMobile ? 54 : 60}
-        startRadius={16}
-        endRadius={0}
+        maskType="feathered-circle"
+        startRadiusVmax={isMobile ? 10 : 6}
+        endRadiusVmax={isMobile ? 85 : 75}
+        featherVmax={isMobile ? 8 : 10}
+        showArrows={false}
         mediaZoom={1.22}
         scrollDistance={2.0}
         holdDistance={0.5}
@@ -91,7 +92,19 @@ export function AboutStudio() {
               }}
             >
               <Link
-                href="/work"
+                href="#work"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const targetEl = document.getElementById("work");
+                  if (targetEl) {
+                    const offset = targetEl.getBoundingClientRect().top + window.scrollY;
+                    window.scrollTo({
+                      top: offset,
+                      behavior: "smooth",
+                    });
+                    window.history.pushState(null, "", "#work");
+                  }
+                }}
                 className="relative text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full px-7 py-3.5 text-white/80 border border-white/10 hover:border-gold/30 hover:text-white transition-all duration-300 font-sans focus:outline-none"
                 style={{
                   background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
@@ -112,7 +125,8 @@ export function AboutStudio() {
           </div>
         </div>
       </ScrollExpand>
-    </section>
+      </section>
+    </div>
   );
 }
 

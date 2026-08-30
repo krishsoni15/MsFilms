@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Large media files
 /public/mp4/vidssave.com*
+/public/mp4/DJI_0094.MP4
+

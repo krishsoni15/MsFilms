@@ -67,6 +67,21 @@ export function Navigation({
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const connectRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#") || (href.startsWith("/#") && pathname === "/")) {
+      e.preventDefault();
+      const targetId = href.split("#")[1];
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        const offset = targetEl.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: offset,
+          behavior: "smooth",
+        });
+        window.history.pushState(null, "", `#${targetId}`);
+      }
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -155,7 +170,8 @@ export function Navigation({
   const links = [
     { label: "Home", href: pathname === "/" ? "#home" : "/#home" },
     { label: "About", href: pathname === "/" ? "#about" : "/#about" },
-    { label: "Work", href: "/work" },
+    { label: "Work", href: pathname === "/" ? "#work" : "/#work" },
+    { label: "Services", href: "/services" },
     { label: "Contact", href: pathname === "/" ? "#contact" : "/#contact" },
   ];
 
@@ -242,6 +258,7 @@ export function Navigation({
                   <Link
                     key={link.label}
                     href={link.href}
+                    onClick={(e) => handleLinkClick(e, link.href)}
                     onMouseEnter={() => setHoveredSection(sectionId)}
                     className={`relative rounded-full uppercase font-sans font-medium transition-all duration-300 px-4 py-1.5 text-[11px] tracking-[0.18em] ${isActive
                       ? "text-white font-semibold"
@@ -438,7 +455,10 @@ export function Navigation({
                         ? "text-gold font-medium"
                         : "text-white/70 hover:text-gold"
                         }`}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(e) => {
+                        handleLinkClick(e, link.href);
+                        setMobileOpen(false);
+                      }}
                     >
                       {isActive && (
                         <motion.span

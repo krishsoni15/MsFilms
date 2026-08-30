@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Aurora } from "./aurora";
 import "./scroll-expand.css";
 
 // Register ScrollTrigger plugin on client-side
@@ -32,6 +31,11 @@ interface ScrollExpandProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  maskType?: "inset" | "circle" | "feathered-circle";
+  startRadiusVmax?: number;
+  endRadiusVmax?: number;
+  featherVmax?: number;
+  showArrows?: boolean;
 }
 
 export function ScrollExpand({
@@ -55,6 +59,11 @@ export function ScrollExpand({
   children,
   className = "",
   style,
+  maskType = "inset",
+  startRadiusVmax = 12,
+  endRadiusVmax = 80,
+  featherVmax = 15,
+  showArrows = true,
   ...rest
 }: ScrollExpandProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -91,6 +100,7 @@ export function ScrollExpand({
           pin: true,
           scrub: smoothing,
           anticipatePin: 1,
+          refreshPriority: 10,
           onEnter: () => {
             if (mediaType === "video" && media instanceof HTMLVideoElement) {
               media.play().catch(() => { });
@@ -115,9 +125,25 @@ export function ScrollExpand({
       });
 
       // Set initial styles
-      gsap.set(frame, {
-        clipPath: `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${startRadius}px)`,
-      });
+      if (maskType === "feathered-circle") {
+        gsap.set(frame, {
+          clipPath: "none",
+          maskImage: `radial-gradient(circle at 50% 50%, #000 ${startRadiusVmax}vmax, transparent ${startRadiusVmax + featherVmax}vmax)`,
+          webkitMaskImage: `radial-gradient(circle at 50% 50%, #000 ${startRadiusVmax}vmax, transparent ${startRadiusVmax + featherVmax}vmax)`,
+        });
+      } else if (maskType === "circle") {
+        gsap.set(frame, {
+          clipPath: `circle(${startRadiusVmax}vmax at 50% 50%)`,
+          maskImage: "none",
+          webkitMaskImage: "none",
+        });
+      } else {
+        gsap.set(frame, {
+          clipPath: `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${startRadius}px)`,
+          maskImage: "none",
+          webkitMaskImage: "none",
+        });
+      }
       gsap.set(media, { scale: mediaZoom });
       if (scrimRef.current) gsap.set(scrimRef.current, { opacity: 0 });
       if (titleRef.current) gsap.set(titleRef.current, { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" });
@@ -141,15 +167,30 @@ export function ScrollExpand({
             // clipProgress reaches 1 when t reaches 1.0
             const clipProgress = Math.min(1, t);
 
-            // Symmetrically interpolate width & height dimensions
-            const currentW = startWidth + (100 - startWidth) * clipProgress;
-            const currentH = startHeight + (100 - startHeight) * clipProgress;
+            if (maskType === "feathered-circle") {
+              const innerRadius = startRadiusVmax + (endRadiusVmax - startRadiusVmax) * clipProgress;
+              const outerRadius = innerRadius + featherVmax;
+              frame.style.clipPath = "none";
+              frame.style.maskImage = `radial-gradient(circle at 50% 50%, #000 ${innerRadius}vmax, transparent ${outerRadius}vmax)`;
+              frame.style.webkitMaskImage = `radial-gradient(circle at 50% 50%, #000 ${innerRadius}vmax, transparent ${outerRadius}vmax)`;
+            } else if (maskType === "circle") {
+              const currentRadius = startRadiusVmax + (endRadiusVmax - startRadiusVmax) * clipProgress;
+              frame.style.maskImage = "none";
+              frame.style.webkitMaskImage = "none";
+              frame.style.clipPath = `circle(${currentRadius}vmax at 50% 50%)`;
+            } else {
+              // Symmetrically interpolate width & height dimensions
+              const currentW = startWidth + (100 - startWidth) * clipProgress;
+              const currentH = startHeight + (100 - startHeight) * clipProgress;
 
-            const curIx = Math.max(0, (100 - currentW) / 2);
-            const curIy = Math.max(0, (100 - currentH) / 2);
-            const r = startRadius + (endRadius - startRadius) * clipProgress;
+              const curIx = Math.max(0, (100 - currentW) / 2);
+              const curIy = Math.max(0, (100 - currentH) / 2);
+              const r = startRadius + (endRadius - startRadius) * clipProgress;
 
-            frame.style.clipPath = `inset(${curIy}% ${curIx}% ${curIy}% ${curIx}% round ${r}px)`;
+              frame.style.maskImage = "none";
+              frame.style.webkitMaskImage = "none";
+              frame.style.clipPath = `inset(${curIy}% ${curIx}% ${curIy}% ${curIx}% round ${r}px)`;
+            }
 
             // Interpolate media transform over the entire scroll progress p
             // Parallax scale: zooms down from mediaZoom (e.g. 1.22) to a clean 1.05
@@ -203,7 +244,7 @@ export function ScrollExpand({
           {
             opacity: 0,
             scale: 0.94,
-            duration: 0.45,
+            duration: 0.6,
             ease: "none",
           },
           0
@@ -244,28 +285,7 @@ export function ScrollExpand({
 
       // Spacing is handled natively in totalDuration above
 
-      // Roll-up stack effect: scale down, blur, and fade out the entire stage as the section scrolls out of view
-      gsap.fromTo(
-        stageRef.current,
-        {
-          scale: 1,
-          opacity: 1,
-          filter: "blur(0px)",
-        },
-        {
-          scale: 0.94,
-          opacity: 0,
-          filter: "blur(16px)",
-          ease: "power1.inOut",
-          scrollTrigger: {
-            trigger: root,
-            pinnedContainer: root, // Factor in pinning distance for accurate scroll measurements
-            start: "top top",
-            end: () => `top+=${window.innerHeight * 0.5} top`, // Faster fade out (0.5 viewports) to avoid text overlap
-            scrub: smoothing,
-          },
-        }
-      );
+
     }, root);
 
     return () => {
@@ -283,6 +303,10 @@ export function ScrollExpand({
     smoothing,
     overlayScrim,
     mediaType,
+    maskType,
+    startRadiusVmax,
+    endRadiusVmax,
+    featherVmax,
   ]);
 
   const mediaElement =
@@ -317,63 +341,53 @@ export function ScrollExpand({
       <div ref={stageRef} className="scroll-expand__stage">
         {/* Background decorations: big color glow and pointing arrows */}
         <div ref={bgDecorationsRef} className="scroll-expand__bg-decorations pointer-events-none">
-          {/* Ambient Aurora WebGL Background - positioned in the bottom part */}
-          <div
-            className="absolute left-0 right-0 bottom-0 h-[75%] pointer-events-none opacity-85 z-0 select-none bg-[radial-gradient(circle_at_50%_80%,rgba(197,168,128,0.08)_0%,transparent_75%)]"
-            style={{
-              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, #000 35%)",
-              maskImage: "linear-gradient(to bottom, transparent 0%, #000 35%)",
-            }}
-          >
-            <Aurora
-              colorStops={["#081730", "#cba358", "#4e7bb0"]}
-              blend={0.7}
-              amplitude={1.15}
-              speed={0.35}
-            />
-          </div>
+
 
           {/* Left Arrow pointing to the center */}
-          <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--left">
-            <span className="scroll-expand__arrow-label">ENTER STUDIO</span>
-            <svg
-              className="scroll-expand__arrow-svg scroll-expand__arrow-svg--left"
-              width="48"
-              height="12"
-              viewBox="0 0 48 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 6H46M46 6L41 1M46 6L41 11"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
+          {showArrows && (
+            <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--left">
+              <span className="scroll-expand__arrow-label">ENTER STUDIO</span>
+              <svg
+                className="scroll-expand__arrow-svg scroll-expand__arrow-svg--left"
+                width="48"
+                height="12"
+                viewBox="0 0 48 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 6H46M46 6L41 1M46 6L41 11"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          )}
 
           {/* Right Arrow pointing to the center */}
-          <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--right">
-            <svg
-              className="scroll-expand__arrow-svg scroll-expand__arrow-svg--right"
-              width="48"
-              height="12"
-              viewBox="0 0 48 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 6H46M46 6L41 1M46 6L41 11"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="scroll-expand__arrow-label">EXPLORE WORK</span>
-          </div>
+          {showArrows && (
+            <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--right">
+              <svg
+                className="scroll-expand__arrow-svg scroll-expand__arrow-svg--right"
+                width="48"
+                height="12"
+                viewBox="0 0 48 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 6H46M46 6L41 1M46 6L41 11"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="scroll-expand__arrow-label">EXPLORE WORK</span>
+            </div>
+          )}
         </div>
 
         <div ref={frameRef} className="scroll-expand__frame">
