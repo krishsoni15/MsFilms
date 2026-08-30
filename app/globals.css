@@ -542,3 +542,36 @@ body {
 html.light img[src*="logo.png"]:not(#preloader img) {
   filter: invert(1) brightness(0) contrast(2);
 }
+
+/* Idle floating micro-animations for photographer section images */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+.floating-portrait {
+  animation: float-gentle 7s ease-in-out infinite;
+}
+
+.floating-portrait-delayed {
+  animation: float-delayed 9s ease-in-out infinite;
+}
+
+/* Initial mask state for photographer section reveal to avoid layout flash */
+.photographer-section-reveal {
+  mask-image: radial-gradient(circle at 50% 0%, #000 0vmax, transparent 25vmax);
+  -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0vmax, transparent 25vmax);
+}

@@ -34,6 +34,35 @@ export function AboutPhotographer() {
     if (!el) return;
 
     const ctx = gsap.context(() => {
+      // Soft arch (half-circle/ellipse) radial mask reveal on the section itself
+      const maskState = { radius: 0 };
+      gsap.fromTo(
+        maskState,
+        { radius: 0 },
+        {
+          radius: 120, // Final radius in vmax
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "top -20%", // Longer scroll distance for a slower, more satisfying reveal
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+          },
+          onUpdate: () => {
+            const innerRadius = maskState.radius;
+            if (innerRadius >= 120) {
+              el.style.maskImage = "none";
+              el.style.webkitMaskImage = "none";
+            } else {
+              const outerRadius = innerRadius + 25; // 25vmax blur feather width
+              el.style.maskImage = `radial-gradient(circle at 50% 0%, #000 ${innerRadius}vmax, transparent ${outerRadius}vmax)`;
+              el.style.webkitMaskImage = `radial-gradient(circle at 50% 0%, #000 ${innerRadius}vmax, transparent ${outerRadius}vmax)`;
+            }
+          }
+        }
+      );
+
       // Animate text column items with a premium blur-in stagger
       gsap.fromTo(
         ".reveal-text-item",
@@ -87,6 +116,86 @@ export function AboutPhotographer() {
           }
         }
       );
+
+      // Main image parallax scroll shift
+      gsap.fromTo(
+        ".main-parallax-wrapper",
+        { yPercent: 4 },
+        {
+          yPercent: -4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+
+      // Left overlapping image parallax float
+      gsap.fromTo(
+        ".secondary-parallax-wrapper",
+        { yPercent: 12 },
+        {
+          yPercent: -20,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+
+      // Right overlapping image parallax float
+      gsap.fromTo(
+        ".tertiary-parallax-wrapper",
+        { yPercent: -8 },
+        {
+          yPercent: 16,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+
+      // Text column subtle drift
+      gsap.fromTo(
+        ".photographer-text-column",
+        { yPercent: 2 },
+        {
+          yPercent: -4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+
+      // Background Aurora/Gradients shift
+      gsap.fromTo(
+        ".photographer-bg",
+        { yPercent: -4 },
+        {
+          yPercent: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
     }, el);
 
     return () => {
@@ -97,10 +206,10 @@ export function AboutPhotographer() {
   return (
     <section
       ref={containerRef}
-      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background-alt border-t border-foreground/5 relative overflow-hidden"
+      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background-alt border-t border-foreground/5 relative overflow-hidden photographer-section-reveal"
     >
       {/* ── Aurora WebGL Background ── */}
-      <div className="absolute inset-0 pointer-events-none opacity-80 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)]">
+      <div className="absolute inset-0 pointer-events-none opacity-80 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)] photographer-bg">
         <Aurora
           colorStops={theme === "light" ? ["#b9c9d6", "#ebd5b0", "#f5f3ec"] : ["#081730", "#cba358", "#4e7bb0"]}
           blend={isMobile ? 0.9 : 0.65}
@@ -112,7 +221,7 @@ export function AboutPhotographer() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center max-w-7xl mx-auto relative z-10">
 
         {/* Left Column — Editorial Text & Philosophy */}
-        <div className="lg:col-span-6 lg:pr-6 order-2 lg:order-1">
+        <div className="lg:col-span-6 lg:pr-6 order-2 lg:order-1 photographer-text-column">
           <p className="reveal-text-item text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4 opacity-0">
             The Creative
           </p>
@@ -211,7 +320,7 @@ export function AboutPhotographer() {
 
         {/* Right Column — Editorial Dual Photo Layout */}
         <div className="lg:col-span-6 relative order-1 lg:order-2 image-collage-container origin-center">
-          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl ml-auto opacity-0">
+          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl ml-auto opacity-0 main-parallax-wrapper">
             <BorderGlow
               borderRadius={16}
               backgroundColor="transparent"
@@ -244,7 +353,7 @@ export function AboutPhotographer() {
           </div>
 
           {/* Overlapping secondary image — parallax floating on bottom-left */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-8 -left-6 lg:-left-12 w-[44%] aspect-[3/4] shadow-2xl rounded-2xl group/sub opacity-0 overflow-visible z-20">
+          <div className="reveal-image-item hidden sm:block absolute -bottom-8 -left-6 lg:-left-12 w-[44%] aspect-[3/4] shadow-2xl rounded-2xl group/sub opacity-0 overflow-visible z-20 secondary-parallax-wrapper">
             <div className="floating-portrait w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
@@ -281,7 +390,7 @@ export function AboutPhotographer() {
           </div>
 
           {/* Overlapping third image — parallax floating on bottom-right */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-12 -right-6 lg:-right-10 w-[45%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 opacity-0 overflow-visible z-20">
+          <div className="reveal-image-item hidden sm:block absolute -bottom-12 -right-6 lg:-right-10 w-[45%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 opacity-0 overflow-visible z-20 tertiary-parallax-wrapper">
             <div className="floating-portrait-delayed w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
