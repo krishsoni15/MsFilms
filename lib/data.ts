@@ -165,6 +165,11 @@ export const services = [
     title: "Events (Engagement, Baby Shower, Birthday, Corporate Party, etc.)",
     image: "/wedding/imgi_6_4.jpg",
   },
+  {
+    id: "04",
+    title: "Dronography & Aerial Media",
+    image: "/drone/imgi_11_6.jpg",
+  },
 ];
 
 // ─────────────────────────────────────────────────

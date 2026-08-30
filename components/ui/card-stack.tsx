@@ -249,23 +249,23 @@ export function CardStack<T extends CardStackItem>({
               // drag only on the active card
               const dragProps = isActive
                 ? {
-                    drag: "x" as const,
-                    dragConstraints: { left: 0, right: 0 },
-                    dragElastic: 0.18,
-                    onDragEnd: (
-                      _e: any,
-                      info: { offset: { x: number }; velocity: { x: number } },
-                    ) => {
-                      if (reduceMotion) return;
-                      const travel = info.offset.x;
-                      const v = info.velocity.x;
-                      const threshold = Math.min(160, cardWidth * 0.22);
+                  drag: "x" as const,
+                  dragConstraints: { left: 0, right: 0 },
+                  dragElastic: 0.18,
+                  onDragEnd: (
+                    _e: any,
+                    info: { offset: { x: number }; velocity: { x: number } },
+                  ) => {
+                    if (reduceMotion) return;
+                    const travel = info.offset.x;
+                    const v = info.velocity.x;
+                    const threshold = Math.min(160, cardWidth * 0.22);
 
-                      // swipe logic
-                      if (travel > threshold || v > 650) prev();
-                      else if (travel < -threshold || v < -650) next();
-                    },
-                  }
+                    // swipe logic
+                    if (travel > threshold || v > 650) prev();
+                    else if (travel < -threshold || v < -650) next();
+                  },
+                }
                 : {};
 
               return (
@@ -288,13 +288,13 @@ export function CardStack<T extends CardStackItem>({
                     reduceMotion
                       ? false
                       : {
-                          opacity: 0,
-                          y: y + 40,
-                          x,
-                          rotateZ,
-                          rotateX,
-                          scale,
-                        }
+                        opacity: 0,
+                        y: y + 40,
+                        x,
+                        rotateZ,
+                        rotateX,
+                        scale,
+                      }
                   }
                   animate={{
                     opacity: 1,

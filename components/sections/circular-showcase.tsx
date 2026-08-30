@@ -56,6 +56,9 @@ export function CircularShowcase() {
           scrollEase={0.03}
           fontUrl="https://fonts.googleapis.com/css2?family=Outfit:wght@600&display=swap"
           font="bold 28px Outfit"
+          autoplay={true}
+          autoplaySpeed={0.5}
+          autoplayDirection="left"
         />
       </div>
     </section>

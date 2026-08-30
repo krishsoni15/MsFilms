@@ -485,6 +485,9 @@ interface AppParams {
   font?: string;
   scrollSpeed?: number;
   scrollEase?: number;
+  autoplay?: boolean;
+  autoplaySpeed?: number;
+  autoplayDirection?: 'left' | 'right';
 }
 
 class App {
@@ -505,6 +508,12 @@ class App {
   viewport!: { width: number; height: number };
   raf!: number;
 
+  autoplay!: boolean;
+  autoplaySpeed!: number;
+  autoplayDirection!: 'left' | 'right';
+  isWheeling: boolean = false;
+  stopWheelingDebounce!: (...args: any[]) => void;
+
   boundOnResize!: () => void;
   boundOnWheel!: (e: any) => void;
   boundOnTouchDown!: (e: any) => void;
@@ -521,13 +530,23 @@ class App {
       borderRadius = 0,
       font = 'bold 30px Figtree',
       scrollSpeed = 2,
-      scrollEase = 0.05
+      scrollEase = 0.05,
+      autoplay = true,
+      autoplaySpeed = 0.5,
+      autoplayDirection = 'left'
     }: AppParams = {} as AppParams
   ) {
     document.documentElement.classList.remove('no-js');
     this.container = container;
     this.scrollSpeed = scrollSpeed;
     this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
+    this.autoplay = autoplay;
+    this.autoplaySpeed = autoplaySpeed;
+    this.autoplayDirection = autoplayDirection;
+    this.isWheeling = false;
+    this.stopWheelingDebounce = debounce(() => {
+      this.isWheeling = false;
+    }, 1000);
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
     this.createRenderer();
     this.createCamera();
@@ -623,29 +642,35 @@ class App {
   }
 
   onWheel(e: WheelEvent & { wheelDelta?: number }) {
+    this.isWheeling = true;
     const delta = e.deltaY || e.wheelDelta || 0;
     this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
     this.onCheckDebounce();
+    this.stopWheelingDebounce();
   }
 
   onKeyDown(e: KeyboardEvent) {
+    this.isWheeling = true;
     switch (e.key) {
       case 'ArrowRight':
         e.preventDefault();
         this.scroll.target += this.scrollSpeed * 5;
         this.onCheckDebounce();
+        this.stopWheelingDebounce();
         break;
 
       case 'ArrowLeft':
         e.preventDefault();
         this.scroll.target -= this.scrollSpeed * 5;
         this.onCheckDebounce();
+        this.stopWheelingDebounce();
         break;
 
       case 'Home':
         e.preventDefault();
         this.scroll.target = 0;
         this.onCheckDebounce();
+        this.stopWheelingDebounce();
         break;
 
       default:
@@ -680,6 +705,10 @@ class App {
   }
 
   update() {
+    if (this.autoplay && !this.isDown && !this.isWheeling) {
+      const speed = this.autoplaySpeed * (this.autoplayDirection === 'left' ? 1 : -1);
+      this.scroll.target += speed;
+    }
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
     if (this.medias) {
@@ -745,6 +774,9 @@ export interface CircularGalleryProps {
   fontUrl?: string;
   scrollSpeed?: number;
   scrollEase?: number;
+  autoplay?: boolean;
+  autoplaySpeed?: number;
+  autoplayDirection?: 'left' | 'right';
 }
 
 function CircularGallery({
@@ -755,7 +787,10 @@ function CircularGallery({
   font = 'bold 30px Figtree',
   fontUrl,
   scrollSpeed = 2,
-  scrollEase = 0.05
+  scrollEase = 0.05,
+  autoplay = true,
+  autoplaySpeed = 0.5,
+  autoplayDirection = 'left'
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -773,7 +808,10 @@ function CircularGallery({
         borderRadius,
         font: resolvedFont,
         scrollSpeed,
-        scrollEase
+        scrollEase,
+        autoplay,
+        autoplaySpeed,
+        autoplayDirection
       });
 
       // Refresh ScrollTrigger to sync scroll heights after dynamic canvas injection
@@ -786,7 +824,7 @@ function CircularGallery({
       isMounted = false;
       if (app) app.destroy();
     };
-  }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase]);
+  }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase, autoplay, autoplaySpeed, autoplayDirection]);
 
   return (
     <div

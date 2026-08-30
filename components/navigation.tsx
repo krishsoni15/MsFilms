@@ -116,7 +116,7 @@ export function Navigation({
         return;
       }
 
-      const sectionIds = ["home", "about", "work", "contact"];
+      const sectionIds = ["home", "about", "work", "services", "contact"];
       const threshold = window.innerHeight * 0.35;
 
       const isAtBottom =

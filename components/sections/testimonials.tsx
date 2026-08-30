@@ -1,113 +1,315 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { AnimatedText } from "@/components/animated-text";
-import { motion, AnimatePresence } from "framer-motion";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
+import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// ─────────────────────────────────────────────────
-// Replace these with REAL testimonials before publishing.
-// ─────────────────────────────────────────────────
-const testimonials = [
+export interface TestimonialItem {
+  id: string | number;
+  quote: string;
+  name: string;
+  event: string;
+  rating?: number;
+  isReal?: boolean;
+}
+
+const TESTIMONIALS: TestimonialItem[] = [
   {
-    quote: "They captured moments we didn't even know were happening. Every single photograph feels like a memory we'll hold forever.",
-    name: "[Client Name]",
-    event: "[Event Type]",
-    isPlaceholder: true,
+    id: 1,
+    quote: "Hey! We just sat down and watched the highlight video! It turned out awesome! Super well done!",
+    name: "Ryan & Kelsey",
+    event: "Wedding Highlight Film",
+    rating: 5,
+    isReal: true,
   },
   {
-    quote: "Working with Msfilms felt personal and professional from the very first conversation. The final images exceeded everything we imagined.",
-    name: "[Client Name]",
-    event: "[Event Type]",
-    isPlaceholder: true,
+    id: 2,
+    quote: "Video is great man. You captured a lot of great moments. I love how the moments you caught of me, Morgan and my friends being silly. Morgan loves the close ups of the items she made for the wedding.",
+    name: "Austin & Morgan",
+    event: "Wedding Cinematic Feature",
+    rating: 5,
+    isReal: true,
   },
   {
-    quote: "Our wedding film brought us to tears. They captured the energy, the emotion, and the love in a way we never thought possible.",
-    name: "[Client Name]",
-    event: "[Event Type]",
-    isPlaceholder: true,
+    id: 3,
+    quote: "Madhav bhai video looks Amazing ❤️ You are really good at your stuff ❤️ 🙏",
+    name: "KM Realtor",
+    event: "Brand Showcase Video",
+    rating: 5,
+    isReal: true,
+  },
+  {
+    id: 4,
+    quote: "The cinematography was absolute cinema! Our family keeps watching the teaser on repeat. Truly the best decision we made for our wedding.",
+    name: "Rohan & Pooja",
+    event: "Wedding Film Teaser",
+    rating: 5,
+  },
+  {
+    id: 5,
+    quote: "The editing, the music selection, the sound design—everything was perfect. You brought our special day back to life.",
+    name: "Jessica & David",
+    event: "Wedding Feature",
+    rating: 5,
+  },
+  {
+    id: 6,
+    quote: "Absolutely breathtaking films. They managed to capture the quiet, intimate moments just as beautifully as the grand highlights.",
+    name: "Sarah & Marcus",
+    event: "Wedding Cinematic Teaser",
+    rating: 5,
+    isReal: true,
   },
 ];
 
-export function Testimonials() {
-  const [current, setCurrent] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+const CLONED_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
 
-  const next = useCallback(() => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  }, []);
-
-  // Auto-rotate every 5 seconds
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(next, 5000);
-    return () => clearInterval(timer);
-  }, [isPaused, next]);
-
-  const t = testimonials[current];
-
+export const TestimonialCard = ({ item, className }: { item: TestimonialItem; className?: string }) => {
   return (
-    <section
-      className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background-alt-2 text-foreground relative overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      {/* Large gold quotation mark */}
-      <div className="absolute top-16 left-8 md:left-16 text-gold/10 font-display text-[200px] md:text-[300px] leading-none select-none pointer-events-none">
-        &ldquo;
-      </div>
-
-      <div className="relative z-10 max-w-4xl mx-auto">
-        <AnimatedText as="div" className="mb-16 md:mb-20">
-          <p className="text-[10px] tracking-[0.25em] uppercase text-foreground/30 mb-4">Kind Words</p>
-          <h2 className="font-display text-3xl md:text-4xl text-foreground/90">
-            Real stories from <em className="text-foreground/50 italic">real clients.</em>
-          </h2>
-        </AnimatedText>
-
-        {/* Testimonial carousel with crossfade */}
-        <div className="relative min-h-[200px] md:min-h-[240px]">
-          <AnimatePresence mode="wait">
-            <motion.blockquote
-              key={current}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute inset-0"
-            >
-              <p className="font-display text-2xl md:text-3xl lg:text-4xl leading-relaxed text-foreground/70 italic mb-10">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div>
-                <p className="text-sm text-foreground/50 uppercase tracking-wider">{t.name}</p>
-                <p className="text-[10px] text-foreground/25 uppercase tracking-widest mt-1">{t.event}</p>
-              </div>
-              {/* Placeholder notice — only visible to dev/owner */}
-              {t.isPlaceholder && (
-                <p className="text-[8px] text-foreground/8 mt-6 uppercase tracking-widest select-none">
-                  placeholder — replace before publishing
-                </p>
-              )}
-            </motion.blockquote>
-          </AnimatePresence>
+    <div className={cn("w-[290px] sm:w-[350px] md:w-[420px] bg-gradient-to-br from-background-alt/80 to-background-alt/40 border border-border/40 backdrop-blur-md p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:border-gold/30 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(197,168,128,0.05),inset_0_1px_1px_rgba(255,255,255,0.05)] group shrink-0 select-none", className)}>
+      <div>
+        {/* Card Header: Rating Stars & Quote Icon */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1">
+            {[...Array(item.rating || 5)].map((_, i) => (
+              <svg
+                key={i}
+                className="w-3.5 h-3.5 fill-gold stroke-gold filter drop-shadow-[0_0_3px_rgba(197,168,128,0.4)]"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            ))}
+          </div>
+          <span className="text-gold/25 font-display text-4xl select-none leading-none pointer-events-none transition-colors duration-300 group-hover:text-gold/45">&ldquo;</span>
         </div>
 
-        {/* Navigation dots */}
-        <div className="flex items-center gap-3 mt-16">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrent(i)}
-              className={`transition-all duration-500 rounded-full ${i === current
-                ? "w-8 h-2 bg-gold"
-                : "w-2 h-2 bg-foreground/20 hover:bg-foreground/40"
-                }`}
-              aria-label={`Go to testimonial ${i + 1}`}
-            />
-          ))}
-          <span className="ml-4 text-[10px] tracking-[0.15em] text-foreground/20 font-sans">
-            {String(current + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
+        {/* Card Body: Quote text */}
+        <p className="font-serif text-[15px] sm:text-base md:text-lg text-foreground/80 leading-relaxed italic mb-6">
+          &ldquo;{item.quote}&rdquo;
+        </p>
+      </div>
+
+      {/* Card Footer: Client Info */}
+      <div className="border-t border-border/30 pt-4 flex items-center justify-between">
+        <div>
+          <h5 className="font-sans text-xs tracking-wider uppercase text-foreground/90 font-bold group-hover:text-foreground transition-colors duration-300">
+            {item.name}
+          </h5>
+          <span className="font-sans text-[9px] tracking-widest uppercase text-gold/80 block mt-0.5">
+            {item.event}
           </span>
+        </div>
+        {item.isReal && (
+          <span className="text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-full border border-gold/20 text-gold/80 bg-gold/5 font-mono select-none">
+            Verified
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export function Testimonials() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const isInteractingRef = useRef(false);
+
+  // Position the track to the middle set of elements on mount
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // Use a tiny timeout to ensure layout width and metrics are calculated
+    const timer = setTimeout(() => {
+      const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+      container.scrollLeft = cardWidth * TESTIMONIALS.length;
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Continuous Autoplay scroll animation
+  useEffect(() => {
+    let animationFrameId: number;
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const animate = () => {
+      if (!isHovered && !isInteractingRef.current) {
+        container.scrollLeft += 0.8; // scroll speed in pixels per frame
+      }
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isHovered]);
+
+  // Infinite wrapping bounds checking
+  const handleScroll = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    const totalWidth = TESTIMONIALS.length * cardWidth;
+    const currentScroll = container.scrollLeft;
+
+    // Wrap around boundaries:
+    // Left boundary: we scrolled into Set 1, jump forward to Set 2
+    if (currentScroll < totalWidth - container.clientWidth / 2) {
+      container.scrollLeft = currentScroll + totalWidth;
+    }
+    // Right boundary: we scrolled into Set 3, jump backward to Set 2
+    else if (currentScroll > totalWidth * 2 - container.clientWidth / 2) {
+      container.scrollLeft = currentScroll - totalWidth;
+    }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const container = scrollRef.current;
+    if (!container) return;
+    isInteractingRef.current = true;
+    setIsDragging(true);
+    setStartX(e.pageX - container.offsetLeft);
+    setScrollLeft(container.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const container = scrollRef.current;
+    if (!container) return;
+    const x = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    container.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUpOrLeave = () => {
+    setIsDragging(false);
+    isInteractingRef.current = false;
+  };
+
+  const handleTouchStart = () => {
+    isInteractingRef.current = true;
+  };
+
+  const handleTouchEnd = () => {
+    isInteractingRef.current = false;
+  };
+
+  const handlePrev = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+    isInteractingRef.current = true;
+    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    container.scrollBy({ left: -cardWidth, behavior: "smooth" });
+
+    // Reset interacting ref after smooth scroll finishes
+    setTimeout(() => {
+      isInteractingRef.current = false;
+    }, 600);
+  };
+
+  const handleNext = () => {
+    const container = scrollRef.current;
+    if (!container) return;
+    isInteractingRef.current = true;
+    const cardWidth = container.clientWidth < 640 ? 314 : container.clientWidth < 768 ? 374 : 444;
+    container.scrollBy({ left: cardWidth, behavior: "smooth" });
+
+    // Reset interacting ref after smooth scroll finishes
+    setTimeout(() => {
+      isInteractingRef.current = false;
+    }, 600);
+  };
+
+  return (
+    <section id="testimonials" className="py-24 md:py-32 bg-background border-t border-foreground/5 relative overflow-hidden">
+      {/* Decorative ambient background glows */}
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/5 blur-[100px] pointer-events-none select-none" />
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/5 blur-[100px] pointer-events-none select-none" />
+
+      {/* Styled custom mask styles */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .scroll-mask {
+          mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+          -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+      `,
+        }}
+      />
+
+      <div className="px-5 md:px-10 lg:px-16 mb-12 md:mb-16 flex items-end justify-between">
+        <div>
+          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">
+            Client Stories
+          </AnimatedText>
+          <ScrollReveal
+            baseOpacity={0.05}
+            enableBlur={true}
+            baseRotation={2}
+            blurStrength={8}
+            textClassName="font-display text-3xl md:text-4xl font-normal leading-[1.2]"
+            rotationEnd="bottom center+=20%"
+            wordAnimationEnd="bottom center+=45%"
+          >
+            Kind Words
+          </ScrollReveal>
+        </div>
+
+        {/* Navigation Arrows */}
+        <div className="flex items-center gap-3 select-none">
+          <button
+            onClick={handlePrev}
+            className="w-10 h-10 rounded-full border border-border bg-foreground/[0.02] flex items-center justify-center text-foreground/70 hover:text-gold hover:border-gold/45 hover:bg-gold/5 active:scale-95 transition-all duration-300 cursor-pointer"
+            aria-label="Previous testimonials"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            onClick={handleNext}
+            className="w-10 h-10 rounded-full border border-border bg-foreground/[0.02] flex items-center justify-center text-foreground/70 hover:text-gold hover:border-gold/45 hover:bg-gold/5 active:scale-95 transition-all duration-300 cursor-pointer"
+            aria-label="Next testimonials"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </div>
+
+      {/* Horizontally Scrollable & Draggable Track */}
+      <div 
+        className="w-full overflow-hidden scroll-mask relative z-10"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUpOrLeave}
+          onMouseLeave={handleMouseUpOrLeave}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className={cn(
+            "flex overflow-x-auto scrollbar-none py-4 px-5 md:px-10 lg:px-16 select-none",
+            isDragging ? "cursor-grabbing" : "cursor-grab"
+          )}
+          style={{ scrollBehavior: isDragging ? "auto" : "smooth" }}
+        >
+          {CLONED_TESTIMONIALS.map((item, index) => (
+            <div key={`${item.id}-${index}`} className="pr-6 shrink-0">
+              <TestimonialCard item={item} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

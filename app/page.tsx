@@ -12,6 +12,7 @@ import { Contact } from "@/components/sections/contact";
 import { TrustStats } from "@/components/sections/trust-stats";
 import { WorkIntro } from "@/components/work/work-intro";
 import { Services } from "@/components/sections/services";
+import { Testimonials } from "@/components/sections/testimonials";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -48,6 +49,7 @@ export default function Home() {
         <AboutPhotographer />
         <WorkIntro />
         <Services />
+        <Testimonials />
         <Contact />
         <Footer />
       </main>
