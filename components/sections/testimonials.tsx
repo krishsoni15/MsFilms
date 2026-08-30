@@ -5,6 +5,7 @@ import { AnimatedText } from "@/components/animated-text";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import BorderGlow from "@/components/ui/border-glow";
 
 export interface TestimonialItem {
   id: string | number;
@@ -68,47 +69,60 @@ const CLONED_TESTIMONIALS = [...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS];
 
 export const TestimonialCard = ({ item, className }: { item: TestimonialItem; className?: string }) => {
   return (
-    <div className={cn("w-[300px] sm:w-[370px] md:w-[440px] bg-gradient-to-br from-background-alt/80 to-background-alt/40 border border-gold/15 backdrop-blur-md p-6 md:p-8 rounded-2xl flex flex-col justify-between transition-all duration-300 hover:border-gold/45 hover:scale-[1.02] shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_45px_rgba(197,168,128,0.08),inset_0_1px_1px_rgba(255,255,255,0.05)] group shrink-0 select-none", className)}>
-      <div>
-        {/* Card Header: Rating Stars & Quote Icon */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1">
-            {[...Array(item.rating || 5)].map((_, i) => (
-              <svg
-                key={i}
-                className="w-3.5 h-3.5 fill-gold stroke-gold filter drop-shadow-[0_0_3px_rgba(197,168,128,0.4)]"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            ))}
-          </div>
-          <span className="text-gold/25 font-display text-4xl select-none leading-none pointer-events-none transition-colors duration-300 group-hover:text-gold/45">&ldquo;</span>
-        </div>
-
-        {/* Card Body: Quote text */}
-        <p className="font-serif text-[15px] sm:text-base md:text-lg text-foreground/80 leading-relaxed italic mb-6">
-          &ldquo;{item.quote}&rdquo;
-        </p>
-      </div>
-
-      {/* Card Footer: Client Info */}
-      <div className="border-t border-border/30 pt-4 flex items-center justify-between">
+    <BorderGlow
+      edgeSensitivity={20}
+      glowColor="40 50 60"
+      backgroundColor="#171717"
+      borderRadius={16}
+      glowRadius={50}
+      glowIntensity={0.6}
+      coneSpread={30}
+      colors={["#c5a880", "#e5d5be", "#ffffff"]}
+      fillOpacity={0.03}
+      className={cn("w-[300px] sm:w-[370px] md:w-[440px] shrink-0 select-none hover:scale-[1.01] transition-transform duration-300", className)}
+    >
+      <div className="p-6 md:p-8 flex flex-col justify-between h-[260px] sm:h-[280px] md:h-[300px] w-full box-border">
         <div>
-          <h5 className="font-sans text-xs tracking-wider uppercase text-foreground/90 font-bold group-hover:text-foreground transition-colors duration-300">
-            {item.name}
-          </h5>
-          <span className="font-sans text-[9px] tracking-widest uppercase text-gold/80 block mt-0.5">
-            {item.event}
-          </span>
+          {/* Card Header: Rating Stars & Quote Icon */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-1">
+              {[...Array(item.rating || 5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className="w-3.5 h-3.5 fill-gold stroke-gold filter drop-shadow-[0_0_3px_rgba(197,168,128,0.4)]"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-gold/25 font-display text-4xl select-none leading-none pointer-events-none transition-colors duration-300 group-hover:text-gold/45">&ldquo;</span>
+          </div>
+
+          {/* Card Body: Quote text */}
+          <p className="font-serif text-sm sm:text-base md:text-lg text-foreground/80 leading-relaxed italic mb-6 line-clamp-4">
+            &ldquo;{item.quote}&rdquo;
+          </p>
         </div>
-        {item.isReal && (
-          <span className="text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-full border border-gold/20 text-gold/80 bg-gold/5 font-mono select-none">
-            Verified
-          </span>
-        )}
+
+        {/* Card Footer: Client Info */}
+        <div className="border-t border-border/30 pt-4 flex items-center justify-between">
+          <div>
+            <h5 className="font-sans text-xs tracking-wider uppercase text-foreground/90 font-bold group-hover:text-foreground transition-colors duration-300">
+              {item.name}
+            </h5>
+            <span className="font-sans text-[9px] tracking-widest uppercase text-gold/80 block mt-0.5">
+              {item.event}
+            </span>
+          </div>
+          {item.isReal && (
+            <span className="text-[8px] tracking-widest uppercase px-2 py-0.5 rounded-full border border-gold/20 text-gold/80 bg-gold/5 font-mono select-none">
+              Verified
+            </span>
+          )}
+        </div>
       </div>
-    </div>
+    </BorderGlow>
   );
 };
 
