@@ -12,37 +12,113 @@ import { cn } from "@/lib/utils";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
   const isDate = type === "date";
-  const [inputType, setInputType] = useState(isDate ? "text" : type);
+  const [displayValue, setDisplayValue] = useState("");
+  const [dateValue, setDateValue] = useState("");
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value; // YYYY-MM-DD
+    if (!val) {
+      setDisplayValue("");
+      setDateValue("");
+      return;
+    }
+    setDateValue(val);
+    
+    try {
+      const dateObj = new Date(val + "T00:00:00");
+      const day = dateObj.getDate();
+      const month = dateObj.toLocaleDateString("en-US", { month: "long" });
+      const year = dateObj.getFullYear();
+      setDisplayValue(`${day} ${month} ${year}`);
+    } catch (err) {
+      setDisplayValue(val);
+    }
+  };
+
+  const triggerPicker = () => {
+    if (!isDate) return;
+    const picker = document.getElementById(`${id}-picker`) as HTMLInputElement;
+    if (picker) {
+      try {
+        picker.showPicker();
+      } catch (err) {
+        picker.focus();
+      }
+    }
+  };
+
+  if (isDate) {
+    return (
+      <div className="relative group">
+        {/* Hidden native date input */}
+        <input
+          type="date"
+          id={`${id}-picker`}
+          value={dateValue}
+          onChange={handleDateChange}
+          className="absolute w-0 h-0 opacity-0 pointer-events-none"
+          required={required && !dateValue}
+        />
+        
+        {/* Visible formatted text input */}
+        <input
+          type="text"
+          id={id}
+          name={id}
+          value={displayValue}
+          onClick={triggerPicker}
+          readOnly
+          placeholder=" "
+          required={required}
+          className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 pr-10 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent cursor-pointer"
+        />
+        
+        {/* Floating Label */}
+        <label
+          htmlFor={id}
+          className="absolute left-0 top-4 text-[10px] text-foreground/60 tracking-[0.2em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[9px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9px] pointer-events-none"
+        >
+          {label}
+        </label>
+        
+        {/* Gold Calendar Icon */}
+        <button
+          type="button"
+          onClick={triggerPicker}
+          className="absolute right-0 top-1/2 -translate-y-1/2 text-gold hover:text-gold-light transition-colors duration-300 cursor-pointer p-2 z-10"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect width="18" height="18" x="3" y="4" rx="2" />
+            <path d="M16 2v4" />
+            <path d="M8 2v4" />
+            <path d="M3 10h18" />
+          </svg>
+        </button>
+
+        {/* Gold focus line animation */}
+        <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-gold transition-all duration-500 ease-out peer-focus:w-full" />
+      </div>
+    );
+  }
 
   return (
     <div className="relative group">
       <input
-        type={inputType}
+        type={type}
         id={id}
         name={id}
         placeholder=" "
         required={required}
-        onFocus={(e) => {
-          if (isDate) {
-            setInputType("date");
-            setTimeout(() => {
-              try {
-                e.target.showPicker?.();
-              } catch (err) {
-                // picker helper fallback
-              }
-            }, 30);
-          }
-        }}
-        onBlur={(e) => {
-          if (isDate && !e.target.value) {
-            setInputType("text");
-          }
-        }}
-        className={cn(
-          "block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent",
-          isDate && "ad-datepicker-input"
-        )}
+        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent"
       />
       <label
         htmlFor={id}
