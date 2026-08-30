@@ -117,6 +117,27 @@ html.mobile-menu-open .scroll-to-top-btn {
   transition: opacity 0.3s ease, visibility 0.3s ease !important;
 }
 
+/* Date picker native indicator theme legibility overrides */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+  filter: invert(1) sepia(0) saturate(0) hue-rotate(0deg) brightness(0.9); /* Dark theme: white icon */
+}
+
+html.light input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0) sepia(0) saturate(0) hue-rotate(0deg) brightness(0.2); /* Light theme: dark icon */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.95;
+}
+
+/* Custom styling to align picker popup properly */
+.ad-datepicker-input {
+  position: relative;
+}
+
 
 @theme inline {
   --color-background: var(--background);

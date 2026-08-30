@@ -8,17 +8,41 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import BorderGlow from "@/components/ui/border-glow";
 import { useTheme } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
 
 function FormField({ id, label, type = "text", required = false }: { id: string; label: string; type?: string; required?: boolean }) {
+  const isDate = type === "date";
+  const [inputType, setInputType] = useState(isDate ? "text" : type);
+
   return (
     <div className="relative group">
       <input
-        type={type}
+        type={inputType}
         id={id}
         name={id}
         placeholder=" "
         required={required}
-        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent"
+        onFocus={(e) => {
+          if (isDate) {
+            setInputType("date");
+            setTimeout(() => {
+              try {
+                e.target.showPicker?.();
+              } catch (err) {
+                // picker helper fallback
+              }
+            }, 30);
+          }
+        }}
+        onBlur={(e) => {
+          if (isDate && !e.target.value) {
+            setInputType("text");
+          }
+        }}
+        className={cn(
+          "block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-4 text-foreground text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent",
+          isDate && "ad-datepicker-input"
+        )}
       />
       <label
         htmlFor={id}
@@ -166,7 +190,7 @@ export function Contact() {
                         <FormField id="event-type" label="Event Type (e.g. Wedding)" required />
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                        <FormField id="event-date" label="Event Date" required />
+                        <FormField id="event-date" label="Event Date" type="date" required />
                         <FormField id="location" label="Event Location" required />
                       </div>
                       <div className="relative group">
