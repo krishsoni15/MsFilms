@@ -109,6 +109,14 @@ html.light .shadow-\[0_8px_40px_rgba\(0\,0\,0\,0\.3\)\] {
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06) !important;
 }
 
+/* Hide scroll-to-top progress button when mobile menu is open */
+html.mobile-menu-open .scroll-to-top-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
 
 @theme inline {
   --color-background: var(--background);

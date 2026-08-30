@@ -43,7 +43,7 @@ export function ScrollProgress() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.7, y: 15 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[80] group flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-background/85 border border-border backdrop-blur-md cursor-pointer select-none outline-none shadow-xl hover:border-gold/30 transition-colors duration-500"
+          className="scroll-to-top-btn fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[80] group flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-background/85 border border-border backdrop-blur-md cursor-pointer select-none outline-none shadow-xl hover:border-gold/30 transition-colors duration-500"
           title="Scroll to top"
           data-cursor-text="TO TOP"
           whileHover={{ scale: 1.08 }}

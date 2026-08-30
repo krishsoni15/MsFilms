@@ -164,8 +164,14 @@ export function Navigation({
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
+    if (mobileOpen) {
+      document.documentElement.classList.add("mobile-menu-open");
+    } else {
+      document.documentElement.classList.remove("mobile-menu-open");
+    }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.classList.remove("mobile-menu-open");
     };
   }, [mobileOpen]);
 
