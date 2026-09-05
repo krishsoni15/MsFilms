@@ -539,10 +539,6 @@ body {
   filter: grayscale(0) contrast(1.05) brightness(1.02);
 }
 
-html.light img[src*="logo.png"]:not(#preloader img) {
-  filter: invert(1) brightness(0) contrast(2);
-}
-
 /* Idle floating micro-animations for photographer section images */
 @keyframes float-gentle {
   0%, 100% {

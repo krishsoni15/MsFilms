@@ -229,13 +229,17 @@ export function Navigation({
         animate={isParentLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed left-0 top-0 w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!visible
-          ? "opacity-0 -translate-y-24 pointer-events-none"
-          : "opacity-100 translate-y-0"
-          } ${isScrolled
-            ? "bg-background/25 backdrop-blur-md border-b border-border py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16"
+        className={`fixed left-0 top-0 w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          !visible
+            ? "opacity-0 -translate-y-24 pointer-events-none"
+            : "opacity-100 translate-y-0"
+        } ${
+          isScrolled
+            ? theme === "light"
+              ? "bg-[#fdfcf9]/90 backdrop-blur-xl border-b border-black/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
+              : "bg-[#020912]/90 backdrop-blur-xl border-b border-white/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
             : "bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
-          }`}
+        }`}
       >
         <div className="flex items-center justify-between w-full mx-auto">
           {/* Logo */}
@@ -245,8 +249,15 @@ export function Navigation({
               alt="Ms films"
               width={180}
               height={48}
-              className={`w-auto object-contain brightness-100 transition-all duration-500 logo ${isScrolled ? "h-[24px] sm:h-[27px] lg:h-[30px]" : "h-[28px] sm:h-[31px] lg:h-[34px]"
-                }`}
+              className={`w-auto object-contain transition-all duration-500 logo ${
+                isScrolled && theme === "light"
+                  ? "invert brightness-0"
+                  : "brightness-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
+              } ${
+                isScrolled
+                  ? "h-[24px] sm:h-[27px] lg:h-[30px]"
+                  : "h-[28px] sm:h-[31px] lg:h-[34px]"
+              }`}
               priority
             />
           </Link>
@@ -262,28 +273,58 @@ export function Navigation({
                   ? link.href.split("#")[1]
                   : link.href.replace("/", "");
                 const isActive = activeSection === sectionId;
-                const isHighlighted = hoveredSection !== null ? hoveredSection === sectionId : isActive;
+                const isHighlighted =
+                  hoveredSection !== null
+                    ? hoveredSection === sectionId
+                    : isActive;
+
+                // Color classes depending on scrolled state & theme
+                let textClass = "";
+                if (!isScrolled) {
+                  textClass = isActive
+                    ? "text-white font-bold"
+                    : isHighlighted
+                    ? "text-white"
+                    : "text-white/75 hover:text-white";
+                } else if (theme === "light") {
+                  textClass = isActive
+                    ? "text-neutral-950 font-bold"
+                    : isHighlighted
+                    ? "text-neutral-900"
+                    : "text-neutral-600 hover:text-neutral-900";
+                } else {
+                  textClass = isActive
+                    ? "text-[#f4f1eb] font-bold"
+                    : isHighlighted
+                    ? "text-[#f4f1eb]"
+                    : "text-[#f4f1eb]/70 hover:text-[#f4f1eb]";
+                }
+
                 return (
                   <Link
                     key={link.label}
                     href={link.href}
                     onClick={(e) => handleLinkClick(e, link.href)}
                     onMouseEnter={() => setHoveredSection(sectionId)}
-                    className={`relative rounded-full uppercase font-sans font-medium transition-all duration-300 px-4 py-1.5 text-[11px] tracking-[0.18em] ${isActive
-                      ? "text-foreground font-semibold"
-                      : isHighlighted
-                        ? "text-foreground/90"
-                        : "text-foreground/45 hover:text-foreground/80"
-                      }`}
+                    className={`relative rounded-full uppercase font-sans transition-all duration-300 px-4 py-1.5 text-[11px] tracking-[0.18em] ${textClass}`}
                   >
                     {/* Sliding active/hover pill background */}
                     {isHighlighted && (
                       <motion.span
                         layoutId="navPill"
-                        className={`absolute inset-0 rounded-full bg-gradient-to-b from-foreground/[0.08] to-foreground/[0.02] ${isActive
-                          ? "border border-foreground/20 bg-foreground/[0.02] shadow-sm"
-                          : "border border-foreground/[0.08]"
-                          }`}
+                        className={`absolute inset-0 rounded-full ${
+                          !isScrolled
+                            ? isActive
+                              ? "border border-white/30 bg-white/15 shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
+                              : "border border-white/20 bg-white/10"
+                            : theme === "light"
+                            ? isActive
+                              ? "border border-black/20 bg-black/[0.08] shadow-sm"
+                              : "border border-black/10 bg-black/[0.04]"
+                            : isActive
+                            ? "border border-white/20 bg-white/[0.1] shadow-sm"
+                            : "border border-white/10 bg-white/[0.04]"
+                        }`}
                         transition={{
                           type: "spring",
                           stiffness: 380,
@@ -300,29 +341,6 @@ export function Navigation({
 
           {/* ─── Right: Let's Connect Button + Dropdown (Desktop) ─── */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
-            {/* Desktop Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="relative w-10 h-10 flex items-center justify-center rounded-full border border-border bg-foreground/[0.02] text-foreground hover:bg-foreground/[0.08] active:scale-95 transition-all duration-300 focus:outline-none cursor-pointer"
-              aria-label="Toggle Theme"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={theme}
-                  initial={{ y: -8, opacity: 0, rotate: -45 }}
-                  animate={{ y: 0, opacity: 1, rotate: 0 }}
-                  exit={{ y: 8, opacity: 0, rotate: 45 }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                >
-                  {theme === "light" ? (
-                    <Moon className="w-4.5 h-4.5 text-foreground" />
-                  ) : (
-                    <Sun className="w-4.5 h-4.5 text-foreground" />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </button>
-
             <div className="relative" ref={connectRef}>
               <BorderGlow
                 edgeSensitivity={25}
@@ -333,7 +351,13 @@ export function Navigation({
                 glowIntensity={0.3}
                 coneSpread={30}
                 animated={true}
-                colors={theme === "light" ? ["#020912", "#cba358", "#020912"] : ["#ffffff", "#cba358", "#ffffff"]}
+                colors={
+                  !isScrolled
+                    ? ["#ffffff", "#cba358", "#ffffff"]
+                    : theme === "light"
+                    ? ["#020912", "#cba358", "#020912"]
+                    : ["#ffffff", "#cba358", "#ffffff"]
+                }
                 fillOpacity={0}
                 style={{
                   borderColor: "transparent",
@@ -341,9 +365,16 @@ export function Navigation({
               >
                 <button
                   onClick={() => setConnectOpen(!connectOpen)}
-                  className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border border-border hover:border-gold/30 transition-all duration-500 focus:outline-none text-foreground hover:text-gold px-6 py-2.5`}
+                  className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border transition-all duration-500 focus:outline-none hover:text-gold px-6 py-2.5 ${
+                    !isScrolled
+                      ? "border-white/25 text-white hover:border-gold/50 bg-white/10"
+                      : theme === "light"
+                      ? "border-black/15 text-neutral-900 hover:border-gold/50 bg-black/[0.03]"
+                      : "border-white/15 text-[#f4f1eb] hover:border-gold/50 bg-white/[0.04]"
+                  }`}
                   style={{
-                    background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
+                    background:
+                      "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
                   }}
                 >
                   <span className="relative z-10 font-sans font-medium transition-colors duration-300">
@@ -413,42 +444,35 @@ export function Navigation({
 
           {/* ─── Mobile Right Actions ─── */}
           <div className="lg:hidden flex items-center gap-2 z-50">
-            {/* Mobile Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 flex items-center justify-center rounded-full border border-border bg-foreground/[0.03] text-foreground hover:bg-foreground/10 active:scale-95 transition-all duration-300 focus:outline-none cursor-pointer"
-              aria-label="Toggle Theme"
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={theme}
-                  initial={{ y: -8, opacity: 0, rotate: -45 }}
-                  animate={{ y: 0, opacity: 1, rotate: 0 }}
-                  exit={{ y: 8, opacity: 0, rotate: 45 }}
-                  transition={{ duration: 0.2, ease: "easeInOut" }}
-                >
-                  {theme === "light" ? (
-                    <Moon className="w-4 h-4" />
-                  ) : (
-                    <Sun className="w-4 h-4" />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </button>
-
             {/* Mobile Hamburger */}
             <button
-              className="w-10 h-10 flex flex-col justify-center items-center rounded-full border border-border bg-foreground/[0.03] backdrop-blur-md hover:bg-foreground/10 active:scale-95 transition-all duration-300"
+              className={`w-10 h-10 flex flex-col justify-center items-center rounded-full border backdrop-blur-md active:scale-95 transition-all duration-300 ${
+                !isScrolled
+                  ? "border-white/25 bg-white/10 text-white"
+                  : theme === "light"
+                  ? "border-black/15 bg-black/[0.03] text-neutral-900"
+                  : "border-white/15 bg-white/[0.04] text-[#f4f1eb]"
+              }`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle Menu"
             >
               <span
-                className={`block w-5 h-[1.5px] bg-foreground transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[1.5px]" : "mb-1.5"
-                  }`}
+                className={`block w-5 h-[1.5px] transition-all duration-300 ${
+                  !isScrolled
+                    ? "bg-white"
+                    : theme === "light"
+                    ? "bg-neutral-900"
+                    : "bg-[#f4f1eb]"
+                } ${mobileOpen ? "rotate-45 translate-y-[1.5px]" : "mb-1.5"}`}
               />
               <span
-                className={`block w-5 h-[1.5px] bg-foreground transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[1.5px]" : ""
-                  }`}
+                className={`block w-5 h-[1.5px] transition-all duration-300 ${
+                  !isScrolled
+                    ? "bg-white"
+                    : theme === "light"
+                    ? "bg-neutral-900"
+                    : "bg-[#f4f1eb]"
+                } ${mobileOpen ? "-rotate-45 -translate-y-[1.5px]" : ""}`}
               />
             </button>
           </div>
