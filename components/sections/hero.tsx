@@ -240,7 +240,7 @@ export function Hero({
       id="home"
       ref={containerRef}
       className="sticky top-0 w-full overflow-hidden h-screen lg:h-svh flex flex-col z-0"
-      style={{ backgroundColor: "#0d0907" }}
+      style={{ backgroundColor: "var(--background)" }}
     >
       <motion.div
         style={{
@@ -299,11 +299,8 @@ export function Hero({
           className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[580px] h-[340px] rounded-full blur-[100px] pointer-events-none z-[2] animate-pulse"
           style={{
             background:
-              categoryIndex === 1
-                ? "radial-gradient(circle, rgba(225,210,185,0.22) 0%, rgba(185,160,125,0.1) 60%, transparent 100%)"
-                : categoryIndex === 2
-                  ? "radial-gradient(circle, rgba(240,190,160,0.22) 0%, rgba(200,140,120,0.1) 60%, transparent 100%)"
-                  : "radial-gradient(circle, rgba(235,215,185,0.2) 0%, rgba(197,168,128,0.1) 60%, transparent 100%)",
+              "radial-gradient(circle, var(--gold) 0%, var(--accent) 50%, transparent 100%)",
+            opacity: 0.22,
             animationDuration: "6s",
           }}
         />
@@ -326,18 +323,18 @@ export function Hero({
           className="hidden lg:flex flex-col items-center gap-4 absolute left-4 xl:left-9 top-1/2 -translate-y-1/2 z-30"
         >
           {/* Top vertical accent line */}
-          <div className="w-px h-10 bg-gradient-to-b from-transparent to-[#c5a880]/40 mb-1" />
+          <div className="w-px h-10 bg-gradient-to-b from-transparent to-gold/40 mb-1" />
 
           {/* Vertical label */}
           <span
-            className="text-[#f4f1eb]/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-[#c5a880] transition-colors duration-300"
+            className="text-foreground/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-gold transition-colors duration-300"
             style={{ writingMode: "vertical-rl" }}
           >
             CINEMATIC&emsp;·&emsp;TIMELESS&emsp;·&emsp;YOURS
           </span>
 
           {/* Vertical divider line */}
-          <div className="w-px h-6 bg-[#c5a880]/25 my-1" />
+          <div className="w-px h-6 bg-gold/25 my-1" />
 
           {/* Category selectors */}
           <div className="flex flex-col items-center gap-4">
@@ -352,8 +349,8 @@ export function Hero({
                   {/* Floating label with clean tracking and position safety */}
                   <span
                     className={`absolute left-7.5 top-1/2 -translate-y-1/2 font-sans text-[7.5px] xl:text-[8px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-500 z-20 ${isActive
-                      ? "text-[#c5a880] opacity-100 translate-x-0 font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]"
-                      : "text-[#f4f1eb]/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-[#f4f1eb]/60 group-hover:opacity-100 group-hover:translate-x-0"
+                      ? "text-gold opacity-100 translate-x-0 font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]"
+                      : "text-foreground/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-foreground/60 group-hover:opacity-100 group-hover:translate-x-0"
                       }`}
                   >
                     {cat.label}
@@ -362,7 +359,7 @@ export function Hero({
                   {/* Numbered node */}
                   <div className="relative flex items-center justify-center w-5 h-5">
                     <span
-                      className={`font-sans text-[9px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-[#c5a880] font-bold" : "text-[#f4f1eb]/40 group-hover:text-[#c5a880]"
+                      className={`font-sans text-[9px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-gold font-bold" : "text-foreground/40 group-hover:text-gold"
                         }`}
                     >
                       {String(idx + 1).padStart(2, "0")}
@@ -370,7 +367,7 @@ export function Hero({
                     {isActive && (
                       <motion.div
                         layoutId="activeCatRing"
-                        className="absolute inset-0 rounded-full border border-[#c5a880]/40 shadow-[0_0_8px_rgba(197,168,128,0.2)]"
+                        className="absolute inset-0 rounded-full border border-gold/40 shadow-[0_0_8px_rgba(197,168,128,0.2)]"
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                       />
                     )}
@@ -381,15 +378,15 @@ export function Hero({
           </div>
 
           {/* Scroll indicator */}
-          <div className="flex flex-col items-center gap-2 mt-2 pt-3 border-t border-[#f4f1eb]/[0.08] w-8">
-            <span className="text-[#f4f1eb]/40 font-sans text-[7px] tracking-[0.22em] uppercase font-semibold">
+          <div className="flex flex-col items-center gap-2 mt-2 pt-3 border-t border-foreground/[0.08] w-8">
+            <span className="text-foreground/40 font-sans text-[7px] tracking-[0.22em] uppercase font-semibold">
               Scroll
             </span>
-            <div className="w-[16px] h-[26px] rounded-full border border-[#c5a880]/20 flex justify-center p-1 relative overflow-hidden">
+            <div className="w-[16px] h-[26px] rounded-full border border-gold/20 flex justify-center p-1 relative overflow-hidden">
               <motion.div
                 animate={{ y: [0, 6, 0], opacity: [0.3, 0.9, 0.3] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                className="w-[2px] h-[5px] rounded-full bg-[#c5a880]"
+                className="w-[2px] h-[5px] rounded-full bg-gold"
               />
             </div>
           </div>
@@ -403,15 +400,15 @@ export function Hero({
           className="hidden lg:flex flex-col items-center absolute right-4 xl:right-9 top-1/2 -translate-y-1/2 z-30"
         >
           {/* Top vertical line */}
-          <div className="w-px h-12 bg-gradient-to-b from-transparent to-[#c5a880]/40 mb-4" />
+          <div className="w-px h-12 bg-gradient-to-b from-transparent to-gold/40 mb-4" />
           <span
-            className="text-[#f4f1eb]/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-[#c5a880] transition-colors duration-300"
+            className="text-foreground/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-gold transition-colors duration-300"
             style={{ writingMode: "vertical-rl" }}
           >
             SASKATOON&emsp;·&emsp;CANADA
           </span>
           {/* Bottom vertical line */}
-          <div className="w-px h-12 bg-gradient-to-t from-transparent to-[#c5a880]/40 mt-4" />
+          <div className="w-px h-12 bg-gradient-to-t from-transparent to-gold/40 mt-4" />
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════
@@ -428,7 +425,7 @@ export function Hero({
               className="hidden lg:block absolute left-[6%] lg:left-[7.5%] xl:left-[8%] 2xl:left-[8.5%] min-[1920px]:left-[8%] top-[14%] lg:top-[16%] xl:top-[14%] 2xl:top-[12%] min-[1920px]:top-[11%] w-[160px] lg:w-[175px] xl:w-[200px] 2xl:w-[240px] min-[1920px]:w-[310px] h-[250px] lg:h-[270px] xl:h-[310px] 2xl:h-[355px] min-[1920px]:h-[450px] z-20"
               style={{ transformOrigin: "center center", y: leftCardY }}
             >
-              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-[#c5a880]/35">
+              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-gold/35">
                 <CrossfadeImage
                   src={currentCategory.leftImage}
                   alt="Left feature"
@@ -438,13 +435,13 @@ export function Hero({
                 {/* Dark gradient overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none z-10" />
                 {/* Gold inner frame */}
-                <div className="absolute inset-[5px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-[3px]" />
+                <div className="absolute inset-[5px] border border-gold/35 pointer-events-none z-20 rounded-[3px]" />
                 {/* Label text with underline line */}
                 <div className="absolute bottom-4 left-4 z-30 flex flex-col items-start gap-1.5">
-                  <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                  <span className="text-foreground font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                     {currentCategory.leftImageLabel}
                   </span>
-                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-[#c5a880] shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
+                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-gold shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
                 </div>
                 {/* Warm tint overlay on image */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#8B6914]/[0.08] to-transparent pointer-events-none z-10 mix-blend-overlay" />
@@ -459,7 +456,7 @@ export function Hero({
               className="hidden lg:block absolute right-[6%] lg:right-[7.5%] xl:right-[8%] 2xl:right-[8.5%] min-[1920px]:right-[8%] top-[11%] lg:top-[13%] xl:top-[11%] 2xl:top-[9%] min-[1920px]:top-[8%] w-[160px] lg:w-[175px] xl:w-[200px] 2xl:w-[240px] min-[1920px]:w-[310px] h-[265px] lg:h-[285px] xl:h-[325px] 2xl:h-[375px] min-[1920px]:h-[470px] z-20"
               style={{ transformOrigin: "center center", y: rightCardY }}
             >
-              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-[#c5a880]/35">
+              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-gold/35">
                 <CrossfadeImage
                   src={currentCategory.rightImage}
                   alt="Right feature"
@@ -468,13 +465,13 @@ export function Hero({
                 {/* Dark gradient overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none z-10" />
                 {/* Gold inner frame */}
-                <div className="absolute inset-[5px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-[3px]" />
+                <div className="absolute inset-[5px] border border-gold/35 pointer-events-none z-20 rounded-[3px]" />
                 {/* Label text with underline line */}
                 <div className="absolute bottom-4 right-4 z-30 flex flex-col items-end gap-1.5 text-right">
-                  <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                  <span className="text-foreground font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                     {currentCategory.rightImageLabel}
                   </span>
-                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-[#c5a880] shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
+                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-gold shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
                 </div>
                 {/* Warm tint overlay on image */}
                 <div className="absolute inset-0 bg-gradient-to-bl from-[#8B6914]/[0.08] to-transparent pointer-events-none z-10 mix-blend-overlay" />
@@ -497,10 +494,10 @@ export function Hero({
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                   className="mb-1.5 lg:mb-3 min-[1920px]:mb-4 flex flex-col items-center gap-2"
                 >
-                  <p className="text-[#c5a880]/90 font-sans text-[8.5px] lg:text-[9px] xl:text-[10px] min-[1920px]:text-[12px] tracking-[0.34em] lg:tracking-[0.38em] uppercase font-semibold drop-shadow-[0_1px_8px_rgba(197,168,128,0.3)]">
+                  <p className="text-gold/90 font-sans text-[8.5px] lg:text-[9px] xl:text-[10px] min-[1920px]:text-[12px] tracking-[0.34em] lg:tracking-[0.38em] uppercase font-semibold drop-shadow-[0_1px_8px_rgba(197,168,128,0.3)]">
                     {currentCategory.eyebrow}
                   </p>
-                  <div className="w-[38px] min-[1920px]:w-[50px] h-px bg-[#c5a880]/60" />
+                  <div className="w-[38px] min-[1920px]:w-[50px] h-px bg-gold/60" />
                 </motion.div>
               </AnimatePresence>
 
@@ -510,7 +507,7 @@ export function Hero({
                 initial={{ opacity: 0, scale: 0.92, y: 15 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="lg:hidden relative w-[165px] sm:w-[210px] h-[200px] sm:h-[250px] my-2 sm:my-3 rounded-t-[100px] sm:rounded-t-[120px] rounded-b-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_30px_rgba(197,168,128,0.2)] ring-1 ring-[#c5a880]/40 shrink-0 mx-auto"
+                className="lg:hidden relative w-[165px] sm:w-[210px] h-[200px] sm:h-[250px] my-2 sm:my-3 rounded-t-[100px] sm:rounded-t-[120px] rounded-b-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_30px_rgba(197,168,128,0.2)] ring-1 ring-gold/40 shrink-0 mx-auto"
               >
                 <CrossfadeImage
                   src={currentCategory.leftImage}
@@ -519,12 +516,12 @@ export function Hero({
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none z-10" />
-                <div className="absolute inset-[4px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-t-[96px] sm:rounded-t-[116px] rounded-b-xl" />
+                <div className="absolute inset-[4px] border border-gold/35 pointer-events-none z-20 rounded-t-[96px] sm:rounded-t-[116px] rounded-b-xl" />
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 text-center w-full px-2">
-                  <span className="text-[#f4f1eb] font-sans text-[8.5px] sm:text-[9.5px] tracking-[0.3em] uppercase leading-[1.6] font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                  <span className="text-foreground font-sans text-[8.5px] sm:text-[9.5px] tracking-[0.3em] uppercase leading-[1.6] font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
                     {currentCategory.leftImageLabel}
                   </span>
-                  <div className="w-6 h-[1.5px] bg-[#c5a880]" />
+                  <div className="w-6 h-[1.5px] bg-gold" />
                 </div>
               </motion.div>
 
@@ -544,7 +541,7 @@ export function Hero({
                     </span>
                     <span className="block font-laluxes-serif font-semibold tracking-[0.02em] text-[clamp(1.75rem,3.1vw,4.4rem)] lg:text-[clamp(1.85rem,3.2vw,4.6rem)] xl:text-[clamp(2.1rem,3.3vw,4.8rem)] leading-[1.12] text-[#ffffff] whitespace-nowrap drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
                       {currentCategory.titleLine2}{" "}
-                      <span className="font-laluxes-script text-[#d6b78a] font-medium text-[1.25em] xl:text-[1.28em] normal-case drop-shadow-[0_2px_22px_rgba(197,168,128,0.65)] inline-block">
+                      <span className="font-laluxes-script text-gold font-medium text-[1.25em] xl:text-[1.28em] normal-case drop-shadow-[0_2px_28px_var(--gold)] inline-block">
                         {currentCategory.titleHighlight}
                       </span>
                     </span>
@@ -560,7 +557,7 @@ export function Hero({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
                   transition={{ duration: 0.5, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-[#f4f1eb]/85 font-sans font-medium text-[12.5px] lg:text-[13.5px] xl:text-[14px] min-[1920px]:text-[16.5px] leading-[1.75] xl:leading-[1.85] max-w-[390px] lg:max-w-[420px] min-[1920px]:max-w-[520px] mb-4 lg:mb-5 xl:mb-7 min-[1920px]:mb-9 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
+                  className="text-foreground/85 font-sans font-medium text-[12.5px] lg:text-[13.5px] xl:text-[14px] min-[1920px]:text-[16.5px] leading-[1.75] xl:leading-[1.85] max-w-[390px] lg:max-w-[420px] min-[1920px]:max-w-[520px] mb-4 lg:mb-5 xl:mb-7 min-[1920px]:mb-9 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
                 >
                   {currentCategory.description}
                 </motion.p>
@@ -587,15 +584,15 @@ export function Hero({
                 >
                   <a
                     href="#contact"
-                    className="group relative cursor-pointer text-[10.5px] xl:text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-semibold inline-flex items-center gap-3.5 rounded-full border border-white/20 hover:border-[#c5a880]/60 text-[#f4f1eb] hover:text-[#c5a880] transition-all duration-500 px-7 lg:px-8 min-[1920px]:px-10 py-3 min-[1920px]:py-4 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md active:scale-[0.98]"
+                    className="group relative cursor-pointer text-[10.5px] xl:text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-semibold inline-flex items-center gap-3.5 rounded-full border border-white/20 hover:border-gold/60 text-foreground hover:text-gold transition-all duration-500 px-7 lg:px-8 min-[1920px]:px-10 py-3 min-[1920px]:py-4 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md active:scale-[0.98]"
                     style={{
                       background:
                         "linear-gradient(to bottom, rgba(197, 168, 128, 0.14) 0%, rgba(197, 168, 128, 0.02) 100%)",
                     }}
                   >
                     <span className="relative z-10 font-sans font-medium">Let&apos;s Connect</span>
-                    <div className="relative z-10 flex items-center justify-center w-[22px] h-[22px] min-[1920px]:w-[26px] min-[1920px]:h-[26px] rounded-full bg-[#c5a880]/15 group-hover:bg-[#c5a880] border border-[#c5a880]/30 transition-all duration-300">
-                      <ArrowRight size={11} className="text-[#c5a880] group-hover:text-[#0d0907] group-hover:translate-x-0.5 transition-all duration-300 min-[1920px]:w-3.5 min-[1920px]:h-3.5" />
+                    <div className="relative z-10 flex items-center justify-center w-[22px] h-[22px] min-[1920px]:w-[26px] min-[1920px]:h-[26px] rounded-full bg-gold/15 group-hover:bg-gold border border-gold/30 transition-all duration-300">
+                      <ArrowRight size={11} className="text-gold group-hover:text-background group-hover:translate-x-0.5 transition-all duration-300 min-[1920px]:w-3.5 min-[1920px]:h-3.5" />
                     </div>
                   </a>
                 </BorderGlow>
@@ -603,7 +600,7 @@ export function Hero({
                 {/* Explore Work — Gold Underlined Link like before */}
                 <a
                   href="/work"
-                  className="relative inline-flex items-center text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-bold text-[#f4f1eb] hover:text-[#c5a880] py-1.5 border-b-2 border-[#c5a880] hover:border-[#e5d5be] transition-colors duration-300"
+                  className="relative inline-flex items-center text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-bold text-foreground hover:text-gold py-1.5 border-b-2 border-gold hover:border-gold-light transition-colors duration-300"
                 >
                   Explore Work
                 </a>
@@ -614,24 +611,24 @@ export function Hero({
                 {...entrance(0.75)}
                 className="lg:hidden mt-4 sm:mt-5 w-full max-w-[340px] sm:max-w-md mx-auto z-30 relative px-1"
               >
-                <div className="flex items-center justify-between bg-black/50 backdrop-blur-xl border border-[#c5a880]/30 rounded-full p-1 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
+                <div className="flex items-center justify-between bg-black/50 backdrop-blur-xl border border-gold/30 rounded-full p-1 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
                   {categories.map((cat, idx) => {
                     const isActive = categoryIndex === idx;
                     return (
                       <button
                         key={cat.id}
                         onClick={() => handleCategoryClick(idx)}
-                        className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-full text-[9px] sm:text-[10px] tracking-[0.16em] uppercase font-sans font-semibold transition-all duration-300 focus:outline-none ${isActive ? "text-[#0d0907]" : "text-[#f4f1eb]/60 hover:text-[#f4f1eb]"
+                        className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-full text-[9px] sm:text-[10px] tracking-[0.16em] uppercase font-sans font-semibold transition-all duration-300 focus:outline-none ${isActive ? "text-background" : "text-foreground/60 hover:text-foreground"
                           }`}
                       >
                         {isActive && (
                           <motion.div
                             layoutId="activeCatPillMobile"
-                            className="absolute inset-0 bg-[#c5a880] rounded-full shadow-[0_2px_12px_rgba(197,168,128,0.5)]"
+                            className="absolute inset-0 bg-gold rounded-full shadow-[0_2px_12px_rgba(197,168,128,0.5)]"
                             transition={{ type: "spring", stiffness: 350, damping: 30 }}
                           />
                         )}
-                        <span className={`relative z-10 font-bold ${isActive ? "text-[#0d0907]" : "text-[#c5a880]/75"}`}>
+                        <span className={`relative z-10 font-bold ${isActive ? "text-background" : "text-gold/75"}`}>
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         <span className="relative z-10 truncate">{cat.label}</span>
@@ -669,7 +666,7 @@ export function Hero({
                       </span>
                     </div>
                     <div className="flex items-center justify-between px-1 pt-1">
-                      <span className="text-[#0d0907] font-serif text-[7.5px] font-semibold tracking-wider">MS FILMS</span>
+                      <span className="text-background font-serif text-[7.5px] font-semibold tracking-wider">MS FILMS</span>
                       <span className="text-[#8b6914] font-sans text-[7px] font-bold">01</span>
                     </div>
                   </motion.div>
@@ -680,7 +677,7 @@ export function Hero({
                     initial={{ opacity: 0, x: 20, rotate: 6 }}
                     animate={{ opacity: 1, x: 0, rotate: 5 }}
                     transition={{ duration: 0.7, delay: 0.2 }}
-                    className="absolute right-2 sm:right-4 bottom-0 w-[140px] sm:w-[165px] h-[95px] sm:h-[112px] rounded-lg overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.9)] z-10 border border-[#c5a880]/40 ring-1 ring-black/50"
+                    className="absolute right-2 sm:right-4 bottom-0 w-[140px] sm:w-[165px] h-[95px] sm:h-[112px] rounded-lg overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.9)] z-10 border border-gold/40 ring-1 ring-black/50"
                   >
                     <Image
                       src={currentCategory.bottomCards[1]?.image || currentCategory.rightImage}
@@ -691,8 +688,8 @@ export function Hero({
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                     <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between z-10">
-                      <span className="text-[#c5a880] text-[8px] font-bold">02</span>
-                      <span className="text-[#f4f1eb] text-[7.5px] tracking-wider uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                      <span className="text-gold text-[8px] font-bold">02</span>
+                      <span className="text-foreground text-[7.5px] tracking-wider uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
                         {currentCategory.bottomCards[1]?.label || "MOMENTS"}
                       </span>
                     </div>
@@ -714,7 +711,7 @@ export function Hero({
                 className="group flex-1 max-w-[285px] xl:max-w-[310px] min-[1920px]:max-w-[380px]"
               >
                 {/* Thumbnail card with label row INSIDE image */}
-                <div className="relative w-full h-[105px] lg:h-[128px] xl:h-[136px] 2xl:h-[148px] min-[1920px]:h-[185px] rounded-md overflow-hidden border border-[#c5a880]/25 group-hover:border-[#c5a880]/60 transition-all duration-400 shadow-[0_12px_35px_rgba(0,0,0,0.7)]">
+                <div className="relative w-full h-[105px] lg:h-[128px] xl:h-[136px] 2xl:h-[148px] min-[1920px]:h-[185px] rounded-md overflow-hidden border border-gold/25 group-hover:border-gold/60 transition-all duration-400 shadow-[0_12px_35px_rgba(0,0,0,0.7)]">
                   <AnimatePresence mode="popLayout">
                     <motion.div
                       key={`card-${currentCategory.id}-${card.num}`}
@@ -742,16 +739,16 @@ export function Hero({
                   {/* Label row INSIDE the image container at bottom */}
                   <div className="absolute bottom-2.5 left-3 right-3 z-20 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[#c5a880] font-sans text-[10px] tracking-wider font-bold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                      <span className="text-gold font-sans text-[10px] tracking-wider font-bold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
                         {card.num}
                       </span>
-                      <div className="w-6 xl:w-10 h-px bg-[#c5a880]/50 group-hover:bg-[#c5a880] transition-colors duration-300" />
+                      <div className="w-6 xl:w-10 h-px bg-gold/50 group-hover:bg-gold transition-colors duration-300" />
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9px] tracking-[0.22em] uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] group-hover:text-[#c5a880] transition-colors duration-300">
+                      <span className="text-foreground font-sans text-[8.5px] xl:text-[9px] tracking-[0.22em] uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] group-hover:text-gold transition-colors duration-300">
                         {card.label}
                       </span>
-                      <ArrowRight size={10} className="text-[#c5a880] group-hover:translate-x-1 transition-transform duration-300" />
+                      <ArrowRight size={10} className="text-gold group-hover:translate-x-1 transition-transform duration-300" />
                     </div>
                   </div>
                 </div>
@@ -769,11 +766,11 @@ export function Hero({
             {...entrance(1.2)}
             className="hidden lg:flex items-center gap-4"
           >
-            <div className="w-14 xl:w-20 h-px bg-gradient-to-r from-transparent to-[#c5a880]/40" />
-            <span className="text-[#f4f1eb]/35 font-sans text-[8px] xl:text-[8.5px] tracking-[0.38em] uppercase whitespace-nowrap font-medium">
+            <div className="w-14 xl:w-20 h-px bg-gradient-to-r from-transparent to-gold/40" />
+            <span className="text-foreground/35 font-sans text-[8px] xl:text-[8.5px] tracking-[0.38em] uppercase whitespace-nowrap font-medium">
               Frames Today&emsp;·&emsp;Memories Forever
             </span>
-            <div className="w-14 xl:w-20 h-px bg-gradient-to-l from-transparent to-[#c5a880]/40" />
+            <div className="w-14 xl:w-20 h-px bg-gradient-to-l from-transparent to-gold/40" />
           </motion.div>
 
           {/* Social Icons — absolute bottom-right */}
@@ -785,14 +782,14 @@ export function Hero({
               href="https://www.instagram.com/msfilms._/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-foreground/15 flex items-center justify-center text-foreground/40 hover:text-gold hover:border-gold/40 transition-all duration-300"
               aria-label="Instagram"
             >
               <InstagramIcon className="w-2.5 h-2.5" />
             </a>
             <a
               href="#"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-foreground/15 flex items-center justify-center text-foreground/40 hover:text-gold hover:border-gold/40 transition-all duration-300"
               aria-label="YouTube"
             >
               <YouTubeIcon className="w-2.5 h-2.5" />
@@ -801,7 +798,7 @@ export function Hero({
               href="https://wa.me/1234567890"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-foreground/15 flex items-center justify-center text-foreground/40 hover:text-gold hover:border-gold/40 transition-all duration-300"
               aria-label="WhatsApp"
             >
               <WhatsAppIcon className="w-2.5 h-2.5" />

@@ -1,55 +1,67 @@
-"use client";
+import type { Metadata } from "next";
+import Script from "next/script";
+import { BlogClient } from "./blog-client";
+import { BLOG_POSTS } from "@/lib/blog-data";
 
-import { motion } from "framer-motion";
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
-import { Blog } from "@/components/sections/blog";
+export const metadata: Metadata = {
+  title: "Journal & Insights | MS Films — Canada-Wide Media Team",
+  description:
+    "Explore photography articles, wedding guides, drone videography tips, and behind-the-scenes stories from MS Films in Saskatoon, Saskatchewan and across Canada.",
+  keywords: [
+    "Saskatoon wedding blog",
+    "wedding photography guide Saskatchewan",
+    "drone videography tips",
+    "wedding planning Canada",
+    "MS Films journal",
+  ],
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Journal & Insights | MS Films",
+    description:
+      "Behind-the-scenes stories, equipment breakdowns, and expert wedding photography planning guides from MS Films.",
+    url: "https://msfilms.ca/blog",
+  },
+};
 
 export default function BlogPage() {
+  const blogListSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://msfilms.ca/blog/#blog",
+    name: "MS Films Journal",
+    description: "Insights, guides, and behind-the-scenes stories from MS Films.",
+    url: "https://msfilms.ca/blog",
+    publisher: {
+      "@type": "Organization",
+      name: "MS Films",
+      logo: "https://msfilms.ca/logo/logo.png",
+    },
+    blogPost: BLOG_POSTS.map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.excerpt,
+      url: `https://msfilms.ca/blog/${post.slug}`,
+      datePublished: post.publishedAt,
+      image: `https://msfilms.ca${post.heroImage}`,
+      author: {
+        "@type": "Person",
+        name: post.author.name,
+      },
+    })),
+  };
+
   return (
     <>
-      <Navigation isParentLoaded={true} />
-
-      <main className="min-h-screen w-full relative bg-background flex flex-col justify-between overflow-x-hidden pt-28">
-        {/* Ambient background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] rounded-full bg-gold/5 blur-[140px] pointer-events-none" />
-
-        <div className="flex-grow">
-          {/* Header */}
-          <div className="relative z-10 text-center px-6 pt-12 pb-6 max-w-4xl mx-auto">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.8, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-gold font-bold uppercase mb-3 block"
-            >
-              Journal & Insights
-            </motion.span>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-serif text-4xl md:text-6xl lg:text-7xl text-foreground font-normal uppercase tracking-tight mb-4"
-            >
-              Stories & Guides
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 0.5, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="font-sans text-xs md:text-sm text-foreground/60 max-w-lg mx-auto leading-relaxed"
-            >
-              Behind-the-scenes stories, wedding planning advice, equipment insights, and visual tutorials from our studio team.
-            </motion.p>
-          </div>
-
-          <Blog />
-        </div>
-
-        <Footer />
-      </main>
+      <Script
+        id="json-ld-blog-list"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(blogListSchema),
+        }}
+      />
+      <BlogClient />
     </>
   );
 }

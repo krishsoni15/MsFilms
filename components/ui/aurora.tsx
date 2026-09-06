@@ -110,9 +110,47 @@ void main() {
 }
 `;
 
-function hexToRgb(hex: string): [number, number, number] {
-  const c = new Color(hex);
-  return [c.r, c.g, c.b];
+function resolveColorToRgb(colorStr: string): [number, number, number] {
+  if (typeof window === "undefined") return [0.77, 0.66, 0.5];
+  let val = colorStr.trim();
+  if (val.startsWith("var(")) {
+    const varName = val.replace(/^var\((--[^,\)]+).*\)$/, "$1").trim();
+    const computed = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    if (computed) val = computed;
+  }
+
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(val);
+  if (m) {
+    return [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255];
+  }
+  const mShort = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(val);
+  if (mShort) {
+    return [
+      parseInt(mShort[1] + mShort[1], 16) / 255,
+      parseInt(mShort[2] + mShort[2], 16) / 255,
+      parseInt(mShort[3] + mShort[3], 16) / 255,
+    ];
+  }
+
+  try {
+    const d = document.createElement("div");
+    d.style.color = val;
+    document.body.appendChild(d);
+    const cs = getComputedStyle(d).color;
+    document.body.removeChild(d);
+    const rgbMatch = cs.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (rgbMatch) {
+      return [
+        parseInt(rgbMatch[1], 10) / 255,
+        parseInt(rgbMatch[2], 10) / 255,
+        parseInt(rgbMatch[3], 10) / 255,
+      ];
+    }
+  } catch {
+    // Ignore DOM lookup errors
+  }
+
+  return [0.77, 0.66, 0.5];
 }
 
 export interface AuroraProps {
@@ -124,7 +162,7 @@ export interface AuroraProps {
 }
 
 export function Aurora(props: AuroraProps) {
-  const { colorStops = ['#c5a880', '#d6b78a', '#5c4524'], amplitude = 1.0, blend = 0.5, speed = 0.8, className = '' } = props;
+  const { colorStops = ["var(--accent)", "var(--gold)", "var(--gold-light)"], amplitude = 1.0, blend = 0.5, speed = 0.8, className = "" } = props;
   const propsRef = useRef<AuroraProps>(props);
   propsRef.current = props;
 
@@ -164,11 +202,11 @@ export function Aurora(props: AuroraProps) {
     window.addEventListener('resize', resize);
 
     const geometry = new Triangle(gl);
-    if (geometry.attributes.uv) {
-      delete geometry.attributes.uv;
+    if ((geometry.attributes as { uv?: unknown }).uv) {
+      delete (geometry.attributes as { uv?: unknown }).uv;
     }
 
-    const initialColors = colorStops.map(hexToRgb);
+    const initialStops = propsRef.current.colorStops ?? colorStops;
 
     program = new Program(gl, {
       vertex: VERT,
@@ -176,7 +214,9 @@ export function Aurora(props: AuroraProps) {
       uniforms: {
         uTime: { value: 0 },
         uAmplitude: { value: amplitude },
-        uColorStops: { value: initialColors },
+        uColorStops: {
+          value: initialStops.map(resolveColorToRgb)
+        },
         uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
         uBlend: { value: blend }
       }
@@ -213,9 +253,12 @@ export function Aurora(props: AuroraProps) {
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
 
       const stops = propsRef.current.colorStops ?? colorStops;
-      const stopsKey = stops.join(',');
+      const paletteAttr = document.documentElement.getAttribute("data-palette") || "";
+      const isLight = document.documentElement.classList.contains("light") ? "L" : "D";
+      const stopsKey = `${paletteAttr}-${isLight}-${stops.join(",")}`;
+
       if (!cachedColorsRef.current || cachedColorsRef.current.key !== stopsKey) {
-        cachedColorsRef.current = { key: stopsKey, value: stops.map(hexToRgb) };
+        cachedColorsRef.current = { key: stopsKey, value: stops.map(resolveColorToRgb) };
       }
       program.uniforms.uColorStops.value = cachedColorsRef.current.value;
 

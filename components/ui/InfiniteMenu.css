@@ -20,7 +20,7 @@
   height: 56px;
   display: grid;
   place-items: center;
-  background: var(--gold, #c5a880);
+  background: var(--gold, var(--gold));
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   cursor: pointer;
@@ -35,7 +35,7 @@
 .action-button-icon {
   user-select: none;
   position: relative;
-  color: #020912;
+  color: var(--background, #020912);
   top: 1px;
   font-size: 20px;
   font-weight: bold;

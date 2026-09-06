@@ -30,7 +30,7 @@ export default function NotFound() {
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           className="mb-4"
         >
-          <h1 className="text-[clamp(6rem,16vw,11rem)] font-sans font-black tracking-tight select-none leading-none bg-gradient-to-b from-foreground via-[#c5a880] to-[#8a7250] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(197,168,128,0.22)]">
+          <h1 className="text-[clamp(6rem,16vw,11rem)] font-sans font-black tracking-tight select-none leading-none bg-gradient-to-b from-foreground via-gold to-[#8a7250] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(197,168,128,0.22)]">
             404
           </h1>
         </motion.div>
@@ -66,13 +66,13 @@ export default function NotFound() {
               glowRadius={25}
               glowIntensity={0.3}
               coneSpread={20}
-              colors={theme === "light" ? ["#020912", "#cba358", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
+              colors={["var(--gold)", "var(--gold-light)", "var(--white)"]}
               fillOpacity={0.03}
               className="px-6 py-2.5 border border-border rounded-full flex items-center justify-center cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] active:scale-95 transition-all duration-300"
             >
               <div className="flex items-center gap-2 text-[9px] tracking-[0.2em] font-sans font-semibold uppercase text-foreground/80 hover:text-foreground">
                 <ArrowLeft className="w-3 h-3" />
-                <span>Return to Studio</span>
+                <span>Return to Home</span>
               </div>
             </BorderGlow>
           </Link>

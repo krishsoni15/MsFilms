@@ -125,7 +125,7 @@ function FilmCard({ film, index }: { film: typeof films[0]; index: number }) {
             glowIntensity={1.5}
             edgeSensitivity={20}
             coneSpread={25}
-            colors={["#c5a880", "#e5d5be", "#ffffff"]}
+            colors={["var(--gold)", "var(--gold-light)", "var(--white)"]}
             fillOpacity={0.08}
             className="absolute inset-0 w-full h-full z-20 pointer-events-auto"
             style={{

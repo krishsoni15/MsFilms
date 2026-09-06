@@ -72,12 +72,12 @@ export const TestimonialCard = ({ item, className }: { item: TestimonialItem; cl
     <BorderGlow
       edgeSensitivity={20}
       glowColor="40 50 60"
-      backgroundColor="#171717"
+      backgroundColor="var(--background-alt)"
       borderRadius={16}
       glowRadius={50}
       glowIntensity={0.6}
       coneSpread={30}
-      colors={["#c5a880", "#e5d5be", "#ffffff"]}
+      colors={["var(--gold)", "var(--gold-light)", "var(--white)"]}
       fillOpacity={0.03}
       className={cn("w-[300px] sm:w-[370px] md:w-[440px] shrink-0 select-none hover:scale-[1.01] transition-transform duration-300", className)}
     >
@@ -298,8 +298,8 @@ export function Testimonials() {
   return (
     <section id="testimonials" className="py-24 md:py-32 bg-background border-t border-foreground/5 relative overflow-hidden">
       {/* Decorative ambient background glows */}
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/5 blur-[100px] pointer-events-none select-none" />
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/5 blur-[100px] pointer-events-none select-none" />
+      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/10 blur-[100px] pointer-events-none select-none" />
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-gold/10 blur-[100px] pointer-events-none select-none" />
 
       {/* Styled custom mask styles */}
       <style
@@ -315,7 +315,7 @@ export function Testimonials() {
 
       <div className="px-5 md:px-10 lg:px-16 mb-12 md:mb-16 flex items-end justify-between">
         <div>
-          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-foreground/40 mb-4">
+          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold font-semibold mb-4">
             Client Stories
           </AnimatedText>
           <ScrollReveal

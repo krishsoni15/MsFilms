@@ -49,7 +49,7 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
 
   if (isDate) {
     return (
-      <div className="relative group">
+      <div className="relative group pt-2">
         <input
           type="date"
           id={`${id}-picker`}
@@ -68,12 +68,12 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
           readOnly
           placeholder=" "
           required={required}
-          className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-2.5 pr-8 text-foreground text-xs focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent cursor-pointer font-sans"
+          className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent pt-3.5 pb-2.5 pr-8 text-foreground text-xs md:text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent cursor-pointer font-sans"
         />
 
         <label
           htmlFor={id}
-          className="absolute left-0 top-2.5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
+          className="absolute left-0 top-5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:top-0 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
         >
           {label}
         </label>
@@ -81,7 +81,7 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
         <button
           type="button"
           onClick={triggerPicker}
-          className="absolute right-0 top-1/2 -translate-y-1/2 text-gold hover:text-gold-light transition-colors duration-300 cursor-pointer p-1 z-10"
+          className="absolute right-0 bottom-2.5 text-gold hover:text-gold-light transition-colors duration-300 cursor-pointer p-1 z-10"
         >
           <svg
             width="14"
@@ -106,18 +106,18 @@ function FormField({ id, label, type = "text", required = false }: { id: string;
   }
 
   return (
-    <div className="relative group">
+    <div className="relative group pt-2">
       <input
         type={type}
         id={id}
         name={id}
         placeholder=" "
         required={required}
-        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-2.5 text-foreground text-xs focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent font-sans"
+        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent pt-3.5 pb-2.5 text-foreground text-xs md:text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent font-sans"
       />
       <label
         htmlFor={id}
-        className="absolute left-0 top-2.5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
+        className="absolute left-0 top-5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:top-0 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
       >
         {label}
       </label>
@@ -190,7 +190,7 @@ export function Contact() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4.5 py-3 rounded-xl border border-gold/40 bg-[#0c0a08]/95 backdrop-blur-xl shadow-2xl text-foreground text-xs"
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4.5 py-3 rounded-xl border border-gold/40 bg-background-alt/95 backdrop-blur-xl shadow-2xl text-foreground text-xs"
           >
             <div className="w-2 h-2 rounded-full bg-gold animate-pulse shrink-0" />
             <span className="font-sans font-medium tracking-wide text-foreground/90">{toastMessage}</span>
@@ -241,8 +241,8 @@ export function Contact() {
                     </svg>
                   </div>
                   <div className="overflow-hidden">
-                    <span className="text-[7.5px] uppercase tracking-[0.15em] text-foreground/40 block font-semibold">Studio Base</span>
-                    <span className="text-[11px] text-foreground/90 font-sans font-medium truncate block">Saskatoon, SK</span>
+                    <span className="text-[7.5px] uppercase tracking-[0.15em] text-foreground/40 block font-semibold">Home Base</span>
+                    <span className="text-[11px] text-foreground/90 font-sans font-medium truncate block">Saskatoon, SK · Canada Wide</span>
                   </div>
                 </div>
 
@@ -311,21 +311,21 @@ export function Contact() {
             <BorderGlow
               edgeSensitivity={20}
               glowColor="40 50 60"
-              backgroundColor={theme === "light" ? "var(--background-alt-2)" : "#020912"}
+              backgroundColor="var(--background)"
               borderRadius={16}
               glowRadius={40}
               glowIntensity={theme === "light" ? 0.3 : 0.6}
               coneSpread={30}
-              colors={theme === "light" ? ["#c5a880", "#bba282", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
+              colors={["var(--gold)", "var(--gold-light)", "var(--white)"]}
               fillOpacity={theme === "light" ? 0.95 : 0.03}
               className="w-full"
             >
               <div className="p-7 sm:p-9 md:p-10 relative z-10">
                 <form
                   onSubmit={handleSubmit}
-                  className="space-y-6"
+                  className="space-y-6 sm:space-y-7"
                 >
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-9 gap-y-7 sm:gap-y-8">
                     <FormField id="name" label="Your Good Name" required />
                     <FormField id="email" label="Email Address" type="email" required />
                     <FormField id="phone" label="Phone Number (Optional)" type="tel" />
@@ -340,11 +340,11 @@ export function Contact() {
                         name="message"
                         placeholder=" "
                         rows={2}
-                        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent py-2.5 text-foreground text-xs focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent font-sans resize-none"
+                        className="block w-full border-t-0 border-x-0 border-b border-border bg-transparent pt-3.5 pb-2.5 text-foreground text-xs md:text-sm focus:border-t-0 focus:border-x-0 focus:border-b-gold/60 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 transition-colors duration-500 peer placeholder-transparent font-sans resize-none"
                       />
                       <label
                         htmlFor="message"
-                        className="absolute left-0 top-2.5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:-top-3 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
+                        className="absolute left-0 top-5 text-[9.5px] text-foreground/60 tracking-[0.18em] uppercase transition-all duration-300 peer-focus:top-0 peer-focus:text-[8.5px] peer-focus:text-gold peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-[8.5px] pointer-events-none"
                       >
                         Tell Us About Your Plans (Optional)
                       </label>
@@ -364,7 +364,7 @@ export function Contact() {
                         glowIntensity={0.3}
                         coneSpread={30}
                         animated={true}
-                        colors={theme === "light" ? ["#020912", "#cba358", "#020912"] : ["#ffffff", "#cba358", "#ffffff"]}
+                        colors={["var(--white)", "var(--gold)", "var(--white)"]}
                         fillOpacity={0}
                         style={{
                           borderColor: "transparent",

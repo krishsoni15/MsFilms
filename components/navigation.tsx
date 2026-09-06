@@ -41,16 +41,16 @@ const connectLinks = [
     subtitle: "+1 (234) 567-890",
     href: "tel:+1234567890",
     icon: Phone,
-    color: "hover:text-[#c5a880]",
-    iconBgHover: "group-hover:bg-[#c5a880]/15 group-hover:border-[#c5a880]/30 group-hover:text-[#c5a880]",
+    color: "hover:text-gold",
+    iconBgHover: "group-hover:bg-gold/15 group-hover:border-gold/30 group-hover:text-gold",
   },
   {
     label: "Email",
     subtitle: "contactus.msfilms@gmail.com",
     href: "mailto:contactus.msfilms@gmail.com",
     icon: Mail,
-    color: "hover:text-[#e5d5be]",
-    iconBgHover: "group-hover:bg-[#e5d5be]/15 group-hover:border-[#e5d5be]/30 group-hover:text-[#e5d5be]",
+    color: "hover:text-gold-light",
+    iconBgHover: "group-hover:bg-gold-light/15 group-hover:border-gold-light/30 group-hover:text-gold-light",
   },
 ];
 
@@ -244,7 +244,7 @@ export function Navigation({
           } ${isScrolled
             ? theme === "light"
               ? "bg-white/75 backdrop-blur-xl border-b border-black/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
-              : "bg-[#080605]/55 backdrop-blur-2xl border-b border-[#c5a880]/25 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
+              : "bg-background/55 backdrop-blur-2xl border-b border-gold/25 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
             : "bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
           }`}
       >
@@ -299,10 +299,10 @@ export function Navigation({
                       : "text-neutral-600 hover:text-neutral-900";
                 } else {
                   textClass = isActive
-                    ? "text-[#f4f1eb] font-bold"
+                    ? "text-foreground font-bold"
                     : isHighlighted
-                      ? "text-[#f4f1eb]"
-                      : "text-[#f4f1eb]/70 hover:text-[#f4f1eb]";
+                      ? "text-foreground"
+                      : "text-foreground/70 hover:text-foreground";
                 }
 
                 return (
@@ -357,10 +357,10 @@ export function Navigation({
                 animated={true}
                 colors={
                   !isScrolled
-                    ? ["#ffffff", "#cba358", "#ffffff"]
+                    ? ["var(--white)", "var(--gold)", "var(--white)"]
                     : theme === "light"
-                      ? ["#020912", "#cba358", "#020912"]
-                      : ["#ffffff", "#cba358", "#ffffff"]
+                      ? ["var(--foreground)", "var(--gold)", "var(--foreground)"]
+                      : ["var(--white)", "var(--gold)", "var(--white)"]
                 }
                 fillOpacity={0}
                 style={{
@@ -373,7 +373,7 @@ export function Navigation({
                     ? "border-white/25 text-white hover:border-gold/50 bg-white/10"
                     : theme === "light"
                       ? "border-black/15 text-neutral-900 hover:border-gold/50 bg-black/[0.03]"
-                      : "border-white/15 text-[#f4f1eb] hover:border-gold/50 bg-white/[0.04]"
+                      : "border-white/15 text-foreground hover:border-gold/50 bg-white/[0.04]"
                     }`}
                   style={{
                     background:
@@ -405,17 +405,17 @@ export function Navigation({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute right-0 top-full mt-3.5 min-w-[310px] z-50 rounded-2xl border border-[#c5a880]/35 bg-[#120e0b]/95 backdrop-blur-3xl shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(197,168,128,0.15)] p-3 flex flex-col gap-1 overflow-hidden ring-1 ring-white/10"
+                    className="absolute right-0 top-full mt-3.5 min-w-[310px] z-50 rounded-2xl border border-gold/35 bg-background/95 backdrop-blur-3xl shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-3 flex flex-col gap-1 overflow-hidden ring-1 ring-white/10"
                   >
                     {/* Top inner gold hairline highlight */}
-                    <div className="bg-gradient-to-r from-transparent via-[#c5a880]/50 to-transparent h-px w-full absolute top-0 left-0" />
+                    <div className="bg-gradient-to-r from-transparent via-gold/50 to-transparent h-px w-full absolute top-0 left-0" />
 
                     {/* Section Header */}
-                    <div className="px-3 pt-1.5 pb-2 border-b border-[#c5a880]/15 mb-1 flex items-center justify-between">
-                      <span className="text-[8.5px] tracking-[0.3em] uppercase text-[#c5a880]/70 font-sans font-bold">
+                    <div className="px-3 pt-1.5 pb-2 border-b border-gold/15 mb-1 flex items-center justify-between">
+                      <span className="text-[8.5px] tracking-[0.3em] uppercase text-gold/70 font-sans font-bold">
                         Get In Touch
                       </span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#c5a880] animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
                     </div>
 
                     {connectLinks.map((item) => (
@@ -432,22 +432,22 @@ export function Navigation({
                             : undefined
                         }
                         onClick={() => setConnectOpen(false)}
-                        className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl transition-all duration-300 hover:bg-[#c5a880]/[0.09] border border-transparent hover:border-[#c5a880]/25 active:scale-[0.98] cursor-pointer"
+                        className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl transition-all duration-300 hover:bg-gold/[0.09] border border-transparent hover:border-gold/25 active:scale-[0.98] cursor-pointer"
                       >
                         <div className="flex items-center gap-3.5">
-                          <div className="p-2.5 rounded-xl bg-[#1c1612] border border-[#c5a880]/25 text-[#c5a880] transition-all duration-300 group-hover:bg-[#c5a880] group-hover:border-[#c5a880] group-hover:text-[#0d0907] group-hover:scale-105 shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                          <div className="p-2.5 rounded-xl bg-background-alt-2 border border-gold/25 text-gold transition-all duration-300 group-hover:bg-gold group-hover:border-gold group-hover:text-background group-hover:scale-105 shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                             <item.icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10.5px] font-bold tracking-[0.2em] uppercase font-sans text-[#f4f1eb] group-hover:text-[#ffffff] transition-colors duration-300">
+                            <span className="text-[10.5px] font-bold tracking-[0.2em] uppercase font-sans text-foreground group-hover:text-white transition-colors duration-300">
                               {item.label}
                             </span>
-                            <span className="text-[9.5px] tracking-wide text-[#c5a880]/70 group-hover:text-[#c5a880] transition-colors duration-300 mt-0.5 max-w-[180px] truncate">
+                            <span className="text-[9.5px] tracking-wide text-gold/70 group-hover:text-gold transition-colors duration-300 mt-0.5 max-w-[180px] truncate">
                               {item.subtitle}
                             </span>
                           </div>
                         </div>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-[#c5a880]/40 group-hover:text-[#c5a880] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0 ml-2" />
+                        <ArrowUpRight className="w-3.5 h-3.5 text-gold/40 group-hover:text-gold group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0 ml-2" />
                       </motion.a>
                     ))}
                   </motion.div>
@@ -461,12 +461,12 @@ export function Navigation({
             {/* Mobile Hamburger */}
             <button
               className={`relative cursor-pointer text-[10px] tracking-[0.22em] uppercase font-sans font-semibold flex items-center gap-2 rounded-full border px-3.5 py-2 backdrop-blur-md active:scale-95 transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.3)] ${mobileOpen
-                ? "border-[#c5a880] text-[#c5a880] bg-[#c5a880]/15"
+                ? "border-gold text-gold bg-gold/15"
                 : !isScrolled
                   ? "border-white/30 text-white bg-white/10 hover:border-gold/60"
                   : theme === "light"
                     ? "border-black/15 text-neutral-900 bg-black/[0.04] hover:border-gold/50"
-                    : "border-white/20 text-[#f4f1eb] bg-white/[0.06] hover:border-gold/50"
+                    : "border-white/20 text-foreground bg-white/[0.06] hover:border-gold/50"
                 }`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle Menu"
@@ -509,18 +509,18 @@ export function Navigation({
               exit={{ x: "100%", opacity: 0 }}
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               style={{ zIndex: 10005 }}
-              className="relative h-full w-[calc(100%-40px)] sm:w-[380px] max-w-[420px] bg-gradient-to-b from-[#110d0a]/98 via-[#0d0907]/98 to-[#080504]/99 border-l border-y border-[#c5a880]/35 border-r-0 rounded-l-[32px] rounded-r-none backdrop-blur-2xl shadow-[-20px_0_70px_rgba(0,0,0,0.9)] p-0 flex flex-col overflow-y-auto no-scrollbar overflow-x-hidden"
+              className="relative h-full w-[calc(100%-40px)] sm:w-[380px] max-w-[420px] bg-gradient-to-b from-background/98 via-background/98 to-background/99 border-l border-y border-gold/35 border-r-0 rounded-l-[32px] rounded-r-none backdrop-blur-2xl shadow-[-20px_0_70px_rgba(0,0,0,0.9)] p-0 flex flex-col overflow-y-auto no-scrollbar overflow-x-hidden"
             >
               {/* Ambient Background Light Glows */}
-              <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[50%] rounded-full bg-[#c5a880]/12 blur-[100px] pointer-events-none" />
-              <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] rounded-full bg-[#c5a880]/6 blur-[80px] pointer-events-none" />
+              <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[50%] rounded-full bg-gold/12 blur-[100px] pointer-events-none" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] rounded-full bg-gold/6 blur-[80px] pointer-events-none" />
 
               {/* Top Bar inside Drawer */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center justify-between px-6 sm:px-8 pt-6 pb-4 border-b border-[#c5a880]/15 z-20 relative"
+                className="flex items-center justify-between px-6 sm:px-8 pt-6 pb-4 border-b border-gold/15 z-20 relative"
               >
                 <div className="flex items-center gap-2">
                   <Image
@@ -535,7 +535,7 @@ export function Navigation({
                 {/* Close Button */}
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#c5a880]/40 bg-[#c5a880]/15 text-[#c5a880] hover:bg-[#c5a880] hover:text-[#0d0907] text-[9.5px] tracking-[0.2em] font-sans font-bold uppercase transition-all duration-300 active:scale-95 shadow-[0_2px_10px_rgba(0,0,0,0.4)] cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-gold/40 bg-gold/15 text-gold hover:bg-gold hover:text-background text-[9.5px] tracking-[0.2em] font-sans font-bold uppercase transition-all duration-300 active:scale-95 shadow-[0_2px_10px_rgba(0,0,0,0.4)] cursor-pointer"
                   aria-label="Close Menu"
                 >
                   <span>CLOSE</span>
@@ -565,22 +565,22 @@ export function Navigation({
                       <Link
                         href={link.href}
                         className={`relative block py-2 sm:py-2.5 font-laluxes-serif text-2xl sm:text-3xl transition-all duration-300 hover:translate-x-2 flex items-center gap-3.5 group ${isActive
-                          ? "text-[#c5a880] font-semibold"
-                          : "text-[#f4f1eb]/75 hover:text-[#c5a880]"
+                          ? "text-gold font-semibold"
+                          : "text-foreground/75 hover:text-gold"
                           }`}
                         onClick={(e) => {
                           handleLinkClick(e, link.href);
                           setMobileOpen(false);
                         }}
                       >
-                        <span className="font-sans text-[10px] sm:text-[11px] tracking-widest text-[#c5a880]/60 group-hover:text-[#c5a880] font-bold">
+                        <span className="font-sans text-[10px] sm:text-[11px] tracking-widest text-gold/60 group-hover:text-gold font-bold">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <span>{link.label}</span>
                         {isActive && (
                           <motion.span
                             layoutId="mobileActiveDot"
-                            className="w-1.5 h-1.5 rounded-full bg-[#c5a880] shrink-0 shadow-[0_0_8px_rgba(197,168,128,0.8)] ml-auto"
+                            className="w-1.5 h-1.5 rounded-full bg-gold shrink-0 shadow-[0_0_8px_color-mix(in_srgb,var(--gold)_80%,transparent)] ml-auto"
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                           />
                         )}
@@ -596,10 +596,10 @@ export function Navigation({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 15 }}
                 transition={{ delay: 0.2, duration: 0.4 }}
-                className="relative z-10 px-6 sm:px-8 pb-6 border-t border-[#c5a880]/15 pt-5 space-y-4"
+                className="relative z-10 px-6 sm:px-8 pb-6 border-t border-gold/15 pt-5 space-y-4"
               >
                 {/* Connect Label */}
-                <p className="text-[8.5px] tracking-[0.22em] uppercase text-[#c5a880]/70 font-sans font-bold">
+                <p className="text-[8.5px] tracking-[0.22em] uppercase text-gold/70 font-sans font-bold">
                   Connect With Us
                 </p>
 
@@ -607,10 +607,10 @@ export function Navigation({
                 <a
                   href="#contact"
                   onClick={() => setMobileOpen(false)}
-                  className="w-full flex items-center justify-between px-4.5 py-2.5 rounded-full border border-[#c5a880]/40 bg-[#c5a880]/15 text-[#f4f1eb] hover:border-[#c5a880] text-[9.5px] tracking-[0.2em] uppercase font-sans font-semibold transition-all duration-300 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                  className="w-full flex items-center justify-between px-4.5 py-2.5 rounded-full border border-gold/40 bg-gold/15 text-foreground hover:border-gold text-[9.5px] tracking-[0.2em] uppercase font-sans font-semibold transition-all duration-300 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
                 >
                   <span>Let&apos;s Connect</span>
-                  <div className="w-4.5 h-4.5 rounded-full bg-[#c5a880] text-[#0d0907] flex items-center justify-center">
+                  <div className="w-4.5 h-4.5 rounded-full bg-gold text-background flex items-center justify-center">
                     <ArrowUpRight size={11} />
                   </div>
                 </a>
@@ -630,20 +630,20 @@ export function Navigation({
                           : undefined
                       }
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#c5a880]/20 bg-black/30 text-[#f4f1eb]/80 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300 text-[9px] tracking-[0.14em] uppercase font-sans font-medium active:scale-[0.97]"
+                      className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gold/20 bg-black/30 text-foreground/80 hover:text-gold hover:border-gold/40 transition-all duration-300 text-[9px] tracking-[0.14em] uppercase font-sans font-medium active:scale-[0.97]"
                     >
-                      <item.icon className="w-3 h-3 text-[#c5a880]" />
+                      <item.icon className="w-3 h-3 text-gold" />
                       <span>{item.label}</span>
                     </a>
                   ))}
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between border-t border-[#c5a880]/15 pt-3">
-                  <span className="text-[#c5a880]/70 text-[8.5px] tracking-[0.18em] uppercase font-sans font-bold">
+                <div className="flex items-center justify-between border-t border-gold/15 pt-3">
+                  <span className="text-gold/70 text-[8.5px] tracking-[0.18em] uppercase font-sans font-bold">
                     MS FILMS &copy; {new Date().getFullYear()}
                   </span>
-                  <p className="text-[#f4f1eb]/30 text-[8px] tracking-[0.18em] uppercase font-sans font-medium">
+                  <p className="text-foreground/30 text-[8px] tracking-[0.18em] uppercase font-sans font-medium">
                     {siteData.locationShort}
                   </p>
                 </div>

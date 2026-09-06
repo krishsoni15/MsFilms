@@ -8,7 +8,7 @@ import { useTheme } from "@/components/theme-provider";
 
 export function GradientSlider() {
   const { theme } = useTheme();
-  const bgStop = theme === "light" ? "#f5f2eb" : "#020912";
+  const bgStop = theme === "light" ? "var(--background-alt)" : "var(--background)";
 
   const items: GradientCarouselItem[] = [
     {

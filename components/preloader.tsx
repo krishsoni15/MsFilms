@@ -138,7 +138,7 @@ export function Preloader({
             imageHeight={82}
             speed={2}
             color={isLightMode ? "rgba(14, 18, 26, 0.25)" : "rgba(244, 241, 235, 0.25)"}
-            shineColor={isLightMode ? "#0e121a" : "#c5a880"}
+            shineColor={isLightMode ? "var(--foreground)" : "var(--gold)"}
             spread={120}
             alt="Msfilms Logo"
           />

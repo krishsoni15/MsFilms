@@ -158,7 +158,7 @@ function HoverVideoCard({
         onHoverStateChange(false);
       }}
       onClick={onClick}
-      className="relative shrink-0 w-[280px] xs:w-[320px] sm:w-[400px] md:w-[460px] lg:w-[500px] aspect-video rounded-2xl overflow-hidden cursor-pointer border border-white/15 hover:border-gold/70 shadow-2xl transition-all duration-500 hover:scale-[1.02] group bg-black"
+      className="relative shrink-0 w-[280px] xs:w-[320px] sm:w-[400px] md:w-[460px] lg:w-[500px] aspect-video rounded-2xl overflow-hidden cursor-pointer border border-border hover:border-gold/70 shadow-2xl transition-all duration-500 hover:scale-[1.02] group bg-background-alt"
     >
       {/* Poster Image */}
       <Image
@@ -185,7 +185,7 @@ function HoverVideoCard({
       />
 
       {/* Ambient Dark Gradient Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent group-hover:from-black/95 transition-all duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/25 to-transparent group-hover:from-background/95 transition-all duration-300" />
 
       {/* Center Glass Gold Play Button */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -380,10 +380,10 @@ export function CircularGallerySection() {
       {/* ─── FULLSCREEN LUXURY CINEMA VIDEO MODAL PLAYER ─── */}
       {activeModalFilm && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 md:p-8 bg-black/95 backdrop-blur-2xl animate-fade-in">
-          <div className="relative w-full max-w-5xl bg-[#0f0c0a] border border-gold/30 rounded-2xl overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] flex flex-col max-h-[92vh]">
+          <div className="relative w-full max-w-5xl bg-background-alt border border-gold/30 rounded-2xl overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.9)] flex flex-col max-h-[92vh]">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 border-b border-gold/20 bg-neutral-950/80">
+            <div className="flex items-center justify-between px-5 sm:px-6 py-3.5 sm:py-4 border-b border-gold/20 bg-background-alt-2/80">
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-gold animate-pulse" />
                 <span className="text-[9px] sm:text-[10px] tracking-[0.25em] uppercase text-gold font-sans font-semibold">
@@ -469,7 +469,7 @@ export function CircularGallerySection() {
             </div>
 
             {/* Modal Details & CTA Footer */}
-            <div className="p-5 sm:p-6 md:p-8 bg-[#0d0a08] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+            <div className="p-5 sm:p-6 md:p-8 bg-background-alt-2 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
               <div className="space-y-1.5 sm:space-y-2 max-w-2xl">
                 <h3 className="font-display text-xl sm:text-2xl md:text-3xl text-foreground font-light">
                   {activeModalFilm.title}

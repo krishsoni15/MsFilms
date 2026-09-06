@@ -1,18 +1,18 @@
 :root {
-  --scroll-expand-bg: #f5f2eb;
-  --scroll-expand-scrim: rgba(245, 242, 235, 0.82);
-  --scroll-expand-text: #020912;
-  --scroll-expand-arrow-label: rgba(2, 9, 18, 0.35);
-  --scroll-expand-hint: rgba(2, 9, 18, 0.55);
+  --scroll-expand-bg: var(--background, #f5f2eb);
+  --scroll-expand-scrim: var(--background, rgba(245, 242, 235, 0.82));
+  --scroll-expand-text: var(--foreground, #020912);
+  --scroll-expand-arrow-label: var(--muted-foreground, rgba(2, 9, 18, 0.35));
+  --scroll-expand-hint: var(--muted-foreground, rgba(2, 9, 18, 0.55));
   --scroll-expand-shadow: rgba(0, 0, 0, 0.1);
 }
 
 :root.dark, html.dark, .dark {
-  --scroll-expand-bg: #020912;
-  --scroll-expand-scrim: rgba(2, 9, 18, 0.82);
-  --scroll-expand-text: #fff;
-  --scroll-expand-arrow-label: rgba(255, 255, 255, 0.35);
-  --scroll-expand-hint: rgba(255, 255, 255, 0.55);
+  --scroll-expand-bg: var(--background, #020912);
+  --scroll-expand-scrim: var(--background, rgba(2, 9, 18, 0.82));
+  --scroll-expand-text: var(--foreground, #fff);
+  --scroll-expand-arrow-label: var(--muted-foreground, rgba(255, 255, 255, 0.35));
+  --scroll-expand-hint: var(--muted-foreground, rgba(255, 255, 255, 0.55));
   --scroll-expand-shadow: rgba(0, 0, 0, 0.55);
 }
 

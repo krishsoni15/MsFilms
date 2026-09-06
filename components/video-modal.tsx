@@ -81,7 +81,7 @@ export function VideoModal({ isOpen, onClose, videoUrl, posterUrl, title }: Vide
             onClick={(e) => e.stopPropagation()}
           >
             {videoUrl ? (
-              <div className="relative w-full h-full bg-[#02070f] rounded-sm overflow-hidden flex items-center justify-center">
+              <div className="relative w-full h-full bg-background-alt border border-border rounded-sm overflow-hidden flex items-center justify-center">
                 {isLoading && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm z-10 gap-3">
                     <div className="w-8 h-8 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />

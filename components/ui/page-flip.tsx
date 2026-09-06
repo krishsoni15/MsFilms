@@ -60,7 +60,7 @@ export default function PageFlip({
     if (isAnimatingRef.current) return;
     isAnimatingRef.current = true;
 
-    const duration = 520; // ms transition time (luxurious and smooth)
+    const duration = 350; // ms transition time (fast, crisp, and responsive)
     const startTime = performance.now();
 
     setDraggedSheet(sheetIdx);
@@ -132,7 +132,7 @@ export default function PageFlip({
     // Capture pointer events to track movement across page boundaries
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch (err) { }
 
     setIsDragging(true);
     setDraggedSheet(sheetIdx);
@@ -176,7 +176,7 @@ export default function PageFlip({
 
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) {}
+    } catch (err) { }
 
     setIsDragging(false);
 
@@ -254,7 +254,7 @@ export default function PageFlip({
     }
   };
 
-  // Calculate book wrapper translation to center the active pages
+  // Dynamic translateX: centers closed cover card on right/left and centers 2-page spread when open
   let translateX = 0;
   if (isDragging || isAnimatingRef.current) {
     if (draggedSheet === 0 && dragAngle !== null) {
@@ -281,7 +281,7 @@ export default function PageFlip({
       {/* Book Container */}
       <div
         ref={containerRef}
-        className="book-container shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-foreground/5 rounded-2xl bg-neutral-900/40 backdrop-blur-sm p-2 sm:p-4 md:p-8"
+        className="book-container shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-border/40 rounded-2xl bg-background-alt/50 backdrop-blur-md p-2 sm:p-4 md:p-8"
         style={{
           width: "100%",
           maxWidth: `${width}px`,
@@ -364,15 +364,15 @@ export default function PageFlip({
                   />
 
                   {/* Front Face (Right Side Page) */}
-                  <div className="page-face-el front overflow-hidden rounded-r-xl border-l border-neutral-950 bg-neutral-900 shadow-[inset_10px_0_20px_rgba(0,0,0,0.5)]">
+                  <div className="page-face-el front overflow-hidden rounded-r-xl border-l border-border bg-background-alt shadow-[inset_10px_0_20px_rgba(0,0,0,0.4)]">
                     {sheet.front}
                   </div>
 
                   {/* Back Face (Left Side Page) */}
-                  <div className="page-face-el back overflow-hidden rounded-l-xl border-r border-neutral-950 bg-neutral-900 shadow-[inset_-10px_0_20px_rgba(0,0,0,0.5)]">
+                  <div className="page-face-el back overflow-hidden rounded-l-xl border-r border-border bg-background-alt shadow-[inset_-10px_0_20px_rgba(0,0,0,0.4)]">
                     {sheet.back || (
-                      <div className="w-full h-full bg-[#111111] flex items-center justify-center">
-                        <span className="text-[10px] uppercase tracking-widest text-foreground/20">End</span>
+                      <div className="w-full h-full bg-background-alt-2 flex items-center justify-center">
+                        <span className="text-[10px] uppercase tracking-widest text-foreground/30">End</span>
                       </div>
                     )}
                   </div>

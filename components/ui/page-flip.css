@@ -82,7 +82,7 @@
   background: linear-gradient(
     to right,
     rgba(0, 0, 0, 0.4),
-    rgba(255, 255, 255, 0.1) 50%,
+    var(--gold) 50%,
     rgba(0, 0, 0, 0.4)
   );
   z-index: 100;
@@ -101,28 +101,28 @@
 
 /* ========== LIGHT MODE OVERRIDES ========== */
 html.light .book-container {
-  background-color: rgba(245, 243, 236, 0.8);
-  border-color: rgba(0, 0, 0, 0.08);
+  background-color: var(--background-alt);
+  border-color: var(--border);
   box-shadow: 0 10px 50px rgba(0, 0, 0, 0.08);
 }
 
 html.light .page-face-el.front {
-  background-color: #fdfcf9;
-  border-left-color: #e5e2db;
+  background-color: var(--background-alt);
+  border-left-color: var(--border);
   box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.06);
 }
 
 html.light .page-face-el.back {
-  background-color: #fdfcf9;
-  border-right-color: #e5e2db;
+  background-color: var(--background-alt);
+  border-right-color: var(--border);
   box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.06);
 }
 
 html.light .book-spine {
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.12),
-    rgba(0, 0, 0, 0.03) 50%,
-    rgba(0, 0, 0, 0.12)
+    rgba(0, 0, 0, 0.15),
+    var(--gold) 50%,
+    rgba(0, 0, 0, 0.15)
   );
 }

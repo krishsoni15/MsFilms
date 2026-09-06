@@ -1,11 +1,9 @@
 :root {
-  --carousel-bg-rgb: 245, 242, 235;
-  --carousel-bg-hex: #f5f2eb;
+  --carousel-bg-hex: var(--background, #f5f2eb);
 }
 
 :root.dark, html.dark, .dark {
-  --carousel-bg-rgb: 2, 9, 18;
-  --carousel-bg-hex: #020912;
+  --carousel-bg-hex: var(--background, #020912);
 }
 
 .gradient-carousel-container {

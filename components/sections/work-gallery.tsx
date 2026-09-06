@@ -72,8 +72,8 @@ export function WorkGallery() {
       <div className="max-w-7xl mx-auto w-full relative flex justify-center py-1 sm:py-2">
         <PageFlip width={950} height={600} className="mx-auto" activeSheetIndex={activeSheetIndex}>
           {/* Page 1: Front Cover */}
-          <div className="w-full h-full bg-neutral-950 flex flex-col justify-between p-3 sm:p-8 md:p-14 border border-gold/10 relative overflow-hidden">
-            <div className="absolute inset-[4px] sm:inset-[15px] border border-gold/10 pointer-events-none rounded-lg" />
+          <div className="w-full h-full bg-background-alt flex flex-col justify-between p-3 sm:p-8 md:p-14 border border-gold/20 relative overflow-hidden">
+            <div className="absolute inset-[4px] sm:inset-[15px] border border-gold/20 pointer-events-none rounded-lg" />
             <div className="text-[6.5px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.35em] uppercase text-gold/60 font-sans font-semibold">
               Fine Art Portfolio
             </div>
@@ -86,18 +86,18 @@ export function WorkGallery() {
               </p>
             </div>
             <div className="flex flex-col gap-0.5 sm:gap-2 z-10">
-              <span className="text-[6.5px] sm:text-[9px] tracking-[0.1em] sm:tracking-[0.2em] uppercase text-foreground/30 font-sans">
+              <span className="text-[6.5px] sm:text-[9px] tracking-[0.1em] sm:tracking-[0.2em] uppercase text-foreground/40 font-sans">
                 Saskatoon, Saskatchewan
               </span>
-              <span className="text-[6.5px] sm:text-[9px] tracking-[0.1em] sm:tracking-[0.15em] uppercase text-gold/60 font-sans font-medium animate-pulse">
+              <span className="text-[6.5px] sm:text-[9px] tracking-[0.1em] sm:tracking-[0.15em] uppercase text-gold font-sans font-medium animate-pulse">
                 Tap Page to Open &rarr;
               </span>
             </div>
           </div>
 
           {/* Page 2: Table of Contents & Intro */}
-          <div className="w-full h-full bg-[#131313] flex flex-col justify-between p-3 sm:p-8 md:p-12 relative overflow-hidden">
-            <div className="absolute inset-[4px] sm:inset-[10px] border border-white/5 pointer-events-none rounded" />
+          <div className="w-full h-full bg-background-alt-2 flex flex-col justify-between p-3 sm:p-8 md:p-12 relative overflow-hidden">
+            <div className="absolute inset-[4px] sm:inset-[10px] border border-border/30 pointer-events-none rounded" />
             <div className="z-10">
               <span className="text-[6.5px] sm:text-[8px] tracking-[0.2em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 sm:mb-2 block">
                 01 / Introduction
@@ -105,102 +105,109 @@ export function WorkGallery() {
               <h4 className="font-display text-xs sm:text-xl md:text-2xl text-foreground font-light uppercase tracking-wide mb-1 sm:mb-6">
                 Our Philosophy
               </h4>
-              <p className="font-serif text-[8px] sm:text-xs md:text-sm text-foreground/75 italic leading-tight sm:leading-relaxed mb-2 sm:mb-6">
+              <p className="font-serif text-[8px] sm:text-xs md:text-sm text-foreground/80 italic leading-tight sm:leading-relaxed mb-2 sm:mb-6">
                 &ldquo;Every story has a soul, and every milestone deserves elegance. We frame authentic emotions into timeless art.&rdquo;
               </p>
             </div>
-            <div className="border-t border-white/10 pt-1.5 sm:pt-4 z-10">
+            <div className="border-t border-border/30 pt-1.5 sm:pt-4 z-10">
               <span className="text-[6.5px] sm:text-[9px] tracking-[0.15em] sm:tracking-[0.25em] uppercase text-foreground/40 font-mono block mb-0.5 sm:mb-1">
                 Chapters
               </span>
-              <div className="space-y-0.5 sm:space-y-1 font-sans text-[7.5px] sm:text-[10px] uppercase tracking-wider text-foreground/70">
-                <div className="flex justify-between"><span>I. Weddings</span><span className="text-gold/85">Pg 3</span></div>
-                <div className="flex justify-between"><span>II. Landscapes</span><span className="text-gold/85">Pg 5</span></div>
-                <div className="flex justify-between"><span>III. Aerial Drone</span><span className="text-gold/85">Pg 7</span></div>
+              <div className="space-y-0.5 sm:space-y-1 font-sans text-[7.5px] sm:text-[10px] uppercase tracking-wider text-foreground/80">
+                <div className="flex justify-between"><span>I. Weddings</span><span className="text-gold font-medium">Pg 3</span></div>
+                <div className="flex justify-between"><span>II. Landscapes</span><span className="text-gold font-medium">Pg 5</span></div>
+                <div className="flex justify-between"><span>III. Aerial Drone</span><span className="text-gold font-medium">Pg 7</span></div>
               </div>
             </div>
           </div>
 
           {/* Page 3: Wedding 1 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter I</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">The Golden Hour</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Saskatoon Wedding Session</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">The Golden Hour</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Saskatoon Wedding Session</p>
             </div>
           </div>
 
           {/* Page 4: Wedding 2 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter I</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">Intimate Whispers</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Selected Bridal Portraiture</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">Intimate Whispers</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Selected Bridal Portraiture</p>
             </div>
           </div>
 
           {/* Page 5: Landscape 1 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter II</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">Mist Mountain</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Banff Fine Art Study</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">Mist Mountain</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Banff Fine Art Study</p>
             </div>
           </div>
 
           {/* Page 6: Landscape 2 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter II</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">Silent Forest</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Saskatchewan Wilderness Study</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">Silent Forest</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Saskatchewan Wilderness Study</p>
             </div>
           </div>
 
           {/* Page 7: Drone 1 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter III</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">High Coastlines</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Cinematic Flight Capture</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">High Coastlines</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Cinematic Flight Capture</p>
             </div>
           </div>
 
           {/* Page 8: Drone 2 */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter III</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">Symmetry from Above</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Overhead Composition Study</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">Symmetry from Above</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Overhead Composition Study</p>
             </div>
           </div>
 
           {/* Page 9: Real Estate / Sunset Peak */}
-          <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-            <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.7]" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+          <div className="w-full h-full bg-background-alt relative overflow-hidden group">
+            <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 group-hover:scale-105 transition-all duration-700 ease-out" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-[6px] sm:inset-[12px] border border-gold/10 group-hover:border-gold/30 pointer-events-none z-10 rounded-sm transition-colors duration-500" />
             <div className="absolute bottom-2 sm:bottom-6 left-2.5 sm:left-6 right-2.5 sm:right-6 text-left z-10">
               <span className="text-[6px] sm:text-[8px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-0.5 block">Chapter IV</span>
-              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-white uppercase tracking-wider leading-tight">Sunset Peaks</h4>
-              <p className="text-[7px] sm:text-[10px] text-white/60 font-sans tracking-wide mt-0.5">Banff National Park Study</p>
+              <h4 className="font-display text-[10px] sm:text-lg md:text-xl text-foreground uppercase tracking-wider leading-tight group-hover:text-gold transition-colors duration-300">Sunset Peaks</h4>
+              <p className="text-[7px] sm:text-[10px] text-foreground/60 font-sans tracking-wide mt-0.5">Banff National Park Study</p>
             </div>
           </div>
 
           {/* Page 10: Back Cover */}
-          <div className="w-full h-full bg-neutral-950 flex flex-col justify-between p-3 sm:p-8 md:p-14 border border-gold/10 relative overflow-hidden">
-            <div className="absolute inset-[4px] sm:inset-[15px] border border-gold/10 pointer-events-none rounded-lg" />
+          <div className="w-full h-full bg-background-alt flex flex-col justify-between p-3 sm:p-8 md:p-14 border border-gold/20 relative overflow-hidden">
+            <div className="absolute inset-[4px] sm:inset-[15px] border border-gold/20 pointer-events-none rounded-lg" />
             <div className="text-[6.5px] sm:text-[9px] tracking-[0.18em] sm:tracking-[0.3em] uppercase text-gold/60 font-sans font-semibold text-left">
               The End
             </div>

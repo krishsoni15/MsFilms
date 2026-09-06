@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────
 // MSFILMS — Centralized Data Architecture
-// Real studio photography & film assets.
+// Real photography & film assets.
 // Every image URL is 100% unique — zero duplicates.
 // ─────────────────────────────────────────────────
 
@@ -8,7 +8,7 @@ export const siteData = {
   name: "Msfilms",
   logo: "/logo/logo.png",
   location: "Saskatoon, Saskatchewan",
-  locationShort: "Saskatoon · Canada",
+  locationShort: "Saskatoon · All Canada",
   email: "contactus.msfilms@gmail.com",
   social: {
     instagram: "https://www.instagram.com/msfilms._/",
@@ -17,17 +17,17 @@ export const siteData = {
   booking: "2026 — 2027",
   bookingBadge: "Now Booking 2026 – 2027",
   aboutHeadline: "About Us",
-  aboutText: "Msfilms is a Saskatoon-based company that specializes in capturing precious memories of special events like weddings, family functions and more. The team at Msfilms has a keen eye for detail and a deep understanding of the technical aspects of photography and videography. They strive to produce high-quality and visually stunning images and videos that will be cherished by clients for years to come. Their commitment to their craft and client satisfaction makes Msfilms a valuable asset in photography and videography.",
+  aboutText: "MS Films is a Saskatoon-based professional media team specializing in capturing precious memories of weddings, milestones, and commercial productions. With a keen eye for detail and technical mastery, we craft visually stunning films and imagery cherished by clients across all of Canada. Our dedication to storytelling and client satisfaction makes MS Films a premier choice for photography and videography nationwide.",
   contactHeadline: "Contact Us",
   contactText: "Based in Saskatoon, Saskatchewan, we offer premium wedding photography, videography, and dronography services available across all of Canada. Whether you are planning an intimate local ceremony or a grand destination celebration from coast to coast, we are dedicated to capturing your most meaningful stories. Please share the details of your upcoming event below, and we will craft a personalized proposal tailored to your vision.",
-  copyright: "Copyright ©2026 | All rights reserved by Msfilms",
+  copyright: "Copyright ©2026 | All rights reserved by MS Films",
 };
 
 // ─────────────────────────────────────────────────
 // HERO
 // ─────────────────────────────────────────────────
 export const heroData = {
-  eyebrow: "SASKATOON · CANADA",
+  eyebrow: "BASED IN SASKATOON · SERVING ALL OF CANADA",
   headline: "Stories worth\nremembering.",
   subheadline: "Photography + films for life's meaningful moments.",
   videoPoster: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2000&auto=format&fit=crop",
@@ -38,7 +38,7 @@ export const heroData = {
     "Wedding Photography & Videography",
     "Capturing Special Family Moments",
     "Dronography",
-    "Telling Stories",
+    "Canada-Wide Coverage",
   ],
 };
 
@@ -82,7 +82,7 @@ export const projects = [
       "/wedding/imgi_8_6.jpg",
       "/landscape/imgi_10_6.jpg",
     ],
-    description: "Professional portrait sessions capturing genuine character and personal expressions in studio and natural light settings.",
+    description: "Professional portrait sessions capturing genuine character and personal expressions in custom editorial and natural light settings.",
   },
   {
     slug: "landscape",
@@ -154,7 +154,7 @@ export const services = [
   {
     id: "01",
     title: "Wedding Photography & Videography",
-    image: "/wedding/imgi_7_3.jpg",
+    image: "/wedding/imgi_3_5.png",
   },
   {
     id: "02",
@@ -163,7 +163,7 @@ export const services = [
   },
   {
     id: "03",
-    title: "Events (Engagement, Baby Shower, Birthday, Corporate Party, etc.)",
+    title: "Events & Special Celebrations",
     image: "/wedding/imgi_6_4.jpg",
   },
 ];

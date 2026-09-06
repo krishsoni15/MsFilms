@@ -69,7 +69,7 @@ html.light .border-glow-card {
     var(--gradient-five, radial-gradient(at 86% 85%, hsla(38, 70%, 70%, 1) 0px, transparent 50%)) border-box,
     var(--gradient-six, radial-gradient(at 82% 18%, hsla(40, 90%, 75%, 1) 0px, transparent 50%)) border-box,
     var(--gradient-seven, radial-gradient(at 51% 4%, hsla(42, 80%, 80%, 1) 0px, transparent 50%)) border-box,
-    var(--gradient-base, linear-gradient(#c5a880 0 100%)) border-box;
+    var(--gradient-base, linear-gradient(var(--gold) 0 100%)) border-box;
 
   opacity: 1;
 
@@ -107,7 +107,7 @@ html.light .border-glow-card {
     var(--gradient-five, radial-gradient(at 86% 85%, hsla(38, 70%, 70%, 1) 0px, transparent 50%)) padding-box,
     var(--gradient-six, radial-gradient(at 82% 18%, hsla(40, 90%, 75%, 1) 0px, transparent 50%)) padding-box,
     var(--gradient-seven, radial-gradient(at 51% 4%, hsla(42, 80%, 80%, 1) 0px, transparent 50%)) padding-box,
-    var(--gradient-base, linear-gradient(#c5a880 0 100%)) padding-box;
+    var(--gradient-base, linear-gradient(var(--gold) 0 100%)) padding-box;
 
   /* Standard mask properties */
   mask-image:
@@ -190,7 +190,7 @@ html.light .border-glow-card {
   border-right: 0px none transparent !important;
   outline: 0px none transparent !important;
   box-shadow: none !important;
-  border-bottom: 1.5px solid #c5a880 !important; /* Gold bottom underline */
+  border-bottom: 1.5px solid var(--gold) !important; /* Gold bottom underline */
 }
 
 /* Chrome/Safari Autofill overlay styling overrides */

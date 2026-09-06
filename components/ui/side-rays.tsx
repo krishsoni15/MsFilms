@@ -20,10 +20,48 @@ export interface SideRaysProps {
   className?: string;
 }
 
-const hexToRgb = (hex: string): [number, number, number] => {
-  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return m ? [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255] : [1, 1, 1];
-};
+function resolveColorToRgb(colorStr: string): [number, number, number] {
+  if (typeof window === "undefined") return [0.8, 0.7, 0.5];
+  let val = colorStr.trim();
+  if (val.startsWith("var(")) {
+    const varName = val.replace(/^var\((--[^,\)]+).*\)$/, "$1").trim();
+    const computed = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    if (computed) val = computed;
+  }
+
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(val);
+  if (m) {
+    return [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255];
+  }
+  const mShort = /^#?([a-f\d])([a-f\d])([a-f\d])$/i.exec(val);
+  if (mShort) {
+    return [
+      parseInt(mShort[1] + mShort[1], 16) / 255,
+      parseInt(mShort[2] + mShort[2], 16) / 255,
+      parseInt(mShort[3] + mShort[3], 16) / 255,
+    ];
+  }
+
+  try {
+    const d = document.createElement("div");
+    d.style.color = val;
+    document.body.appendChild(d);
+    const cs = getComputedStyle(d).color;
+    document.body.removeChild(d);
+    const rgbMatch = cs.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (rgbMatch) {
+      return [
+        parseInt(rgbMatch[1], 10) / 255,
+        parseInt(rgbMatch[2], 10) / 255,
+        parseInt(rgbMatch[3], 10) / 255,
+      ];
+    }
+  } catch {
+    // Ignore DOM lookup errors
+  }
+
+  return [0.8, 0.7, 0.5];
+}
 
 const originToFlip = (origin: Origin): [number, number] => {
   switch (origin) {
@@ -36,8 +74,8 @@ const originToFlip = (origin: Origin): [number, number] => {
 
 export default function SideRays({
   speed = 2.5,
-  rayColor1 = '#EAB308',
-  rayColor2 = '#96c8ff',
+  rayColor1 = 'var(--gold)',
+  rayColor2 = 'var(--gold-light)',
   intensity = 2,
   spread = 2,
   origin = 'top-right',
@@ -180,8 +218,8 @@ void main() {
         iTime: { value: 0 },
         iResolution: { value: [1, 1] as number[] },
         iSpeed: { value: speed },
-        iRayColor1: { value: hexToRgb(rayColor1) as number[] },
-        iRayColor2: { value: hexToRgb(rayColor2) as number[] },
+        iRayColor1: { value: resolveColorToRgb(rayColor1) as number[] },
+        iRayColor2: { value: resolveColorToRgb(rayColor2) as number[] },
         iIntensity: { value: intensity },
         iSpread: { value: spread },
         iFlipX: { value: flipX },
@@ -210,6 +248,8 @@ void main() {
       const loop = (t: number) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) return;
         uniforms.iTime.value = t * 0.001;
+        uniforms.iRayColor1.value = resolveColorToRgb(rayColor1);
+        uniforms.iRayColor2.value = resolveColorToRgb(rayColor2);
         try {
           renderer.render({ scene: mesh });
           animationIdRef.current = requestAnimationFrame(loop);
@@ -256,8 +296,8 @@ void main() {
     if (!uniformsRef.current) return;
     const u = uniformsRef.current;
     u.iSpeed.value = speed;
-    u.iRayColor1.value = hexToRgb(rayColor1);
-    u.iRayColor2.value = hexToRgb(rayColor2);
+    u.iRayColor1.value = resolveColorToRgb(rayColor1);
+    u.iRayColor2.value = resolveColorToRgb(rayColor2);
     u.iIntensity.value = intensity;
     u.iSpread.value = spread;
     const [flipX, flipY] = originToFlip(origin);

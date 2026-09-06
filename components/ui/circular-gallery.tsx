@@ -94,12 +94,12 @@ function createCompositeCardTexture(
     ctx.lineTo(cx + 17, cy);
     ctx.lineTo(cx - 9, cy + 17);
     ctx.closePath();
-    ctx.fillStyle = "#c5a880";
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--gold").trim() || "#c5a880";
     ctx.fill();
 
     // 4. Category & Duration Tag at Bottom Left
     ctx.font = "600 16px sans-serif";
-    ctx.fillStyle = "#c5a880";
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--gold").trim() || "#c5a880";
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     const tag = `${(categoryText || "FILM").toUpperCase()} ${durationText ? `• ${durationText}` : ""}`;

@@ -6,12 +6,11 @@ import { Preloader } from "@/components/preloader";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Hero } from "@/components/sections/hero";
-import { AboutStudio } from "@/components/sections/about";
+import { AboutSection } from "@/components/sections/about";
 import { AboutPhotographer } from "@/components/sections/photographer";
 import { Contact } from "@/components/sections/contact";
 import { TrustStats } from "@/components/sections/trust-stats";
 import { WorkIntro } from "@/components/work/work-intro";
-import { WorkGallery } from "@/components/sections/work-gallery";
 import { CircularGallerySection } from "@/components/sections/circular-gallery-section";
 import { Services } from "@/components/sections/services";
 import { Blog } from "@/components/sections/blog";
@@ -47,7 +46,7 @@ export default function Home() {
       <main className="overflow-x-clip w-full max-w-full relative bg-background">
         <Hero isParentLoaded={!isLoading} />
         <TrustStats />
-        <AboutStudio />
+        <AboutSection />
         <AboutPhotographer />
         <WorkIntro />
         <CircularGallerySection />
@@ -60,7 +59,3 @@ export default function Home() {
     </>
   );
 }
-
-
-
-

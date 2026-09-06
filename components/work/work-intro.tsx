@@ -78,9 +78,9 @@ export function WorkIntro() {
           id: "work-intro-trigger",
           trigger: container,
           start: "top top",
-          end: "+=650%",
+          end: "+=460%",
           pin: true,
-          scrub: 1.2,
+          scrub: 0.7,
           refreshPriority: 5,
           onUpdate: (self) => {
             const progress = self.progress;

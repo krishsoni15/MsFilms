@@ -54,10 +54,10 @@ export function Blog() {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group relative rounded-xl border border-gold/20 hover:border-gold/60 bg-gradient-to-b from-[#14110e]/90 via-[#0e0c0a]/90 to-[#080705]/95 overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-[0_12px_35px_-10px_rgba(197,168,128,0.2)] hover:-translate-y-1 flex flex-col justify-between"
+              className="group relative rounded-xl border border-gold/20 hover:border-gold/60 bg-background-alt overflow-hidden shadow-2xl transition-all duration-500 hover:shadow-[0_12px_35px_-10px_rgba(197,168,128,0.2)] hover:-translate-y-1 flex flex-col justify-between"
             >
               {/* Image Thumbnail Container */}
-              <div className="relative w-full aspect-[16/9] overflow-hidden bg-neutral-950">
+              <div className="relative w-full aspect-[16/9] overflow-hidden bg-background-alt-2">
                 <Image
                   src={post.heroImage}
                   alt={post.title}
@@ -66,7 +66,7 @@ export function Blog() {
                   sizes="(max-width: 768px) 100vw, 500px"
                 />
                 {/* Dual Gradient Vignette */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e0c0a] via-black/20 to-black/40 opacity-90 transition-opacity duration-300 group-hover:opacity-75" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background-alt via-background/20 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-75" />
 
                 {/* Top Badges */}
                 <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">

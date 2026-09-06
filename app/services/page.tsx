@@ -1,73 +1,28 @@
-"use client";
+import type { Metadata } from "next";
+import { ServicesClient } from "./services-client";
 
-import { motion } from "framer-motion";
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
-import { Services } from "@/components/sections/services";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Wedding Photography & Videography Services | MS Films — Canada Wide",
+  description:
+    "Explore MS Films' tailored production packages: wedding photography, 4K videography, aerial dronography, and portrait sessions in Saskatoon, Saskatchewan, and all across Canada.",
+  keywords: [
+    "Saskatoon wedding photography services",
+    "wedding videography packages Saskatchewan",
+    "drone photography pricing Saskatoon",
+    "Canada wide wedding photography",
+    "event photography Saskatoon",
+  ],
+  alternates: {
+    canonical: "/services",
+  },
+  openGraph: {
+    title: "Services & Production Offerings | MS Films",
+    description:
+      "Tailored wedding photography, 4K videography, aerial flight, and architectural media for high-end clients across Saskatchewan & all of Canada.",
+    url: "https://msfilms.ca/services",
+  },
+};
 
 export default function ServicesPage() {
-  return (
-    <>
-      <Navigation isParentLoaded={true} />
-
-      <main className="min-h-screen w-full relative bg-background flex flex-col justify-between overflow-x-hidden pt-28">
-        {/* Ambient background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] rounded-full bg-gold/5 blur-[140px] pointer-events-none" />
-
-        <div className="flex-grow">
-          {/* Header */}
-          <div className="relative z-10 text-center px-6 pt-12 pb-8 max-w-4xl mx-auto">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 0.8, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-gold font-bold uppercase mb-3 block"
-            >
-              Custom Production Offerings
-            </motion.span>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-serif text-4xl md:text-6xl lg:text-7xl text-foreground font-normal uppercase tracking-tight mb-4"
-            >
-              Services & Pricing
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 0.5, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="font-sans text-xs md:text-sm text-foreground/60 max-w-lg mx-auto leading-relaxed mb-8"
-            >
-              Tailored cinematic photography, 4K videography, aerial flight, and architectural media for high-end clients across Saskatchewan & Canada.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex justify-center"
-            >
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 border border-gold/40 hover:border-gold bg-gold/10 hover:bg-gold/20 text-gold px-6 py-3 text-[10px] tracking-[0.25em] uppercase font-sans font-semibold rounded transition-all duration-300 shadow-md"
-              >
-                <span>Request Custom Quote</span>
-                <ArrowUpRight size={14} />
-              </a>
-            </motion.div>
-          </div>
-
-          {/* Detailed Services Component */}
-          <Services />
-        </div>
-
-        <Footer />
-      </main>
-    </>
-  );
+  return <ServicesClient />;
 }

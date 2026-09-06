@@ -346,7 +346,7 @@ export function ScrollExpand({
           {/* Left Arrow pointing to the center */}
           {showArrows && (
             <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--left">
-              <span className="scroll-expand__arrow-label">ENTER STUDIO</span>
+              <span className="scroll-expand__arrow-label">EXPLORE VISION</span>
               <svg
                 className="scroll-expand__arrow-svg scroll-expand__arrow-svg--left"
                 width="48"

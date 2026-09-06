@@ -121,13 +121,13 @@ export function FeaturedWork() {
               <div className="relative h-full w-full rounded-2xl overflow-hidden bg-background">
                 <BorderGlow
                   borderRadius={16}
-                  backgroundColor={theme === "light" ? "var(--background)" : "#020912"}
+                  backgroundColor="var(--background)"
                   glowColor="40 50 60"
                   glowRadius={40}
                   glowIntensity={active ? 1.5 : 0.4}
                   edgeSensitivity={20}
                   coneSpread={25}
-                  colors={theme === "light" ? ["#c5a880", "#bba282", "#020912"] : ["#c5a880", "#e5d5be", "#ffffff"]}
+                  colors={["var(--gold)", "var(--gold-light)", "var(--white)"]}
                   fillOpacity={active ? 0.08 : 0.0}
                   className="w-full h-full"
                 >

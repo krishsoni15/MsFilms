@@ -28,13 +28,13 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "art-of-wedding-cinematography",
     title: "The Art of Wedding Cinematography: How We Capture Unscripted Emotion across Saskatchewan",
-    subtitle: "Discover how our studio blends documentary storytelling with fine art aesthetics to craft timeless, emotional wedding films.",
-    excerpt: "Behind every frame of a wedding film is a unspoken glance, a tear, and a story waiting to be told with timeless cinematic grace.",
+    subtitle: "Discover how our team blends documentary storytelling with fine art aesthetics to craft timeless, emotional wedding films.",
+    excerpt: "Behind every frame of a wedding film is an unspoken glance, a tear, and a story waiting to be told with timeless cinematic grace.",
     category: "Wedding Cinema",
     readTime: "6 min read",
     publishedAt: "September 4, 2025",
     author: {
-      name: "MS Films Studio",
+      name: "MS Films",
       role: "Lead Cinematographers",
       avatar: "/logo/logo.png",
     },
@@ -70,7 +70,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         heading: "Crafting Your Heirloom Film",
-        paragraph: "Every film undergoes bespoke color grading and custom sound mixing in our studio. From the selection of licensing acoustic scores to subtle film grain textures, your final wedding film is delivered as a 4K digital heirloom ready to share across the world.",
+        paragraph: "Every film undergoes bespoke color grading and custom sound mixing by our post-production team. From the selection of licensing acoustic scores to subtle film grain textures, your final wedding film is delivered as a 4K digital heirloom ready to share across the world.",
       },
     ],
   },
@@ -83,7 +83,7 @@ export const BLOG_POSTS: BlogPost[] = [
     readTime: "5 min read",
     publishedAt: "August 28, 2025",
     author: {
-      name: "MS Films Studio",
+      name: "MS Films",
       role: "Architectural & Aerial Specialists",
       avatar: "/logo/logo.png",
     },
@@ -124,3 +124,4 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
   },
 ];
+
