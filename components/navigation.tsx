@@ -92,8 +92,21 @@ export function Navigation({
       // Update scrolled state
       setIsScrolled(currentScrollY > 50);
 
-      // Keep navbar always visible with smooth glass transparency
-      setVisible(true);
+      // Smart show/hide navbar based on scroll direction
+      const diff = currentScrollY - lastScrollY.current;
+
+      if (mobileOpen || connectOpen) {
+        setVisible(true);
+      } else if (currentScrollY <= 80) {
+        setVisible(true);
+      } else {
+        if (diff > 12 && currentScrollY > 150) {
+          setVisible(false); // Hide on scroll down
+        } else if (diff < -6) {
+          setVisible(true); // Reveal on scroll up
+        }
+      }
+
       lastScrollY.current = currentScrollY;
 
       // Detect active section on scroll

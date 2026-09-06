@@ -2,6 +2,7 @@
   perspective: 1500px;
   position: relative;
   user-select: none;
+  aspect-ratio: 1.6 / 1;
 }
 
 .book-viewport {
@@ -87,6 +88,15 @@
   z-index: 100;
   transform: translate3d(-1px, 0, 1px);
   pointer-events: none;
+}
+
+/* ========== MOBILE RESPONSIVE OPTIMIZATIONS ========== */
+@media (max-width: 640px) {
+  .book-container {
+    aspect-ratio: 1.12 / 1 !important;
+    padding: 0.3rem !important;
+    border-radius: 0.75rem !important;
+  }
 }
 
 /* ========== LIGHT MODE OVERRIDES ========== */

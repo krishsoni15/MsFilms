@@ -32,16 +32,17 @@ export function AboutStudio() {
         title="MSFILMS"
         scrollHint="SCROLL TO DISCOVER"
         useWindowScroll={true}
-        maskType="feathered-circle"
-        startRadiusVmax={isMobile ? 10 : 6}
-        endRadiusVmax={isMobile ? 85 : 75}
-        featherVmax={isMobile ? 8 : 10}
+        maskType="inset"
+        startWidth={isMobile ? 88 : 65}
+        startHeight={isMobile ? 65 : 70}
+        startRadius={24}
+        endRadius={0}
         showArrows={false}
-        mediaZoom={1.22}
-        scrollDistance={2.0}
-        holdDistance={0.5}
-        smoothing={1.2}
-        overlayScrim={0.88}
+        mediaZoom={1.15}
+        scrollDistance={1.8}
+        holdDistance={0.4}
+        smoothing={1.0}
+        overlayScrim={0.75}
       >
         <div className="max-w-4xl mx-auto px-6 text-center text-white flex flex-col items-center justify-center h-full">
           <span className="text-[10px] tracking-[0.25em] uppercase text-gold mb-3 font-semibold">

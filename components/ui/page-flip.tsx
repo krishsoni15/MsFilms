@@ -281,11 +281,10 @@ export default function PageFlip({
       {/* Book Container */}
       <div
         ref={containerRef}
-        className="book-container shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-foreground/5 rounded-2xl bg-neutral-900/40 backdrop-blur-sm p-4 md:p-8"
+        className="book-container shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-foreground/5 rounded-2xl bg-neutral-900/40 backdrop-blur-sm p-2 sm:p-4 md:p-8"
         style={{
           width: "100%",
           maxWidth: `${width}px`,
-          aspectRatio: "1.6 / 1",
           touchAction: "pan-y",
         }}
       >
@@ -345,7 +344,7 @@ export default function PageFlip({
                     transform: `rotateY(${rotation}deg)`,
                     cursor: isDragging && isBeingDragged ? "grabbing" : isInteractive ? "pointer" : "default",
                     pointerEvents: isInteractive || isBeingDragged ? "auto" : "none",
-                    touchAction: "none",
+                    touchAction: isBeingDragged ? "none" : "pan-y",
                   }}
                   onPointerDown={(e) => handlePointerDown(e, idx)}
                   onPointerMove={(e) => handlePointerMove(e, idx)}
@@ -385,26 +384,31 @@ export default function PageFlip({
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center gap-6 z-40">
-        <button
-          onClick={handlePrev}
-          disabled={currentFlipped < 0 || isAnimatingRef.current}
-          className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center text-foreground/80 hover:text-gold hover:border-gold/50 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 bg-background-alt/40 backdrop-blur-sm cursor-pointer shadow-md"
-          title="Previous Page"
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <span className="text-[10px] tracking-[0.2em] uppercase text-foreground/40 font-mono">
-          Page {currentFlipped === -1 ? 1 : (currentFlipped + 1) * 2} of {totalSheets * 2}
+      <div className="flex flex-col items-center gap-2 z-40">
+        <span className="text-[7.5px] uppercase tracking-[0.2em] text-gold/80 sm:hidden font-mono font-medium animate-pulse">
+          Swipe left/right or tap buttons to flip
         </span>
-        <button
-          onClick={handleNext}
-          disabled={currentFlipped >= totalSheets - 1 || isAnimatingRef.current}
-          className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center text-foreground/80 hover:text-gold hover:border-gold/50 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 bg-background-alt/40 backdrop-blur-sm cursor-pointer shadow-md"
-          title="Next Page"
-        >
-          <ChevronRight size={20} />
-        </button>
+        <div className="flex items-center gap-4 sm:gap-6">
+          <button
+            onClick={handlePrev}
+            disabled={currentFlipped < 0 || isAnimatingRef.current}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gold/20 flex items-center justify-center text-foreground/80 hover:text-gold hover:border-gold/50 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 bg-background-alt/40 backdrop-blur-sm cursor-pointer shadow-md"
+            title="Previous Page"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span className="text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.2em] uppercase text-foreground/50 font-mono">
+            Page {currentFlipped === -1 ? 1 : (currentFlipped + 1) * 2} of {totalSheets * 2}
+          </span>
+          <button
+            onClick={handleNext}
+            disabled={currentFlipped >= totalSheets - 1 || isAnimatingRef.current}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gold/20 flex items-center justify-center text-foreground/80 hover:text-gold hover:border-gold/50 disabled:opacity-30 disabled:pointer-events-none transition-all duration-300 bg-background-alt/40 backdrop-blur-sm cursor-pointer shadow-md"
+            title="Next Page"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
     </div>
   );
