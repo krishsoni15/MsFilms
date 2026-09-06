@@ -92,22 +92,8 @@ export function Navigation({
       // Update scrolled state
       setIsScrolled(currentScrollY > 50);
 
-      // Smart show/hide navbar based on scroll direction
-      const diff = currentScrollY - lastScrollY.current;
-
-      if (mobileOpen || connectOpen) {
-        setVisible(true);
-      } else if (currentScrollY <= 50) {
-        setVisible(true);
-      } else {
-        // More sensitive scroll-hiding threshold (from 12 to 5) so it hides instantly on scroll down
-        if (diff > 5) {
-          setVisible(false); // scrolling down
-        } else if (diff < -5) {
-          setVisible(true); // scrolling up
-        }
-      }
-
+      // Keep navbar always visible with smooth glass transparency
+      setVisible(true);
       lastScrollY.current = currentScrollY;
 
       // Detect active section on scroll
@@ -169,19 +155,29 @@ export function Navigation({
     } else {
       document.documentElement.classList.remove("mobile-menu-open");
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        setConnectOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       document.body.style.overflow = "";
       document.documentElement.classList.remove("mobile-menu-open");
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [mobileOpen]);
 
   const links = [
-    { label: "Home", href: pathname === "/" ? "#home" : "/#home" },
-    { label: "About", href: pathname === "/" ? "#about" : "/#about" },
-    { label: "Work", href: pathname === "/" ? "#work" : "/#work" },
-    { label: "Services", href: pathname === "/" ? "#services" : "/#services" },
-    { label: "Blog", href: pathname === "/" ? "#blog" : "/#blog" },
-    { label: "Contact", href: pathname === "/" ? "#contact" : "/#contact" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Work", href: "/work" },
+    { label: "Services", href: "/services" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
   ];
 
   // Variants for staggered children dropdown animation
@@ -229,35 +225,31 @@ export function Navigation({
         animate={isParentLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
         transition={{ duration: 1.2, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
         style={{ zIndex: 9999 }}
-        className={`fixed left-0 top-0 w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          !visible
-            ? "opacity-0 -translate-y-24 pointer-events-none"
-            : "opacity-100 translate-y-0"
-        } ${
-          isScrolled
+        className={`fixed left-0 top-0 w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${!visible
+          ? "opacity-0 -translate-y-24 pointer-events-none"
+          : "opacity-100 translate-y-0"
+          } ${isScrolled
             ? theme === "light"
-              ? "bg-[#fdfcf9]/90 backdrop-blur-xl border-b border-black/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
-              : "bg-[#020912]/90 backdrop-blur-xl border-b border-white/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
+              ? "bg-white/75 backdrop-blur-xl border-b border-black/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
+              : "bg-[#080605]/55 backdrop-blur-2xl border-b border-[#c5a880]/25 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
             : "bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
-        }`}
+          }`}
       >
         <div className="flex items-center justify-between w-full mx-auto">
           {/* Logo */}
-          <Link href="/" className="z-50 relative flex items-center shrink-0">
+          <Link href="/" className={`z-50 relative flex items-center shrink-0 transition-opacity duration-300 ${mobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
             <Image
               src="/logo/logo.png"
               alt="Ms films"
               width={180}
               height={48}
-              className={`w-auto object-contain transition-all duration-500 logo ${
-                isScrolled && theme === "light"
-                  ? "invert brightness-0"
-                  : "brightness-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
-              } ${
-                isScrolled
+              className={`w-auto object-contain transition-all duration-500 logo ${isScrolled && theme === "light"
+                ? "invert brightness-0"
+                : "brightness-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
+                } ${isScrolled
                   ? "h-[24px] sm:h-[27px] lg:h-[30px]"
                   : "h-[28px] sm:h-[31px] lg:h-[34px]"
-              }`}
+                }`}
               priority
             />
           </Link>
@@ -269,10 +261,10 @@ export function Navigation({
               className="flex items-center gap-1.5 px-1 py-1"
             >
               {links.map((link) => {
-                const sectionId = link.href.includes("#")
-                  ? link.href.split("#")[1]
-                  : link.href.replace("/", "");
-                const isActive = activeSection === sectionId;
+                const sectionId = link.href.replace("/", "") || "home";
+                const isActive =
+                  pathname === link.href ||
+                  (pathname === "/" && activeSection === sectionId);
                 const isHighlighted =
                   hoveredSection !== null
                     ? hoveredSection === sectionId
@@ -284,20 +276,20 @@ export function Navigation({
                   textClass = isActive
                     ? "text-white font-bold"
                     : isHighlighted
-                    ? "text-white"
-                    : "text-white/75 hover:text-white";
+                      ? "text-white"
+                      : "text-white/75 hover:text-white";
                 } else if (theme === "light") {
                   textClass = isActive
                     ? "text-neutral-950 font-bold"
                     : isHighlighted
-                    ? "text-neutral-900"
-                    : "text-neutral-600 hover:text-neutral-900";
+                      ? "text-neutral-900"
+                      : "text-neutral-600 hover:text-neutral-900";
                 } else {
                   textClass = isActive
                     ? "text-[#f4f1eb] font-bold"
                     : isHighlighted
-                    ? "text-[#f4f1eb]"
-                    : "text-[#f4f1eb]/70 hover:text-[#f4f1eb]";
+                      ? "text-[#f4f1eb]"
+                      : "text-[#f4f1eb]/70 hover:text-[#f4f1eb]";
                 }
 
                 return (
@@ -312,19 +304,18 @@ export function Navigation({
                     {isHighlighted && (
                       <motion.span
                         layoutId="navPill"
-                        className={`absolute inset-0 rounded-full ${
-                          !isScrolled
-                            ? isActive
-                              ? "border border-white/30 bg-white/15 shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
-                              : "border border-white/20 bg-white/10"
-                            : theme === "light"
+                        className={`absolute inset-0 rounded-full ${!isScrolled
+                          ? isActive
+                            ? "border border-white/30 bg-white/15 shadow-[0_2px_12px_rgba(0,0,0,0.3)]"
+                            : "border border-white/20 bg-white/10"
+                          : theme === "light"
                             ? isActive
                               ? "border border-black/20 bg-black/[0.08] shadow-sm"
                               : "border border-black/10 bg-black/[0.04]"
                             : isActive
-                            ? "border border-white/20 bg-white/[0.1] shadow-sm"
-                            : "border border-white/10 bg-white/[0.04]"
-                        }`}
+                              ? "border border-white/20 bg-white/[0.1] shadow-sm"
+                              : "border border-white/10 bg-white/[0.04]"
+                          }`}
                         transition={{
                           type: "spring",
                           stiffness: 380,
@@ -355,8 +346,8 @@ export function Navigation({
                   !isScrolled
                     ? ["#ffffff", "#cba358", "#ffffff"]
                     : theme === "light"
-                    ? ["#020912", "#cba358", "#020912"]
-                    : ["#ffffff", "#cba358", "#ffffff"]
+                      ? ["#020912", "#cba358", "#020912"]
+                      : ["#ffffff", "#cba358", "#ffffff"]
                 }
                 fillOpacity={0}
                 style={{
@@ -365,13 +356,12 @@ export function Navigation({
               >
                 <button
                   onClick={() => setConnectOpen(!connectOpen)}
-                  className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border transition-all duration-500 focus:outline-none hover:text-gold px-6 py-2.5 ${
-                    !isScrolled
-                      ? "border-white/25 text-white hover:border-gold/50 bg-white/10"
-                      : theme === "light"
+                  className={`relative cursor-pointer text-[11px] tracking-[0.2em] uppercase flex items-center gap-2.5 rounded-full border transition-all duration-500 focus:outline-none hover:text-gold px-6 py-2.5 ${!isScrolled
+                    ? "border-white/25 text-white hover:border-gold/50 bg-white/10"
+                    : theme === "light"
                       ? "border-black/15 text-neutral-900 hover:border-gold/50 bg-black/[0.03]"
                       : "border-white/15 text-[#f4f1eb] hover:border-gold/50 bg-white/[0.04]"
-                  }`}
+                    }`}
                   style={{
                     background:
                       "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.02) 100%)",
@@ -402,8 +392,19 @@ export function Navigation({
                     initial="hidden"
                     animate="visible"
                     exit="exit"
-                    className="absolute right-0 top-full mt-3 min-w-[300px] z-50 rounded-2xl border border-border bg-cream-dark/95 backdrop-blur-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4),0_0_40px_rgba(197,168,128,0.02),inset_0_1px_1px_rgba(255,255,255,0.04)] p-2.5 flex flex-col gap-1 overflow-hidden"
+                    className="absolute right-0 top-full mt-3.5 min-w-[310px] z-50 rounded-2xl border border-[#c5a880]/35 bg-[#120e0b]/95 backdrop-blur-3xl shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_30px_rgba(197,168,128,0.15)] p-3 flex flex-col gap-1 overflow-hidden ring-1 ring-white/10"
                   >
+                    {/* Top inner gold hairline highlight */}
+                    <div className="bg-gradient-to-r from-transparent via-[#c5a880]/50 to-transparent h-px w-full absolute top-0 left-0" />
+
+                    {/* Section Header */}
+                    <div className="px-3 pt-1.5 pb-2 border-b border-[#c5a880]/15 mb-1 flex items-center justify-between">
+                      <span className="text-[8.5px] tracking-[0.3em] uppercase text-[#c5a880]/70 font-sans font-bold">
+                        Get In Touch
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#c5a880] animate-pulse" />
+                    </div>
+
                     {connectLinks.map((item) => (
                       <motion.a
                         key={item.label}
@@ -418,22 +419,22 @@ export function Navigation({
                             : undefined
                         }
                         onClick={() => setConnectOpen(false)}
-                        className="group flex items-center justify-between p-2.5 rounded-xl transition-all duration-300 hover:bg-foreground/[0.03] active:scale-[0.98]"
+                        className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl transition-all duration-300 hover:bg-[#c5a880]/[0.09] border border-transparent hover:border-[#c5a880]/25 active:scale-[0.98] cursor-pointer"
                       >
                         <div className="flex items-center gap-3.5">
-                          <div className="p-2.5 rounded-lg bg-foreground/[0.02] border border-border text-foreground/50 transition-all duration-300 group-hover:bg-gold/10 group-hover:border-gold/25 group-hover:text-gold group-hover:scale-105">
+                          <div className="p-2.5 rounded-xl bg-[#1c1612] border border-[#c5a880]/25 text-[#c5a880] transition-all duration-300 group-hover:bg-[#c5a880] group-hover:border-[#c5a880] group-hover:text-[#0d0907] group-hover:scale-105 shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
                             <item.icon className="w-4 h-4 transition-transform duration-300 group-hover:rotate-6" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-semibold tracking-[0.18em] uppercase font-sans text-foreground/70 group-hover:text-foreground transition-colors duration-300">
+                            <span className="text-[10.5px] font-bold tracking-[0.2em] uppercase font-sans text-[#f4f1eb] group-hover:text-[#ffffff] transition-colors duration-300">
                               {item.label}
                             </span>
-                            <span className="text-[9px] tracking-wide text-foreground/35 group-hover:text-foreground/55 transition-colors duration-300 mt-0.5 max-w-[170px] truncate">
+                            <span className="text-[9.5px] tracking-wide text-[#c5a880]/70 group-hover:text-[#c5a880] transition-colors duration-300 mt-0.5 max-w-[180px] truncate">
                               {item.subtitle}
                             </span>
                           </div>
                         </div>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-foreground/10 group-hover:text-foreground/50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0 ml-2" />
+                        <ArrowUpRight className="w-3.5 h-3.5 text-[#c5a880]/40 group-hover:text-[#c5a880] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0 ml-2" />
                       </motion.a>
                     ))}
                   </motion.div>
@@ -443,170 +444,197 @@ export function Navigation({
           </div>
 
           {/* ─── Mobile Right Actions ─── */}
-          <div className="lg:hidden flex items-center gap-2 z-50">
+          <div className={`lg:hidden flex items-center gap-2 z-50 transition-opacity duration-300 ${mobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
             {/* Mobile Hamburger */}
             <button
-              className={`w-10 h-10 flex flex-col justify-center items-center rounded-full border backdrop-blur-md active:scale-95 transition-all duration-300 ${
-                !isScrolled
-                  ? "border-white/25 bg-white/10 text-white"
+              className={`relative cursor-pointer text-[10px] tracking-[0.22em] uppercase font-sans font-semibold flex items-center gap-2 rounded-full border px-3.5 py-2 backdrop-blur-md active:scale-95 transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.3)] ${mobileOpen
+                ? "border-[#c5a880] text-[#c5a880] bg-[#c5a880]/15"
+                : !isScrolled
+                  ? "border-white/30 text-white bg-white/10 hover:border-gold/60"
                   : theme === "light"
-                  ? "border-black/15 bg-black/[0.03] text-neutral-900"
-                  : "border-white/15 bg-white/[0.04] text-[#f4f1eb]"
-              }`}
+                    ? "border-black/15 text-neutral-900 bg-black/[0.04] hover:border-gold/50"
+                    : "border-white/20 text-[#f4f1eb] bg-white/[0.06] hover:border-gold/50"
+                }`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle Menu"
             >
-              <span
-                className={`block w-5 h-[1.5px] transition-all duration-300 ${
-                  !isScrolled
-                    ? "bg-white"
-                    : theme === "light"
-                    ? "bg-neutral-900"
-                    : "bg-[#f4f1eb]"
-                } ${mobileOpen ? "rotate-45 translate-y-[1.5px]" : "mb-1.5"}`}
-              />
-              <span
-                className={`block w-5 h-[1.5px] transition-all duration-300 ${
-                  !isScrolled
-                    ? "bg-white"
-                    : theme === "light"
-                    ? "bg-neutral-900"
-                    : "bg-[#f4f1eb]"
-                } ${mobileOpen ? "-rotate-45 -translate-y-[1.5px]" : ""}`}
-              />
+              <span className="text-[9.5px] font-bold tracking-[0.2em]">MENU</span>
+              <div className="flex flex-col justify-center items-center w-3.5 h-3.5 gap-1 relative">
+                <span className="block w-3.5 h-[1.5px] rounded-full bg-current" />
+                <span className="block w-3.5 h-[1.5px] rounded-full bg-current" />
+              </div>
             </button>
           </div>
         </div>
       </motion.header>
 
-      {/* ─── Fullscreen Mobile Menu Drawer ─── */}
+      {/* ─── Floating Glass Mobile Menu Drawer ─── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            key="mobile-menu-scrim"
+            key="mobile-menu-wrapper"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9990]"
-          />
-        )}
-        {mobileOpen && (
-          <motion.div
-            key="mobile-menu-drawer"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 30, stiffness: 220 }}
-            style={{ zIndex: 9995 }}
-            className="fixed top-0 right-0 bottom-0 h-full w-full sm:w-[440px] md:w-[480px] bg-gradient-to-b from-background via-background-alt to-background-alt-2 border-l border-gold/15 backdrop-blur-2xl shadow-[0_0_60px_rgba(0,0,0,0.3)] p-0 flex flex-col overflow-hidden"
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[10000] flex justify-end"
           >
-            {/* Ambient Background Light Glows */}
-            <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[50%] rounded-full bg-gold/8 blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] rounded-full bg-gold/4 blur-[80px] pointer-events-none" />
+            {/* Scrim Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              onClick={() => setMobileOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            />
 
-            {/* Nav Links (padded at top to clear logo & animated close hamburger from header) */}
-            <nav className="relative z-10 flex-1 flex flex-col justify-center px-8 sm:px-12 gap-1 pt-[110px] pb-6">
+            {/* Sliding Glass Drawer Panel (Stuck Flush on Right Edge, Rounded on Left) */}
+            <motion.div
+              initial={{ x: "100%", opacity: 0.5 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              style={{ zIndex: 10005 }}
+              className="relative h-full w-[calc(100%-40px)] sm:w-[380px] max-w-[420px] bg-gradient-to-b from-[#110d0a]/98 via-[#0d0907]/98 to-[#080504]/99 border-l border-y border-[#c5a880]/35 border-r-0 rounded-l-[32px] rounded-r-none backdrop-blur-2xl shadow-[-20px_0_70px_rgba(0,0,0,0.9)] p-0 flex flex-col overflow-y-auto no-scrollbar overflow-x-hidden"
+            >
+              {/* Ambient Background Light Glows */}
+              <div className="absolute top-[-15%] left-[-15%] w-[80%] h-[50%] rounded-full bg-[#c5a880]/12 blur-[100px] pointer-events-none" />
+              <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[40%] rounded-full bg-[#c5a880]/6 blur-[80px] pointer-events-none" />
+
+              {/* Top Bar inside Drawer */}
               <motion.div
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 48, opacity: 0.5 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ delay: 0.1 }}
-                className="h-px bg-gold mb-6"
-              />
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center justify-between px-6 sm:px-8 pt-6 pb-4 border-b border-[#c5a880]/15 z-20 relative"
+              >
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/logo/logo.png"
+                    alt="Ms films"
+                    width={100}
+                    height={28}
+                    className="h-5 sm:h-6 w-auto object-contain brightness-100 logo"
+                  />
+                </div>
 
-              {links.map((link, i) => {
-                const sectionId = link.href.includes("#")
-                  ? link.href.split("#")[1]
-                  : link.href.replace("/", "");
-                const isActive = activeSection === sectionId;
-                return (
-                  <motion.div
-                    key={link.label}
-                    initial={{ opacity: 0, x: 25 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 25 }}
-                    transition={{
-                      delay: 0.05 + i * 0.06,
-                      duration: 0.4,
-                      ease: [0.16, 1, 0.3, 1]
-                    }}
-                  >
-                    <Link
-                      href={link.href}
-                      className={`relative block py-3 font-laluxes-serif text-4xl sm:text-5xl transition-all duration-300 hover:translate-x-4 flex items-center gap-3.5 ${isActive
-                        ? "text-gold font-medium"
-                        : "text-foreground/70 hover:text-gold"
-                        }`}
-                      onClick={(e) => {
-                        handleLinkClick(e, link.href);
-                        setMobileOpen(false);
+                {/* Close Button */}
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#c5a880]/40 bg-[#c5a880]/15 text-[#c5a880] hover:bg-[#c5a880] hover:text-[#0d0907] text-[9.5px] tracking-[0.2em] font-sans font-bold uppercase transition-all duration-300 active:scale-95 shadow-[0_2px_10px_rgba(0,0,0,0.4)] cursor-pointer"
+                  aria-label="Close Menu"
+                >
+                  <span>CLOSE</span>
+                  <span className="text-[11px] font-bold">✕</span>
+                </button>
+              </motion.div>
+
+              {/* Nav Links */}
+              <nav className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-8 gap-1 py-4">
+                {links.map((link, i) => {
+                  const sectionId = link.href.includes("#")
+                    ? link.href.split("#")[1]
+                    : link.href.replace("/", "");
+                  const isActive = activeSection === sectionId;
+                  return (
+                    <motion.div
+                      key={link.label}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{
+                        delay: 0.08 + i * 0.045,
+                        duration: 0.45,
+                        ease: [0.16, 1, 0.3, 1]
                       }}
                     >
-                      {isActive && (
-                        <motion.span
-                          layoutId="mobileActiveDot"
-                          className="w-2 h-2 rounded-full bg-gold shrink-0 shadow-[0_0_8px_rgba(197,168,128,0.8)]"
-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        />
-                      )}
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </nav>
+                      <Link
+                        href={link.href}
+                        className={`relative block py-2 sm:py-2.5 font-laluxes-serif text-2xl sm:text-3xl transition-all duration-300 hover:translate-x-2 flex items-center gap-3.5 group ${isActive
+                          ? "text-[#c5a880] font-semibold"
+                          : "text-[#f4f1eb]/75 hover:text-[#c5a880]"
+                          }`}
+                        onClick={(e) => {
+                          handleLinkClick(e, link.href);
+                          setMobileOpen(false);
+                        }}
+                      >
+                        <span className="font-sans text-[10px] sm:text-[11px] tracking-widest text-[#c5a880]/60 group-hover:text-[#c5a880] font-bold">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span>{link.label}</span>
+                        {isActive && (
+                          <motion.span
+                            layoutId="mobileActiveDot"
+                            className="w-1.5 h-1.5 rounded-full bg-[#c5a880] shrink-0 shadow-[0_0_8px_rgba(197,168,128,0.8)] ml-auto"
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                          />
+                        )}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </nav>
 
-            {/* Bottom: Social Links + Logo */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 15 }}
-              transition={{ delay: 0.25, duration: 0.4 }}
-              className="relative z-10 px-8 sm:px-12 pb-10 border-t border-border pt-8 space-y-6"
-            >
-              {/* Connect Label */}
-              <p className="text-[9px] tracking-[0.2em] uppercase text-foreground/30 font-sans font-medium">
-                Connect With Us
-              </p>
-
-              {/* Social icons row */}
-              <div className="flex flex-wrap gap-2.5">
-                {connectLinks.map((item) => (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    target={
-                      item.href.startsWith("http") ? "_blank" : undefined
-                    }
-                    rel={
-                      item.href.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    onClick={() => setMobileOpen(false)}
-                    className="group flex items-center gap-2.5 px-4.5 py-3 rounded-full border border-border bg-foreground/[0.03] text-foreground/70 hover:text-gold-light hover:border-gold/45 hover:bg-gold/[0.06] transition-all duration-300 text-[10px] tracking-[0.15em] uppercase font-sans font-medium active:scale-[0.97]"
-                  >
-                    <item.icon className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
-                    <span>{item.label}</span>
-                  </a>
-                ))}
-              </div>
-
-              {/* Logo */}
-              <div className="flex items-center justify-between border-t border-border pt-6">
-                <Image
-                  src={siteData.logo}
-                  alt={siteData.name}
-                  width={110}
-                  height={32}
-                  className="h-7 w-auto object-contain brightness-100 opacity-55 logo"
-                />
-                <p className="text-foreground/20 text-[9px] tracking-[0.15em] uppercase font-sans font-medium">
-                  {siteData.locationShort}
+              {/* Bottom: Quick Contact Actions + Social Links + Footer */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
+                className="relative z-10 px-6 sm:px-8 pb-6 border-t border-[#c5a880]/15 pt-5 space-y-4"
+              >
+                {/* Connect Label */}
+                <p className="text-[8.5px] tracking-[0.22em] uppercase text-[#c5a880]/70 font-sans font-bold">
+                  Connect With Us
                 </p>
-              </div>
+
+                {/* Direct Let's Connect Button inside Mobile Drawer */}
+                <a
+                  href="#contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full flex items-center justify-between px-4.5 py-2.5 rounded-full border border-[#c5a880]/40 bg-[#c5a880]/15 text-[#f4f1eb] hover:border-[#c5a880] text-[9.5px] tracking-[0.2em] uppercase font-sans font-semibold transition-all duration-300 active:scale-[0.98] shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
+                >
+                  <span>Let&apos;s Connect</span>
+                  <div className="w-4.5 h-4.5 rounded-full bg-[#c5a880] text-[#0d0907] flex items-center justify-center">
+                    <ArrowUpRight size={11} />
+                  </div>
+                </a>
+
+                {/* Social icons row */}
+                <div className="flex flex-wrap gap-1.5">
+                  {connectLinks.map((item) => (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      target={
+                        item.href.startsWith("http") ? "_blank" : undefined
+                      }
+                      rel={
+                        item.href.startsWith("http")
+                          ? "noopener noreferrer"
+                          : undefined
+                      }
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#c5a880]/20 bg-black/30 text-[#f4f1eb]/80 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300 text-[9px] tracking-[0.14em] uppercase font-sans font-medium active:scale-[0.97]"
+                    >
+                      <item.icon className="w-3 h-3 text-[#c5a880]" />
+                      <span>{item.label}</span>
+                    </a>
+                  ))}
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between border-t border-[#c5a880]/15 pt-3">
+                  <span className="text-[#c5a880]/70 text-[8.5px] tracking-[0.18em] uppercase font-sans font-bold">
+                    MS FILMS &copy; {new Date().getFullYear()}
+                  </span>
+                  <p className="text-[#f4f1eb]/30 text-[8px] tracking-[0.18em] uppercase font-sans font-medium">
+                    {siteData.locationShort}
+                  </p>
+                </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}

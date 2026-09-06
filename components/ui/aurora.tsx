@@ -96,22 +96,20 @@ void main() {
   
   vec3 rampColor;
   COLOR_RAMP(colors, uv.x, rampColor);
+
+  float amp = max(uAmplitude, 0.1);
+  float height = snoise(vec2(uv.x * (2.0 / amp) + uTime * 0.4, uTime * 0.2)) * 0.5 + 0.5;
+  float base = smoothstep(0.0, 1.0, uv.y);
+  float noise = snoise(vec2(uv.x * (4.0 / amp) + uTime * 0.6, uv.y * (2.5 / amp) + uTime * 0.4));
   
-  float height = snoise(vec2(uv.x * 2.0 + uTime * 0.1, uTime * 0.25)) * 0.5 * uAmplitude;
-  height = exp(height);
-  height = (uv.y * 2.0 - height + 0.2);
-  float intensity = 0.6 * height;
-  
-  float midPoint = 0.20;
-  float auroraAlpha = smoothstep(midPoint - uBlend * 0.5, midPoint + uBlend * 0.5, intensity);
-  
-  vec3 auroraColor = intensity * rampColor;
-  
-  fragColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
+  float aurora = smoothstep(height - 0.35, height + 0.35, uv.y + noise * 0.18) * (1.0 - base);
+
+  vec3 color = rampColor * aurora * uBlend;
+
+  fragColor = vec4(color, aurora * uBlend);
 }
 `;
 
-// Pre-parse hex color to RGB array — done ONCE, not every frame
 function hexToRgb(hex: string): [number, number, number] {
   const c = new Color(hex);
   return [c.r, c.g, c.b];
@@ -122,28 +120,27 @@ export interface AuroraProps {
   speed?: number;
   blend?: number;
   amplitude?: number;
+  className?: string;
 }
 
 export function Aurora(props: AuroraProps) {
-  const { colorStops = ['#5227FF', '#7cff67', '#5227FF'], amplitude = 1.0, blend = 0.5 } = props;
+  const { colorStops = ['#c5a880', '#d6b78a', '#5c4524'], amplitude = 1.0, blend = 0.5, speed = 0.8, className = '' } = props;
   const propsRef = useRef<AuroraProps>(props);
   propsRef.current = props;
 
   const ctnDom = useRef<HTMLDivElement | null>(null);
 
-  // Cache parsed color values — only recompute when colorStops prop changes
   const cachedColorsRef = useRef<{ key: string; value: [number, number, number][] } | null>(null);
 
   useEffect(() => {
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    // Limit DPR to reduce WebGL pixel fill on high-DPI screens
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: false, // Disable antialiasing — aurora is a soft gradient, AA is wasteful
-      dpr: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 1) : 1 // Cap at 1x DPR
+      antialias: false,
+      dpr: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 1) : 1
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -171,7 +168,6 @@ export function Aurora(props: AuroraProps) {
       delete geometry.attributes.uv;
     }
 
-    // Parse colors ONCE at init
     const initialColors = colorStops.map(hexToRgb);
 
     program = new Program(gl, {
@@ -189,7 +185,6 @@ export function Aurora(props: AuroraProps) {
     const mesh = new Mesh(gl, { geometry, program });
     ctn.appendChild(canvas);
 
-    // Pause WebGL rendering when offscreen
     let isVisible = true;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -199,29 +194,24 @@ export function Aurora(props: AuroraProps) {
     );
     observer.observe(ctn);
 
-    // Throttled render loop — aurora is a slow ambient effect, ~30fps is plenty
     let animateId = 0;
     let lastRenderTime = 0;
-    const FRAME_INTERVAL = 1000 / 30; // ~30fps cap
+    const FRAME_INTERVAL = 1000 / 30;
 
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
 
-      // Skip if not visible
       if (!isVisible) return;
 
-      // Throttle to ~30fps
       const delta = t - lastRenderTime;
       if (delta < FRAME_INTERVAL) return;
       lastRenderTime = t - (delta % FRAME_INTERVAL);
 
-      const { speed = 1.0 } = propsRef.current;
-      const timeVal = t * 0.01;
-      program.uniforms.uTime.value = timeVal * speed * 0.1;
+      const { speed = 0.8 } = propsRef.current;
+      program.uniforms.uTime.value = t * 0.001 * speed;
       program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
 
-      // Only re-parse colors if the prop array actually changed
       const stops = propsRef.current.colorStops ?? colorStops;
       const stopsKey = stops.join(',');
       if (!cachedColorsRef.current || cachedColorsRef.current.key !== stopsKey) {
@@ -244,10 +234,9 @@ export function Aurora(props: AuroraProps) {
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amplitude]);
+  }, [amplitude, blend]);
 
-  return <div ref={ctnDom} className="aurora-container" />;
+  return <div ref={ctnDom} className={`aurora-container relative w-full h-full pointer-events-none ${className}`} />;
 }
 
 export default Aurora;

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useCallback, useEffect, ReactNode, CSSProperties } from 'react';
 import './border-glow.css';
 
@@ -92,7 +94,7 @@ export default function BorderGlow({
   glowIntensity = 1.0,
   coneSpread = 25,
   animated = false,
-  colors = ['#c084fc', '#f472b6', '#38bdf8'],
+  colors = ['#c5a880', '#d6b78a', '#e5d5be'],
   fillOpacity = 0.5,
   style = {},
   onPointerMove,

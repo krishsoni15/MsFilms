@@ -211,10 +211,10 @@ export function AboutPhotographer() {
       {/* ── Aurora WebGL Background ── */}
       <div className="absolute inset-0 pointer-events-none opacity-80 z-0 select-none bg-[radial-gradient(circle_at_50%_20%,rgba(203,163,88,0.06)_0%,transparent_70%)] lg:bg-[radial-gradient(circle_at_15%_25%,rgba(203,163,88,0.1)_0%,transparent_60%),radial-gradient(circle_at_85%_35%,rgba(203,163,88,0.08)_0%,transparent_60%)] photographer-bg">
         <Aurora
-          colorStops={theme === "light" ? ["#b9c9d6", "#ebd5b0", "#f5f3ec"] : ["#081730", "#cba358", "#4e7bb0"]}
-          blend={isMobile ? 0.9 : 0.65}
-          amplitude={isMobile ? 0.65 : 1.25}
-          speed={0.45}
+          colorStops={theme === "light" ? ["#d6c5a8", "#ebd5b0", "#f5f3ec"] : ["#5c4524", "#c5a880", "#8B6914"]}
+          blend={isMobile ? 0.6 : 0.75}
+          amplitude={isMobile ? 0.8 : 1.2}
+          speed={0.6}
         />
       </div>
 

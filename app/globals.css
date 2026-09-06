@@ -571,3 +571,12 @@ body {
   mask-image: radial-gradient(circle at 50% 0%, #000 0vmax, transparent 25vmax);
   -webkit-mask-image: radial-gradient(circle at 50% 0%, #000 0vmax, transparent 25vmax);
 }
+
+/* Utility to hide scrollbars cleanly across browsers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

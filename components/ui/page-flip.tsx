@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, ReactNode } from "react";
+import React, { useState, useEffect, useRef, ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import "./page-flip.css";
@@ -10,6 +10,7 @@ interface PageFlipProps {
   width?: number; // Total book width on desktop
   height?: number; // Total book height on desktop
   className?: string;
+  activeSheetIndex?: number;
 }
 
 export default function PageFlip({
@@ -17,9 +18,10 @@ export default function PageFlip({
   width = 900,
   height = 550,
   className,
+  activeSheetIndex,
 }: PageFlipProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [currentFlipped, setCurrentFlipped] = useState(-1); // -1 means book is closed (cover is showing)
+  const [currentFlipped, setCurrentFlipped] = useState(-1); // -1 means book is closed (cover showing)
 
   // Dragging and Animation states
   const [draggedSheet, setDraggedSheet] = useState<number | null>(null);
@@ -29,6 +31,9 @@ export default function PageFlip({
   const dragDirection = useRef<"left" | "right" | null>(null);
   const dragStartTime = useRef(0);
   const isAnimatingRef = useRef(false);
+
+  // Track parent activeSheetIndex scroll changes without state conflicts
+  const lastParentIndexRef = useRef<number | undefined>(activeSheetIndex);
 
   // Group pages into sheets (front & back)
   const pages = React.Children.toArray(children);
@@ -43,18 +48,19 @@ export default function PageFlip({
     };
   });
 
-  // Programmatic Page Curl Transition (Handles snap back, clicks, and buttons)
+  // Programmatic Page Curl Transition (Handles snap back, clicks, buttons, and scroll)
   const animateToAngle = (
     sheetIdx: number,
     fromAngle: number,
     toAngle: number,
     finalFlipped: number,
-    direction: "left" | "right"
+    direction: "left" | "right",
+    isManual: boolean = false
   ) => {
     if (isAnimatingRef.current) return;
     isAnimatingRef.current = true;
 
-    const duration = 350; // ms transition time (snappy and fast)
+    const duration = 520; // ms transition time (luxurious and smooth)
     const startTime = performance.now();
 
     setDraggedSheet(sheetIdx);
@@ -64,7 +70,7 @@ export default function PageFlip({
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Ease out cubic for a natural swing
+      // Ease out cubic for a natural book page swing
       const ease = 1 - Math.pow(1 - progress, 3);
       const currentAngle = fromAngle + (toAngle - fromAngle) * ease;
 
@@ -85,7 +91,37 @@ export default function PageFlip({
     requestAnimationFrame(tick);
   };
 
+  // Synchronize scroll-driven activeSheetIndex with page-flip animation
+  useEffect(() => {
+    if (activeSheetIndex === undefined) return;
+
+    // Only respond if parent activeSheetIndex has actually changed to a NEW value from parent scroll
+    if (activeSheetIndex !== lastParentIndexRef.current) {
+      const targetIndex = activeSheetIndex;
+      lastParentIndexRef.current = targetIndex;
+
+      if (targetIndex !== currentFlipped && !isAnimatingRef.current && !isDragging) {
+        if (Math.abs(targetIndex - currentFlipped) > 1) {
+          // Fast scroll jump -> instant update
+          setCurrentFlipped(targetIndex);
+        } else if (targetIndex > currentFlipped) {
+          // Flip forward
+          animateToAngle(targetIndex, 0, -180, targetIndex, "left", false);
+        } else {
+          // Flip backward
+          animateToAngle(currentFlipped, -180, 0, targetIndex, "right", false);
+        }
+      }
+    }
+  }, [activeSheetIndex, currentFlipped, isDragging]);
+
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, sheetIdx: number) => {
+    // Ignore direct clicks on interactive elements (e.g. Inquiry links or buttons inside page)
+    const target = e.target as HTMLElement;
+    if (target.closest("a, button, input, [role='button']")) {
+      return;
+    }
+
     if (isAnimatingRef.current) return;
 
     const isTopLeft = sheetIdx === currentFlipped;
@@ -93,24 +129,25 @@ export default function PageFlip({
 
     if (!isTopLeft && !isTopRight) return;
 
-    // Detect if click is on the left side or right side of the book center
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const isClickOnLeft = x < rect.width / 2;
-
-    if (isClickOnLeft && sheetIdx !== currentFlipped) return;
-    if (!isClickOnLeft && sheetIdx !== currentFlipped + 1) return;
-
-    // Capture pointer events to track movement even outside the card boundary
-    e.currentTarget.setPointerCapture(e.pointerId);
+    // Capture pointer events to track movement across page boundaries
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (err) {}
 
     setIsDragging(true);
     setDraggedSheet(sheetIdx);
     dragStartX.current = e.clientX;
     dragStartTime.current = performance.now();
-    dragDirection.current = isClickOnLeft ? "right" : "left";
-    setDragAngle(sheetIdx === currentFlipped ? -180 : 0);
+
+    if (isTopLeft) {
+      // Clicked top left page -> ready to flip backward towards right
+      dragDirection.current = "right";
+      setDragAngle(-180);
+    } else {
+      // Clicked top right page -> ready to flip forward towards left
+      dragDirection.current = "left";
+      setDragAngle(0);
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>, sheetIdx: number) => {
@@ -120,12 +157,13 @@ export default function PageFlip({
     const deltaX = e.clientX - dragStartX.current;
     const halfWidth = rect.width / 2;
 
-    // Calculate rotation angle based on drag delta
     let angle = 0;
     if (dragDirection.current === "left") {
+      // Dragging right page to the left (0 to -180 deg)
       const pct = Math.max(0, Math.min(1, -deltaX / halfWidth));
       angle = pct * -180;
     } else {
+      // Dragging left page to the right (-180 to 0 deg)
       const pct = Math.max(0, Math.min(1, deltaX / halfWidth));
       angle = -180 + pct * 180;
     }
@@ -138,7 +176,7 @@ export default function PageFlip({
 
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) { }
+    } catch (err) {}
 
     setIsDragging(false);
 
@@ -146,51 +184,57 @@ export default function PageFlip({
     const elapsed = performance.now() - dragStartTime.current;
     const velocityX = deltaX / elapsed; // px/ms
 
-    const isClick = Math.abs(deltaX) < 10 && elapsed < 250; // brief, tiny movement is a click
-    const isSwipe = Math.abs(velocityX) > 0.25 && Math.abs(deltaX) > 30; // quick flicks are swipes
+    const isClick = Math.abs(deltaX) < 10 && elapsed < 350; // brief tap/click turns page
+    const isSwipe = Math.abs(velocityX) > 0.2 && Math.abs(deltaX) > 25; // quick swipe gesture
 
     if (isClick) {
-      // Tap/Click turns page
+      // Simple tap/click page turn
       if (sheetIdx === currentFlipped) {
-        // Clicked left page -> flip back (prev page)
-        animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right");
+        // Clicked left page -> flip backward
+        animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
       } else if (sheetIdx === currentFlipped + 1) {
-        // Clicked right page -> flip forward (next page)
-        animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left");
+        // Clicked right page -> flip forward
+        animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
       }
     } else if (isSwipe) {
-      // Swipe/Flick gesture: flip immediately in the flick's direction
+      // Fast swipe/flick gesture
       if (deltaX < 0) {
-        // Flicked left -> flip forward
+        // Swiped left -> flip forward
         if (currentFlipped < totalSheets - 1) {
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left");
+          const targetIdx = sheetIdx === currentFlipped ? currentFlipped + 1 : sheetIdx;
+          animateToAngle(targetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
         } else {
-          // Cancel/snap back to flat Y-axis
-          animateToAngle(sheetIdx, dragAngle, dragAngle < -90 ? -180 : 0, currentFlipped, dragAngle < -90 ? "left" : "right");
+          // Snap back
+          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped, "right", true);
         }
       } else {
-        // Flicked right -> flip backward
+        // Swiped right -> flip backward
         if (currentFlipped >= 0) {
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right");
+          const targetIdx = sheetIdx === currentFlipped + 1 ? currentFlipped : sheetIdx;
+          animateToAngle(targetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
         } else {
-          // Cancel/snap back to flat Y-axis
-          animateToAngle(sheetIdx, dragAngle, dragAngle < -90 ? -180 : 0, currentFlipped, dragAngle < -90 ? "left" : "right");
+          // Snap back
+          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped, "left", true);
         }
       }
     } else {
-      // Slow drag release: flip if dragged past 50% midpoint threshold
-      const threshold = -90; // midpoint angle
+      // Slow drag release: check if dragged past 50% midpoint (-90 deg)
+      const threshold = -90;
       if (dragDirection.current === "left") {
         if (dragAngle < threshold) {
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left");
+          // Dragged past 50% -> complete flip forward
+          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
         } else {
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped, "right");
+          // Snap back to 0 deg
+          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped, "right", true);
         }
       } else if (dragDirection.current === "right") {
         if (dragAngle > threshold) {
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right");
+          // Dragged past 50% -> complete flip backward
+          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
         } else {
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped, "left");
+          // Snap back to -180 deg
+          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped, "left", true);
         }
       }
     }
@@ -199,14 +243,14 @@ export default function PageFlip({
   const handlePrev = () => {
     if (isAnimatingRef.current || isDragging) return;
     if (currentFlipped >= 0) {
-      animateToAngle(currentFlipped, -180, 0, currentFlipped - 1, "right");
+      animateToAngle(currentFlipped, -180, 0, currentFlipped - 1, "right", true);
     }
   };
 
   const handleNext = () => {
     if (isAnimatingRef.current || isDragging) return;
     if (currentFlipped < totalSheets - 1) {
-      animateToAngle(currentFlipped + 1, 0, -180, currentFlipped + 1, "left");
+      animateToAngle(currentFlipped + 1, 0, -180, currentFlipped + 1, "left", true);
     }
   };
 
@@ -242,10 +286,11 @@ export default function PageFlip({
           width: "100%",
           maxWidth: `${width}px`,
           aspectRatio: "1.6 / 1",
+          touchAction: "pan-y",
         }}
       >
         <div className="book-viewport">
-          <div 
+          <div
             className={cn(
               "book-wrap w-full h-full",
               isDragging || isAnimatingRef.current ? "transition-none" : "transition-transform duration-[350ms] ease-out"
@@ -264,15 +309,18 @@ export default function PageFlip({
               // Calculate z-index stack height
               let zIndex = 0;
               if (isFlipped) {
-                // Flipped sheets stack upwards
+                // Flipped sheets stack upwards on left
                 zIndex = idx + 1;
               } else {
-                // Unflipped sheets stack downwards
+                // Unflipped sheets stack downwards on right
                 zIndex = totalSheets - idx;
               }
 
               // Active sheet currently being dragged or animated
               const isBeingDragged = draggedSheet === idx;
+              const isTopLeft = idx === currentFlipped;
+              const isTopRight = idx === currentFlipped + 1;
+              const isInteractive = isTopLeft || isTopRight;
 
               // Determine active rotation angle
               let rotation = isFlipped ? -180 : 0;
@@ -289,13 +337,15 @@ export default function PageFlip({
                   key={idx}
                   className={cn(
                     "sheet-el",
-                    isDragging && isBeingDragged ? "" : "transition-none", // Programmatic ease loops control movement
+                    isDragging && isBeingDragged ? "" : "transition-none",
                     isBeingDragged ? "flipping z-[200]" : ""
                   )}
                   style={{
                     zIndex: isBeingDragged ? 200 : zIndex,
                     transform: `rotateY(${rotation}deg)`,
-                    cursor: isDragging && isBeingDragged ? "grabbing" : (idx === currentFlipped || idx === currentFlipped + 1) ? "grab" : "default",
+                    cursor: isDragging && isBeingDragged ? "grabbing" : isInteractive ? "pointer" : "default",
+                    pointerEvents: isInteractive || isBeingDragged ? "auto" : "none",
+                    touchAction: "none",
                   }}
                   onPointerDown={(e) => handlePointerDown(e, idx)}
                   onPointerMove={(e) => handlePointerMove(e, idx)}
@@ -307,9 +357,10 @@ export default function PageFlip({
                     className="sheet-shadow"
                     style={{
                       opacity: shadowOpacity,
-                      background: dragDirection.current === "left"
-                        ? "linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)"
-                        : "linear-gradient(to left, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)"
+                      background:
+                        dragDirection.current === "left"
+                          ? "linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)"
+                          : "linear-gradient(to left, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 100%)",
                     }}
                   />
 
@@ -334,7 +385,7 @@ export default function PageFlip({
       </div>
 
       {/* Navigation Controls */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-6 z-40">
         <button
           onClick={handlePrev}
           disabled={currentFlipped < 0 || isAnimatingRef.current}
@@ -358,3 +409,5 @@ export default function PageFlip({
     </div>
   );
 }
+
+

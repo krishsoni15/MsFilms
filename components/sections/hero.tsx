@@ -179,9 +179,16 @@ export function Hero({
 
   /* Parallax scroll transforms */
   const { scrollY } = useScroll();
-  const heroScale = useTransform(scrollY, [0, 600], [1, 0.93]);
-  const heroRotateX = useTransform(scrollY, [0, 600], [0, -9]);
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 700], [1, 0.95]);
+  const heroY = useTransform(scrollY, [0, 700], [0, -60]);
+  const heroOpacity = useTransform(scrollY, [0, 550], [1, 0.15]);
+  const heroBlur = useTransform(scrollY, [0, 600], ["blur(0px)", "blur(6px)"]);
+
+  /* Multi-layered element parallax offsets */
+  const leftCardY = useTransform(scrollY, [0, 600], [0, -45]);
+  const rightCardY = useTransform(scrollY, [0, 600], [0, -75]);
+  const centerTextY = useTransform(scrollY, [0, 600], [0, -30]);
+  const bottomDeckY = useTransform(scrollY, [0, 600], [0, -95]);
 
   /* Trigger loaded state from parent (preloader) */
   useEffect(() => {
@@ -193,7 +200,7 @@ export function Hero({
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       setCategoryIndex((prev) => (prev + 1) % categories.length);
-    }, 5500);
+    }, 6500);
   }, []);
 
   useEffect(() => {
@@ -201,7 +208,7 @@ export function Hero({
     timeoutRef.current = setTimeout(() => {
       setCategoryIndex(1);
       startAutoPlay();
-    }, 7500);
+    }, 8500);
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -233,61 +240,81 @@ export function Hero({
       id="home"
       ref={containerRef}
       className="sticky top-0 w-full overflow-hidden h-screen lg:h-svh flex flex-col z-0"
-      style={{ backgroundColor: "#0c0806" }}
+      style={{ backgroundColor: "#0d0907" }}
     >
       <motion.div
         style={{
           scale: heroScale,
-          rotateX: isMobile ? 0 : heroRotateX,
-          transformPerspective: "1200px",
+          y: heroY,
           opacity: heroOpacity,
+          filter: heroBlur,
         }}
         className="relative w-full h-full flex flex-col overflow-hidden origin-bottom"
       >
         {/* ══════════════════════════════════════════════════════
-            BACKGROUND LAYERS
+            BACKGROUND LAYERS & SHADERS
             ══════════════════════════════════════════════════════ */}
 
-        {/* Layer 0: Background Image */}
+        {/* Layer 0 & 1: Synchronized Background Image + Vibe Shader Overlay */}
         <div className="absolute inset-0 z-0">
           <AnimatePresence mode="popLayout">
             <motion.div
-              key={`bg-${categoryIndex}`}
+              key={`bg-slide-${categoryIndex}`}
               initial={{ opacity: 0, scale: 1.05 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1.4, ease: "easeInOut" }}
+              transition={{ duration: 1.4, ease: [0.25, 1, 0.5, 1] }}
               className="absolute inset-0"
             >
+              {/* Background Image */}
               <Image
                 src={currentCategory.bgImage}
                 alt="Background"
                 fill
                 className="object-cover"
-                style={{ filter: "blur(6px)", transform: "scale(1.08)" }}
+                style={{ filter: "blur(3px) brightness(0.85) contrast(1.05) sepia(0.12) saturate(1.05)", transform: "scale(1.06)" }}
                 sizes="100vw"
-                quality={70}
+                quality={75}
                 priority={categoryIndex === 0}
+              />
+
+              {/* Synchronized Gold Light Leak Spotlight Shader */}
+              <div
+                className="absolute inset-0 pointer-events-none z-10"
+                style={{
+                  background:
+                    categoryIndex === 1
+                      ? "radial-gradient(ellipse 70% 60% at 50% 38%, rgba(215,195,160,0.28) 0%, rgba(155,135,105,0.12) 40%, rgba(11,10,12,0.4) 75%, rgba(8,7,9,0.65) 100%), linear-gradient(180deg, rgba(8,7,9,0.3) 0%, transparent 45%, rgba(8,7,9,0.6) 100%)"
+                      : categoryIndex === 2
+                        ? "radial-gradient(ellipse 70% 60% at 50% 38%, rgba(230,175,135,0.28) 0%, rgba(170,120,110,0.12) 40%, rgba(12,8,10,0.4) 75%, rgba(8,5,7,0.65) 100%), linear-gradient(180deg, rgba(8,5,7,0.3) 0%, transparent 45%, rgba(8,5,7,0.6) 100%)"
+                        : "radial-gradient(ellipse 70% 60% at 50% 38%, rgba(225,190,140,0.26) 0%, rgba(175,135,90,0.1) 40%, rgba(13,9,7,0.4) 75%, rgba(10,6,4,0.65) 100%), linear-gradient(180deg, rgba(10,6,4,0.3) 0%, transparent 45%, rgba(10,6,4,0.6) 100%)",
+                }}
               />
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Lightweight gradient for text readability without darkening background */}
+        {/* Layer 2: Soft Shimmering Vibe-Adaptive Gold Bloom Shader */}
         <div
-          className="absolute inset-0 z-[1] pointer-events-none"
+          className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[580px] h-[340px] rounded-full blur-[100px] pointer-events-none z-[2] animate-pulse"
           style={{
-            background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.4) 100%)",
+            background:
+              categoryIndex === 1
+                ? "radial-gradient(circle, rgba(225,210,185,0.22) 0%, rgba(185,160,125,0.1) 60%, transparent 100%)"
+                : categoryIndex === 2
+                  ? "radial-gradient(circle, rgba(240,190,160,0.22) 0%, rgba(200,140,120,0.1) 60%, transparent 100%)"
+                  : "radial-gradient(circle, rgba(235,215,185,0.2) 0%, rgba(197,168,128,0.1) 60%, transparent 100%)",
+            animationDuration: "6s",
           }}
         />
 
-        {/* Layer 4: Static film grain (NO animation) */}
+        {/* Layer 3: Subtle 35mm Film Grain Overlay (z-[40]) */}
         <div
-          className="absolute inset-0 pointer-events-none z-[4]"
+          className="absolute inset-0 pointer-events-none z-[40]"
           style={{
             backgroundImage: `url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)" opacity="0.03"/%3E%3C/svg%3E')`,
             backgroundRepeat: "repeat",
-            opacity: 0.55,
+            opacity: 0.35,
           }}
         />
 
@@ -296,15 +323,21 @@ export function Hero({
             ══════════════════════════════════════════════════════ */}
         <motion.div
           {...entrance(1.0)}
-          className="hidden lg:flex flex-col items-center gap-6 absolute left-5 xl:left-9 top-1/2 -translate-y-1/2 z-30"
+          className="hidden lg:flex flex-col items-center gap-4 absolute left-4 xl:left-9 top-1/2 -translate-y-1/2 z-30"
         >
+          {/* Top vertical accent line */}
+          <div className="w-px h-10 bg-gradient-to-b from-transparent to-[#c5a880]/40 mb-1" />
+
           {/* Vertical label */}
           <span
-            className="text-[#f4f1eb]/10 font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap font-light mb-4"
+            className="text-[#f4f1eb]/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-[#c5a880] transition-colors duration-300"
             style={{ writingMode: "vertical-rl" }}
           >
-            CINEMATIC&emsp;TIMELESS&emsp;YOURS
+            CINEMATIC&emsp;·&emsp;TIMELESS&emsp;·&emsp;YOURS
           </span>
+
+          {/* Vertical divider line */}
+          <div className="w-px h-6 bg-[#c5a880]/25 my-1" />
 
           {/* Category selectors */}
           <div className="flex flex-col items-center gap-4">
@@ -316,11 +349,11 @@ export function Hero({
                   onClick={() => handleCategoryClick(idx)}
                   className="flex flex-col items-center group focus:outline-none relative"
                 >
-                  {/* Floating label */}
+                  {/* Floating label with clean tracking and position safety */}
                   <span
-                    className={`absolute left-7 top-1/2 -translate-y-1/2 font-sans text-[7px] tracking-[0.3em] uppercase whitespace-nowrap transition-all duration-500 ${isActive
-                      ? "text-[#c5a880]/70 opacity-100 translate-x-0 font-semibold"
-                      : "text-[#f4f1eb]/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-[#f4f1eb]/25 group-hover:opacity-80 group-hover:translate-x-0"
+                    className={`absolute left-7.5 top-1/2 -translate-y-1/2 font-sans text-[7.5px] xl:text-[8px] tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-500 z-20 ${isActive
+                      ? "text-[#c5a880] opacity-100 translate-x-0 font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]"
+                      : "text-[#f4f1eb]/0 opacity-0 -translate-x-2 pointer-events-none group-hover:text-[#f4f1eb]/60 group-hover:opacity-100 group-hover:translate-x-0"
                       }`}
                   >
                     {cat.label}
@@ -329,7 +362,7 @@ export function Hero({
                   {/* Numbered node */}
                   <div className="relative flex items-center justify-center w-5 h-5">
                     <span
-                      className={`font-sans text-[9px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-[#c5a880] font-bold" : "text-[#f4f1eb]/15 group-hover:text-[#f4f1eb]/30"
+                      className={`font-sans text-[9px] tracking-wider transition-colors duration-500 z-10 ${isActive ? "text-[#c5a880] font-bold" : "text-[#f4f1eb]/40 group-hover:text-[#c5a880]"
                         }`}
                     >
                       {String(idx + 1).padStart(2, "0")}
@@ -337,7 +370,7 @@ export function Hero({
                     {isActive && (
                       <motion.div
                         layoutId="activeCatRing"
-                        className="absolute inset-0 rounded-full border border-[#c5a880]/20"
+                        className="absolute inset-0 rounded-full border border-[#c5a880]/40 shadow-[0_0_8px_rgba(197,168,128,0.2)]"
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                       />
                     )}
@@ -348,15 +381,15 @@ export function Hero({
           </div>
 
           {/* Scroll indicator */}
-          <div className="flex flex-col items-center gap-2 mt-4 pt-4 border-t border-[#f4f1eb]/[0.05] w-8">
-            <span className="text-[#f4f1eb]/10 font-sans text-[7px] tracking-[0.2em] uppercase">
+          <div className="flex flex-col items-center gap-2 mt-2 pt-3 border-t border-[#f4f1eb]/[0.08] w-8">
+            <span className="text-[#f4f1eb]/40 font-sans text-[7px] tracking-[0.22em] uppercase font-semibold">
               Scroll
             </span>
-            <div className="w-[16px] h-[26px] rounded-full border border-[#f4f1eb]/[0.07] flex justify-center p-1 relative overflow-hidden">
+            <div className="w-[16px] h-[26px] rounded-full border border-[#c5a880]/20 flex justify-center p-1 relative overflow-hidden">
               <motion.div
-                animate={{ y: [0, 6, 0], opacity: [0.2, 0.8, 0.2] }}
+                animate={{ y: [0, 6, 0], opacity: [0.3, 0.9, 0.3] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                className="w-[2px] h-[5px] rounded-full bg-[#c5a880]/50"
+                className="w-[2px] h-[5px] rounded-full bg-[#c5a880]"
               />
             </div>
           </div>
@@ -367,79 +400,93 @@ export function Hero({
             ══════════════════════════════════════════════════════ */}
         <motion.div
           {...entrance(1.1)}
-          className="hidden lg:flex flex-col items-center absolute right-5 xl:right-9 top-1/2 -translate-y-1/2 z-30"
+          className="hidden lg:flex flex-col items-center absolute right-4 xl:right-9 top-1/2 -translate-y-1/2 z-30"
         >
+          {/* Top vertical line */}
+          <div className="w-px h-12 bg-gradient-to-b from-transparent to-[#c5a880]/40 mb-4" />
           <span
-            className="text-[#f4f1eb]/10 font-sans text-[8px] tracking-[0.45em] uppercase whitespace-nowrap font-light"
+            className="text-[#f4f1eb]/55 font-sans text-[8.5px] tracking-[0.48em] uppercase whitespace-nowrap font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] hover:text-[#c5a880] transition-colors duration-300"
             style={{ writingMode: "vertical-rl" }}
           >
             SASKATOON&emsp;·&emsp;CANADA
           </span>
+          {/* Bottom vertical line */}
+          <div className="w-px h-12 bg-gradient-to-t from-transparent to-[#c5a880]/40 mt-4" />
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════
             MAIN CONTENT
             ══════════════════════════════════════════════════════ */}
-        <div className="relative flex-1 flex flex-col items-center justify-center z-10 px-5 lg:px-24 xl:px-32 pt-16 lg:pt-20">
-          <div className="relative w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center justify-center">
+        <div className="relative flex-1 flex flex-col items-center justify-center z-10 px-4 lg:px-12 xl:px-32 pt-8 lg:pt-9 xl:pt-20 min-[1920px]:pt-24 min-h-0">
+          <div className="relative w-full max-w-[1440px] min-[1920px]:max-w-[1800px] mx-auto flex-1 flex flex-col items-center justify-center">
 
             {/* ─── Left Tilted Image ─── */}
             <motion.div
               initial={{ opacity: 0, y: 50, rotate: -12 }}
-              animate={isLoaded ? { opacity: 1, y: 0, rotate: -8 } : {}}
+              animate={isLoaded ? { opacity: 1, y: 0, rotate: isMobile ? 0 : -7 } : {}}
               transition={{ duration: 1.3, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden lg:block absolute left-[-2%] xl:left-[0.5%] top-[13%] w-[200px] xl:w-[242px] 2xl:w-[268px] h-[280px] xl:h-[336px] 2xl:h-[368px] z-20"
-              style={{ transformOrigin: "center center" }}
+              className="hidden lg:block absolute left-[6%] lg:left-[7.5%] xl:left-[8%] 2xl:left-[8.5%] min-[1920px]:left-[8%] top-[14%] lg:top-[16%] xl:top-[14%] 2xl:top-[12%] min-[1920px]:top-[11%] w-[160px] lg:w-[175px] xl:w-[200px] 2xl:w-[240px] min-[1920px]:w-[310px] h-[250px] lg:h-[270px] xl:h-[310px] 2xl:h-[355px] min-[1920px]:h-[450px] z-20"
+              style={{ transformOrigin: "center center", y: leftCardY }}
             >
-              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.8)] ring-1 ring-[#c5a880]/[0.08]">
+              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-[#c5a880]/35">
                 <CrossfadeImage
                   src={currentCategory.leftImage}
                   alt="Left feature"
                   objectPosition={currentCategory.leftImagePosition}
                   priority
                 />
+                {/* Dark gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none z-10" />
                 {/* Gold inner frame */}
-                <div className="absolute inset-[5px] border border-[#c5a880]/20 pointer-events-none z-20 rounded-[3px]" />
-                {/* Label text */}
-                <div className="absolute bottom-3 left-3 z-30">
-                  <span className="text-[#f4f1eb]/45 font-sans text-[7px] tracking-[0.4em] uppercase leading-[2.2] whitespace-pre-line font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                <div className="absolute inset-[5px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-[3px]" />
+                {/* Label text with underline line */}
+                <div className="absolute bottom-4 left-4 z-30 flex flex-col items-start gap-1.5">
+                  <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                     {currentCategory.leftImageLabel}
                   </span>
+                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-[#c5a880] shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
                 </div>
                 {/* Warm tint overlay on image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#8B6914]/[0.06] to-transparent pointer-events-none z-10 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#8B6914]/[0.08] to-transparent pointer-events-none z-10 mix-blend-overlay" />
               </div>
             </motion.div>
 
             {/* ─── Right Tilted Image ─── */}
             <motion.div
               initial={{ opacity: 0, y: 50, rotate: 12 }}
-              animate={isLoaded ? { opacity: 1, y: 0, rotate: 8 } : {}}
+              animate={isLoaded ? { opacity: 1, y: 0, rotate: isMobile ? 0 : 7 } : {}}
               transition={{ duration: 1.3, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden lg:block absolute right-[-2%] xl:right-[0.5%] top-[9%] w-[200px] xl:w-[242px] 2xl:w-[268px] h-[300px] xl:h-[358px] 2xl:h-[390px] z-20"
-              style={{ transformOrigin: "center center" }}
+              className="hidden lg:block absolute right-[6%] lg:right-[7.5%] xl:right-[8%] 2xl:right-[8.5%] min-[1920px]:right-[8%] top-[11%] lg:top-[13%] xl:top-[11%] 2xl:top-[9%] min-[1920px]:top-[8%] w-[160px] lg:w-[175px] xl:w-[200px] 2xl:w-[240px] min-[1920px]:w-[310px] h-[265px] lg:h-[285px] xl:h-[325px] 2xl:h-[375px] min-[1920px]:h-[470px] z-20"
+              style={{ transformOrigin: "center center", y: rightCardY }}
             >
-              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.8)] ring-1 ring-[#c5a880]/[0.08]">
+              <div className="relative w-full h-full rounded-lg overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_35px_rgba(197,168,128,0.15)] ring-1 ring-[#c5a880]/35">
                 <CrossfadeImage
                   src={currentCategory.rightImage}
                   alt="Right feature"
                   objectPosition={currentCategory.rightImagePosition}
                 />
+                {/* Dark gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none z-10" />
                 {/* Gold inner frame */}
-                <div className="absolute inset-[5px] border border-[#c5a880]/20 pointer-events-none z-20 rounded-[3px]" />
-                {/* Label text */}
-                <div className="absolute top-3 right-3 z-30 text-right">
-                  <span className="text-[#f4f1eb]/45 font-sans text-[7px] tracking-[0.4em] uppercase leading-[2.2] whitespace-pre-line font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                <div className="absolute inset-[5px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-[3px]" />
+                {/* Label text with underline line */}
+                <div className="absolute bottom-4 right-4 z-30 flex flex-col items-end gap-1.5 text-right">
+                  <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9.5px] min-[1920px]:text-[11px] tracking-[0.35em] uppercase leading-[2.1] whitespace-pre-line font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                     {currentCategory.rightImageLabel}
                   </span>
+                  <div className="w-6 min-[1920px]:w-9 h-[2px] bg-[#c5a880] shadow-[0_1px_4px_rgba(0,0,0,0.8)]" />
                 </div>
                 {/* Warm tint overlay on image */}
-                <div className="absolute inset-0 bg-gradient-to-bl from-[#8B6914]/[0.06] to-transparent pointer-events-none z-10 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-bl from-[#8B6914]/[0.08] to-transparent pointer-events-none z-10 mix-blend-overlay" />
               </div>
             </motion.div>
 
             {/* ─── Center Text Content ─── */}
-            <div className="relative z-30 text-center max-w-[550px] mx-auto flex flex-col items-center">
+            <motion.div
+              {...entrance(0.2)}
+              style={{ y: centerTextY }}
+              className="relative z-30 text-center max-w-[560px] xl:max-w-[600px] 2xl:max-w-[660px] min-[1920px]:max-w-[820px] mx-auto flex flex-col items-center px-2"
+            >
               {/* Eyebrow */}
               <AnimatePresence mode="wait">
                 <motion.div
@@ -448,16 +495,40 @@ export function Hero({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="mb-3 lg:mb-4 flex flex-col items-center gap-2.5"
+                  className="mb-1.5 lg:mb-3 min-[1920px]:mb-4 flex flex-col items-center gap-2"
                 >
-                  <p className="text-[#c5a880]/50 font-sans text-[9px] lg:text-[10px] tracking-[0.35em] uppercase font-medium">
+                  <p className="text-[#c5a880]/90 font-sans text-[8.5px] lg:text-[9px] xl:text-[10px] min-[1920px]:text-[12px] tracking-[0.34em] lg:tracking-[0.38em] uppercase font-semibold drop-shadow-[0_1px_8px_rgba(197,168,128,0.3)]">
                     {currentCategory.eyebrow}
                   </p>
-                  <div className="w-[35px] h-px bg-[#c5a880]/35" />
+                  <div className="w-[38px] min-[1920px]:w-[50px] h-px bg-[#c5a880]/60" />
                 </motion.div>
               </AnimatePresence>
 
-              {/* Title */}
+              {/* ─── Mobile Arched Top Feature Image (Inspired by the-awans.com) ─── */}
+              <motion.div
+                key={`mob-arch-${categoryIndex}`}
+                initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="lg:hidden relative w-[165px] sm:w-[210px] h-[200px] sm:h-[250px] my-2 sm:my-3 rounded-t-[100px] sm:rounded-t-[120px] rounded-b-2xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_30px_rgba(197,168,128,0.2)] ring-1 ring-[#c5a880]/40 shrink-0 mx-auto"
+              >
+                <CrossfadeImage
+                  src={currentCategory.leftImage}
+                  alt={currentCategory.label}
+                  objectPosition={currentCategory.leftImagePosition}
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none z-10" />
+                <div className="absolute inset-[4px] border border-[#c5a880]/35 pointer-events-none z-20 rounded-t-[96px] sm:rounded-t-[116px] rounded-b-xl" />
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 text-center w-full px-2">
+                  <span className="text-[#f4f1eb] font-sans text-[8.5px] sm:text-[9.5px] tracking-[0.3em] uppercase leading-[1.6] font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                    {currentCategory.leftImageLabel}
+                  </span>
+                  <div className="w-6 h-[1.5px] bg-[#c5a880]" />
+                </div>
+              </motion.div>
+
+              {/* Title — Strictly 2 Lines with 5% Increase in Weight & Contrast */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`title-${categoryIndex}`}
@@ -465,15 +536,15 @@ export function Hero({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -15, filter: "blur(8px)" }}
                   transition={{ duration: 0.7, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
-                  className="mb-4 lg:mb-5"
+                  className="mb-3 lg:mb-4 xl:mb-5 min-[1920px]:mb-7"
                 >
                   <h1>
-                    <span className="block font-laluxes-serif font-medium tracking-[0.015em] text-[clamp(2.2rem,4.8vw,3.6rem)] leading-[1.12] text-[#f4f1eb]">
+                    <span className="block font-laluxes-serif font-semibold tracking-[0.02em] text-[clamp(1.75rem,3.1vw,4.4rem)] lg:text-[clamp(1.85rem,3.2vw,4.6rem)] xl:text-[clamp(2.1rem,3.3vw,4.8rem)] leading-[1.12] text-[#ffffff] whitespace-nowrap drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
                       {currentCategory.titleLine1}
                     </span>
-                    <span className="block font-laluxes-serif font-medium tracking-[0.015em] text-[clamp(2.2rem,4.8vw,3.6rem)] leading-[1.12] text-[#f4f1eb]">
+                    <span className="block font-laluxes-serif font-semibold tracking-[0.02em] text-[clamp(1.75rem,3.1vw,4.4rem)] lg:text-[clamp(1.85rem,3.2vw,4.6rem)] xl:text-[clamp(2.1rem,3.3vw,4.8rem)] leading-[1.12] text-[#ffffff] whitespace-nowrap drop-shadow-[0_4px_30px_rgba(0,0,0,0.85)]">
                       {currentCategory.titleLine2}{" "}
-                      <span className="font-laluxes-script text-[#c5a880] font-normal text-[1.15em] normal-case">
+                      <span className="font-laluxes-script text-[#d6b78a] font-medium text-[1.25em] xl:text-[1.28em] normal-case drop-shadow-[0_2px_22px_rgba(197,168,128,0.65)] inline-block">
                         {currentCategory.titleHighlight}
                       </span>
                     </span>
@@ -481,7 +552,7 @@ export function Hero({
                 </motion.div>
               </AnimatePresence>
 
-              {/* Description */}
+              {/* Description — Enhanced Legibility & Font Size */}
               <AnimatePresence mode="wait">
                 <motion.p
                   key={`desc-${categoryIndex}`}
@@ -489,26 +560,26 @@ export function Hero({
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
                   transition={{ duration: 0.5, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-                  className="text-[#f4f1eb]/55 font-sans font-normal text-[12px] lg:text-[13px] leading-[1.85] max-w-[390px] mb-6 lg:mb-7"
+                  className="text-[#f4f1eb]/85 font-sans font-medium text-[12.5px] lg:text-[13.5px] xl:text-[14px] min-[1920px]:text-[16.5px] leading-[1.75] xl:leading-[1.85] max-w-[390px] lg:max-w-[420px] min-[1920px]:max-w-[520px] mb-4 lg:mb-5 xl:mb-7 min-[1920px]:mb-9 drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
                 >
                   {currentCategory.description}
                 </motion.p>
               </AnimatePresence>
 
-              {/* CTA Buttons — Let's Connect Gold BorderGlow Button + Gold Underlined Explore Work Link */}
+              {/* CTA Buttons — Let's Connect Dark Luxury Pill Button + Gold Underlined Explore Work Link */}
               <motion.div
                 {...entrance(0.55)}
-                className="flex items-center justify-center gap-6 sm:gap-8 flex-wrap"
+                className="flex items-center justify-center gap-4 sm:gap-6 xl:gap-8 flex-wrap"
               >
-                {/* Let's Connect — Gold Pill Button with BorderGlow */}
+                {/* Let's Connect — Styled matching navbar's BorderGlow shimmer button */}
                 <BorderGlow
-                  edgeSensitivity={30}
-                  glowColor="40 85 80"
+                  edgeSensitivity={25}
+                  glowColor="35 85 75"
                   backgroundColor="transparent"
                   borderRadius={9999}
                   glowRadius={35}
-                  glowIntensity={0.4}
-                  coneSpread={35}
+                  glowIntensity={0.35}
+                  coneSpread={30}
                   animated={true}
                   colors={["#ffffff", "#cba358", "#ffffff"]}
                   fillOpacity={0}
@@ -516,78 +587,134 @@ export function Hero({
                 >
                   <a
                     href="#contact"
-                    className="group flex items-center gap-3 rounded-full pl-3.5 pr-6 py-2.5 sm:py-3 text-[11px] tracking-[0.18em] uppercase font-sans font-bold transition-all duration-300 text-black shadow-[0_6px_25px_rgba(197,168,128,0.3)] hover:shadow-[0_8px_35px_rgba(197,168,128,0.5)] hover:brightness-105 active:scale-[0.98]"
+                    className="group relative cursor-pointer text-[10.5px] xl:text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-semibold inline-flex items-center gap-3.5 rounded-full border border-white/20 hover:border-[#c5a880]/60 text-[#f4f1eb] hover:text-[#c5a880] transition-all duration-500 px-7 lg:px-8 min-[1920px]:px-10 py-3 min-[1920px]:py-4 shadow-[0_4px_25px_rgba(0,0,0,0.6)] backdrop-blur-md active:scale-[0.98]"
                     style={{
-                      background: "linear-gradient(135deg, #e3c79a 0%, #c5a880 50%, #9e825a 100%)",
+                      background:
+                        "linear-gradient(to bottom, rgba(197, 168, 128, 0.14) 0%, rgba(197, 168, 128, 0.02) 100%)",
                     }}
                   >
-                    <span className="w-6 h-6 rounded-full bg-black flex items-center justify-center text-[#c5a880] shrink-0 group-hover:scale-105 transition-transform duration-300">
-                      <MessageCircle size={11} className="text-[#c5a880]" />
-                    </span>
-                    Let&apos;s Connect
+                    <span className="relative z-10 font-sans font-medium">Let&apos;s Connect</span>
+                    <div className="relative z-10 flex items-center justify-center w-[22px] h-[22px] min-[1920px]:w-[26px] min-[1920px]:h-[26px] rounded-full bg-[#c5a880]/15 group-hover:bg-[#c5a880] border border-[#c5a880]/30 transition-all duration-300">
+                      <ArrowRight size={11} className="text-[#c5a880] group-hover:text-[#0d0907] group-hover:translate-x-0.5 transition-all duration-300 min-[1920px]:w-3.5 min-[1920px]:h-3.5" />
+                    </div>
                   </a>
                 </BorderGlow>
 
-                {/* Explore Work — Gold Underlined Link */}
+                {/* Explore Work — Gold Underlined Link like before */}
                 <a
                   href="/work"
-                  className="relative inline-flex items-center text-[11px] tracking-[0.22em] uppercase font-sans font-bold text-[#f4f1eb] hover:text-[#c5a880] py-1.5 border-b-2 border-[#c5a880] hover:border-[#e5d5be] transition-colors duration-300"
+                  className="relative inline-flex items-center text-[11px] min-[1920px]:text-[12.5px] tracking-[0.22em] uppercase font-sans font-bold text-[#f4f1eb] hover:text-[#c5a880] py-1.5 border-b-2 border-[#c5a880] hover:border-[#e5d5be] transition-colors duration-300"
                 >
                   Explore Work
                 </a>
               </motion.div>
-            </div>
 
-            {/* ─── Mobile Category Selectors ─── */}
-            <motion.div
-              {...entrance(0.9)}
-              className="lg:hidden mt-7 w-full max-w-sm mx-auto"
-            >
-              <div className="flex items-center justify-center gap-5 border-t border-[#f4f1eb]/[0.05] pt-4">
-                {categories.map((cat, idx) => {
-                  const isActive = categoryIndex === idx;
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => handleCategoryClick(idx)}
-                      className="flex flex-col items-center gap-1 group focus:outline-none"
-                    >
-                      <span
-                        className={`font-sans text-[9px] tracking-[0.25em] uppercase transition-colors duration-300 ${isActive ? "text-[#c5a880] font-medium" : "text-[#f4f1eb]/25"
+              {/* ─── Mobile Category Segment Controller Bar ─── */}
+              <motion.div
+                {...entrance(0.75)}
+                className="lg:hidden mt-4 sm:mt-5 w-full max-w-[340px] sm:max-w-md mx-auto z-30 relative px-1"
+              >
+                <div className="flex items-center justify-between bg-black/50 backdrop-blur-xl border border-[#c5a880]/30 rounded-full p-1 shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
+                  {categories.map((cat, idx) => {
+                    const isActive = categoryIndex === idx;
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => handleCategoryClick(idx)}
+                        className={`relative flex-1 flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-full text-[9px] sm:text-[10px] tracking-[0.16em] uppercase font-sans font-semibold transition-all duration-300 focus:outline-none ${isActive ? "text-[#0d0907]" : "text-[#f4f1eb]/60 hover:text-[#f4f1eb]"
                           }`}
                       >
-                        {cat.label}
-                      </span>
-                      <div className="h-[1.5px] w-full relative mt-0.5">
-                        {isActive ? (
+                        {isActive && (
                           <motion.div
-                            layoutId="activeIndicatorMobileLine"
-                            className="absolute inset-0 bg-[#c5a880]"
-                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                            layoutId="activeCatPillMobile"
+                            className="absolute inset-0 bg-[#c5a880] rounded-full shadow-[0_2px_12px_rgba(197,168,128,0.5)]"
+                            transition={{ type: "spring", stiffness: 350, damping: 30 }}
                           />
-                        ) : (
-                          <div className="absolute inset-0 bg-transparent group-hover:bg-[#f4f1eb]/10 transition-colors duration-300" />
                         )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
+                        <span className={`relative z-10 font-bold ${isActive ? "text-[#0d0907]" : "text-[#c5a880]/75"}`}>
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <span className="relative z-10 truncate">{cat.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+
+              {/* ─── Mobile Staggered Overlapping Film Photo Cards (Inspired by the-awans.com) ─── */}
+              <motion.div
+                {...entrance(0.9)}
+                className="lg:hidden mt-4 sm:mt-5 w-full max-w-[340px] sm:max-w-md mx-auto z-30 relative px-2 flex justify-center items-center pb-2"
+              >
+                <div className="relative w-[280px] sm:w-[320px] h-[115px] sm:h-[135px] flex items-center justify-center">
+                  {/* Card 1: Polaroid Frame (Left/Top) */}
+                  <motion.div
+                    key={`mob-pol-${currentCategory.id}`}
+                    initial={{ opacity: 0, x: -20, rotate: -6 }}
+                    animate={{ opacity: 1, x: 0, rotate: -4 }}
+                    transition={{ duration: 0.7, delay: 0.1 }}
+                    className="absolute left-2 sm:left-4 top-0 w-[145px] sm:w-[170px] h-[100px] sm:h-[118px] bg-white p-1.5 rounded-sm shadow-[0_15px_35px_rgba(0,0,0,0.85)] z-20 border border-white/80"
+                  >
+                    <div className="relative w-full h-[78px] sm:h-[94px] overflow-hidden rounded-[1px]">
+                      <Image
+                        src={currentCategory.bottomCards[0].image}
+                        alt={currentCategory.bottomCards[0].label}
+                        fill
+                        className="object-cover"
+                        sizes="170px"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                      <span className="absolute bottom-1 left-1.5 text-white text-[7.5px] font-sans tracking-widest font-bold uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                        {currentCategory.bottomCards[0].label}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between px-1 pt-1">
+                      <span className="text-[#0d0907] font-serif text-[7.5px] font-semibold tracking-wider">MS FILMS</span>
+                      <span className="text-[#8b6914] font-sans text-[7px] font-bold">01</span>
+                    </div>
+                  </motion.div>
+
+                  {/* Card 2: Film Shot (Right/Bottom Overlapping) */}
+                  <motion.div
+                    key={`mob-film-${currentCategory.id}`}
+                    initial={{ opacity: 0, x: 20, rotate: 6 }}
+                    animate={{ opacity: 1, x: 0, rotate: 5 }}
+                    transition={{ duration: 0.7, delay: 0.2 }}
+                    className="absolute right-2 sm:right-4 bottom-0 w-[140px] sm:w-[165px] h-[95px] sm:h-[112px] rounded-lg overflow-hidden shadow-[0_20px_45px_rgba(0,0,0,0.9)] z-10 border border-[#c5a880]/40 ring-1 ring-black/50"
+                  >
+                    <Image
+                      src={currentCategory.bottomCards[1]?.image || currentCategory.rightImage}
+                      alt={currentCategory.bottomCards[1]?.label || "Film"}
+                      fill
+                      className="object-cover"
+                      sizes="165px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between z-10">
+                      <span className="text-[#c5a880] text-[8px] font-bold">02</span>
+                      <span className="text-[#f4f1eb] text-[7.5px] tracking-wider uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                        {currentCategory.bottomCards[1]?.label || "MOMENTS"}
+                      </span>
+                    </div>
+                  </motion.div>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
 
           {/* ─── Bottom Category Strip (Desktop) ─── */}
           <motion.div
             {...entrance(0.75)}
-            className="hidden lg:flex items-end justify-center gap-4 xl:gap-6 w-full max-w-[860px] xl:max-w-[950px] mx-auto pb-4 xl:pb-5 z-30 relative -mt-2 xl:-mt-3"
+            style={{ y: bottomDeckY }}
+            className="hidden lg:flex items-end justify-center gap-3 xl:gap-6 w-full max-w-[820px] xl:max-w-[950px] min-[1920px]:max-w-[1200px] mx-auto pb-1 xl:pb-5 min-[1920px]:pb-8 z-30 relative mt-0 lg:mt-1 xl:-mt-3 min-[1920px]:-mt-4"
           >
             {currentCategory.bottomCards.map((card) => (
               <div
                 key={`${currentCategory.id}-${card.num}`}
-                className="group flex-1 max-w-[285px] xl:max-w-[310px]"
+                className="group flex-1 max-w-[285px] xl:max-w-[310px] min-[1920px]:max-w-[380px]"
               >
-                {/* Thumbnail */}
-                <div className="relative w-full h-[118px] xl:h-[136px] 2xl:h-[148px] rounded-md overflow-hidden mb-2.5 border border-[#f4f1eb]/[0.06] group-hover:border-[#c5a880]/20 transition-all duration-400 shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
+                {/* Thumbnail card with label row INSIDE image */}
+                <div className="relative w-full h-[105px] lg:h-[128px] xl:h-[136px] 2xl:h-[148px] min-[1920px]:h-[185px] rounded-md overflow-hidden border border-[#c5a880]/25 group-hover:border-[#c5a880]/60 transition-all duration-400 shadow-[0_12px_35px_rgba(0,0,0,0.7)]">
                   <AnimatePresence mode="popLayout">
                     <motion.div
                       key={`card-${currentCategory.id}-${card.num}`}
@@ -608,20 +735,24 @@ export function Hero({
                       />
                     </motion.div>
                   </AnimatePresence>
-                  {/* Subtle dark overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
-                </div>
-                {/* Label row */}
-                <div className="flex items-center gap-2">
-                  <span className="text-[#c5a880]/45 font-sans text-[9.5px] tracking-wider font-semibold">
-                    {card.num}
-                  </span>
-                  <div className="flex-1 h-px bg-[#f4f1eb]/[0.06]" />
-                  <div className="flex items-center gap-1">
-                    <span className="text-[#f4f1eb]/50 font-sans text-[8.5px] tracking-[0.2em] uppercase font-medium">
-                      {card.label}
-                    </span>
-                    <ArrowRight size={9} className="text-[#f4f1eb]/25 group-hover:text-[#c5a880] group-hover:translate-x-0.5 transition-all duration-300" />
+
+                  {/* Dark gradient overlay for text readability inside image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent pointer-events-none z-10" />
+
+                  {/* Label row INSIDE the image container at bottom */}
+                  <div className="absolute bottom-2.5 left-3 right-3 z-20 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[#c5a880] font-sans text-[10px] tracking-wider font-bold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+                        {card.num}
+                      </span>
+                      <div className="w-6 xl:w-10 h-px bg-[#c5a880]/50 group-hover:bg-[#c5a880] transition-colors duration-300" />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[#f4f1eb] font-sans text-[8.5px] xl:text-[9px] tracking-[0.22em] uppercase font-semibold drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] group-hover:text-[#c5a880] transition-colors duration-300">
+                        {card.label}
+                      </span>
+                      <ArrowRight size={10} className="text-[#c5a880] group-hover:translate-x-1 transition-transform duration-300" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -632,36 +763,36 @@ export function Hero({
         {/* ══════════════════════════════════════════════════════
             BOTTOM BAR
             ══════════════════════════════════════════════════════ */}
-        <div className="relative z-30 w-full flex items-end justify-center px-5 lg:px-8 pb-4 lg:pb-5">
-          {/* Center Tagline */}
+        <div className="relative z-30 w-full flex items-end justify-center px-5 lg:px-8 pb-1 lg:pb-3 xl:pb-5">
+          {/* Center Tagline with gold lines */}
           <motion.div
             {...entrance(1.2)}
-            className="hidden lg:flex items-center gap-3"
+            className="hidden lg:flex items-center gap-4"
           >
-            <div className="w-7 h-px bg-[#c5a880]/20" />
-            <span className="text-[#f4f1eb]/12 font-sans text-[8px] tracking-[0.35em] uppercase whitespace-nowrap font-medium">
+            <div className="w-14 xl:w-20 h-px bg-gradient-to-r from-transparent to-[#c5a880]/40" />
+            <span className="text-[#f4f1eb]/35 font-sans text-[8px] xl:text-[8.5px] tracking-[0.38em] uppercase whitespace-nowrap font-medium">
               Frames Today&emsp;·&emsp;Memories Forever
             </span>
-            <div className="w-7 h-px bg-[#c5a880]/20" />
+            <div className="w-14 xl:w-20 h-px bg-gradient-to-l from-transparent to-[#c5a880]/40" />
           </motion.div>
 
           {/* Social Icons — absolute bottom-right */}
           <motion.div
             {...entrance(1.3)}
-            className="hidden lg:flex flex-col items-center gap-2 absolute right-5 xl:right-9 bottom-5"
+            className="hidden lg:flex flex-col items-center gap-2.5 absolute right-5 xl:right-9 bottom-5"
           >
             <a
               href="https://www.instagram.com/msfilms._/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/[0.05] flex items-center justify-center text-[#f4f1eb]/25 hover:text-[#c5a880] hover:border-[#c5a880]/20 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
               aria-label="Instagram"
             >
               <InstagramIcon className="w-2.5 h-2.5" />
             </a>
             <a
               href="#"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/[0.05] flex items-center justify-center text-[#f4f1eb]/25 hover:text-[#c5a880] hover:border-[#c5a880]/20 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
               aria-label="YouTube"
             >
               <YouTubeIcon className="w-2.5 h-2.5" />
@@ -670,7 +801,7 @@ export function Hero({
               href="https://wa.me/1234567890"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/[0.05] flex items-center justify-center text-[#f4f1eb]/25 hover:text-[#c5a880] hover:border-[#c5a880]/20 transition-all duration-300"
+              className="w-[24px] h-[24px] rounded-full border border-[#f4f1eb]/15 flex items-center justify-center text-[#f4f1eb]/40 hover:text-[#c5a880] hover:border-[#c5a880]/40 transition-all duration-300"
               aria-label="WhatsApp"
             >
               <WhatsAppIcon className="w-2.5 h-2.5" />

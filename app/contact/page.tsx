@@ -3,11 +3,9 @@
 import { motion } from "framer-motion";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { Services } from "@/components/sections/services";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { Contact } from "@/components/sections/contact";
 
-export default function ServicesPage() {
+export default function ContactPage() {
   return (
     <>
       <Navigation isParentLoaded={true} />
@@ -18,14 +16,14 @@ export default function ServicesPage() {
 
         <div className="flex-grow">
           {/* Header */}
-          <div className="relative z-10 text-center px-6 pt-12 pb-8 max-w-4xl mx-auto">
+          <div className="relative z-10 text-center px-6 pt-12 pb-6 max-w-4xl mx-auto">
             <motion.span
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 0.8, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="font-sans text-[10px] md:text-[11px] tracking-[0.4em] text-gold font-bold uppercase mb-3 block"
             >
-              Custom Production Offerings
+              Start A Conversation
             </motion.span>
 
             <motion.h1
@@ -34,36 +32,20 @@ export default function ServicesPage() {
               transition={{ duration: 0.8, delay: 0.3 }}
               className="font-serif text-4xl md:text-6xl lg:text-7xl text-foreground font-normal uppercase tracking-tight mb-4"
             >
-              Services & Pricing
+              Contact Studio
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 0.5, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="font-sans text-xs md:text-sm text-foreground/60 max-w-lg mx-auto leading-relaxed mb-8"
+              className="font-sans text-xs md:text-sm text-foreground/60 max-w-lg mx-auto leading-relaxed"
             >
-              Tailored cinematic photography, 4K videography, aerial flight, and architectural media for high-end clients across Saskatchewan & Canada.
+              Tell us about your story, upcoming date, or project vision. We respond to all inquiries within 24 hours.
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex justify-center"
-            >
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 border border-gold/40 hover:border-gold bg-gold/10 hover:bg-gold/20 text-gold px-6 py-3 text-[10px] tracking-[0.25em] uppercase font-sans font-semibold rounded transition-all duration-300 shadow-md"
-              >
-                <span>Request Custom Quote</span>
-                <ArrowUpRight size={14} />
-              </a>
-            </motion.div>
           </div>
 
-          {/* Detailed Services Component */}
-          <Services />
+          <Contact />
         </div>
 
         <Footer />

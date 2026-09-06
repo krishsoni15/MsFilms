@@ -198,18 +198,20 @@ main.sphere-main {
 
 /* ─── Work Intro Background Specific Customizations ─── */
 .work-bg-dome .item__image {
-  opacity: 0.16;
+  opacity: 0.55;
+  transition: opacity 400ms ease, transform 400ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 400ms ease;
 }
 
 .work-bg-dome .item__image:hover {
   opacity: 1;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(197, 168, 128, 0.5);
 }
 
 .item__image:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(197, 168, 128, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(197, 168, 128, 0.5);
 }
 
 .item__image:hover img {
-  transform: scale(1.15);
+  transform: scale(1.1);
   filter: none;
 }

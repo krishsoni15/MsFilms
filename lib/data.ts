@@ -12,6 +12,7 @@ export const siteData = {
   email: "contactus.msfilms@gmail.com",
   social: {
     instagram: "https://www.instagram.com/msfilms._/",
+    whatsapp: "https://wa.me/?text=Hello%20MS%20Films!%20I'm%20interested%20in%20inquiring%20about%20your%20photography%20%26%20videography%20services.",
   },
   booking: "2026 — 2027",
   bookingBadge: "Now Booking 2026 – 2027",

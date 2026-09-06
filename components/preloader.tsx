@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ShinyText from "@/components/ui/ShinyText";
 
 const IMAGES_TO_PRELOAD = [
@@ -11,8 +11,6 @@ const IMAGES_TO_PRELOAD = [
   "/wedding/1_3.png",
   "/wedding/1_4.png",
   "/wedding/1_5.png",
-  "/wedding/imgi_2_2.png",
-  "/me/imgi_36_625043456_18087932393515848_4263036374454868947_n.jpg",
 ];
 
 export function Preloader({
@@ -24,34 +22,13 @@ export function Preloader({
 }) {
   const [progress, setProgress] = useState(0);
   const [animatedProgress, setAnimatedProgress] = useState(0);
-  const [isReady, setIsReady] = useState(false);
-
-  // Custom states for the mask reveal transitions
-  const [startMask, setStartMask] = useState(false);
-  const [logoFadeOut, setLogoFadeOut] = useState(false);
-  const [maxRadius, setMaxRadius] = useState(1200);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const [isLightMode, setIsLightMode] = useState(false);
 
-  // Measure screen diagonal to calculate exact radius needed to cover the viewport
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsLightMode(document.documentElement.classList.contains("light"));
-      const handleResize = () => {
-        const diag = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2);
-        setMaxRadius(diag / 2 + 100); // add safety padding
-      };
-      handleResize();
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
     }
-  }, []);
-
-  // Lock scrolling when mounting
-  useEffect(() => {
-    document.documentElement.classList.add("preloader-active");
-    return () => {
-      document.documentElement.classList.remove("preloader-active");
-    };
   }, []);
 
   // Preload logic
@@ -64,13 +41,7 @@ export function Preloader({
       return;
     }
 
-    const handleImageLoad = () => {
-      loadedCount++;
-      setProgress((loadedCount / totalCount) * 100);
-    };
-
-    const handleImageError = () => {
-      // Treat errors as loaded to prevent getting stuck
+    const handleLoad = () => {
       loadedCount++;
       setProgress((loadedCount / totalCount) * 100);
     };
@@ -78,15 +49,22 @@ export function Preloader({
     imagesToPreload.forEach((src) => {
       const img = new Image();
       img.src = src;
-      img.onload = handleImageLoad;
-      img.onerror = handleImageError;
+      img.onload = handleLoad;
+      img.onerror = handleLoad;
     });
+
+    // Fallback timer to ensure preloader never gets stuck
+    const fallback = setTimeout(() => {
+      setProgress(100);
+    }, 600);
+
+    return () => clearTimeout(fallback);
   }, [imagesToPreload]);
 
-  // Smooth progress animation & minimum duration enforcement (400ms)
+  // Smooth progress animation & completion trigger
   useEffect(() => {
     const startTime = Date.now();
-    const minDuration = 400; // Snappy 400ms minimum duration so loading feels fast
+    const minDuration = 450; // Snappy 450ms minimum duration for ultra fast load
     let animationFrameId: number;
 
     const tick = () => {
@@ -95,129 +73,77 @@ export function Preloader({
       setAnimatedProgress((prev) => {
         const target = progress;
         const diff = target - prev;
-
-        // Easing interpolation
-        let step = diff * 0.16;
-        if (step > 0 && step < 0.8) step = 0.8;
-
+        const step = Math.max(diff * 0.2, 1);
         const nextValue = Math.min(prev + step, target);
 
-        if (nextValue >= 99.9 && elapsedTime >= minDuration) {
-          setIsReady(true);
+        if (nextValue >= 99.5 && elapsedTime >= minDuration) {
+          setIsFadingOut(true);
           return 100;
         }
 
         return nextValue;
       });
 
-      if (!isReady) {
+      if (!isFadingOut) {
         animationFrameId = requestAnimationFrame(tick);
       }
     };
 
     animationFrameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [progress, isReady]);
+  }, [progress, isFadingOut]);
 
-  // Complete preloading transition: logo fades out first, then mask expands
+  // Call onComplete after fade out transition completes
   useEffect(() => {
-    if (isReady) {
-      // Step 1: Fade out the logo text quickly
-      const logoTimer = setTimeout(() => {
-        setLogoFadeOut(true);
-      }, 100);
-
-      // Step 2: Trigger mask expansion snappy reveal
-      const maskTimer = setTimeout(() => {
-        setStartMask(true);
-      }, 350);
-
-      // Step 3: Complete transition and unmount
-      const completeTimer = setTimeout(() => {
+    if (isFadingOut) {
+      const timer = setTimeout(() => {
         onComplete();
-      }, 1100); // 350ms delay + 750ms mask expansion animation duration
-
-      return () => {
-        document.documentElement.classList.remove("preloader-active");
-        clearTimeout(logoTimer);
-        clearTimeout(maskTimer);
-        clearTimeout(completeTimer);
-      };
+      }, 500);
+      return () => clearTimeout(timer);
     }
-  }, [isReady, onComplete]);
+  }, [isFadingOut, onComplete]);
 
   return (
     <motion.div
       id="preloader"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4, ease: "easeInOut" }}
-      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center select-none overflow-hidden pointer-events-none"
+      initial={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+      animate={
+        isFadingOut
+          ? { opacity: 0, scale: 1.03, filter: "blur(10px)" }
+          : { opacity: 1, scale: 1, filter: "blur(0px)" }
+      }
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[99999] flex flex-col items-center justify-center select-none overflow-hidden"
       style={{
-        backgroundColor: isLightMode ? "#f5f2eb" : "#020912"
+        backgroundColor: isLightMode ? "#fdfcf9" : "#0d0907",
       }}
     >
-      {/* SVG Mask Background - creates a feathered circular camera iris cutout reveal */}
-      <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
-        <svg className="w-full h-full" width="100%" height="100%">
-          <defs>
-            {/* Soft feather filter for the circle edge */}
-            <filter id="mask-feather-blur">
-              <feGaussianBlur stdDeviation="40" />
-            </filter>
-            <mask id="preloader-reveal-mask">
-              {/* White area represents visible background */}
-              <rect width="100%" height="100%" fill="white" />
-              {/* Black circle cutout with standard blur filter for premium feathered edge */}
-              <motion.circle
-                cx="50%"
-                cy="50%"
-                initial={{ r: 0 }}
-                animate={startMask ? { r: maxRadius } : { r: 0 }}
-                transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-                fill="black"
-                filter="url(#mask-feather-blur)"
-              />
-            </mask>
-          </defs>
-          {/* background rect that gets masked and fades out gently for ultimate smoothness */}
-          <motion.rect
-            width="100%"
-            height="100%"
-            fill={isLightMode ? "#f5f2eb" : "#020912"}
-            mask="url(#preloader-reveal-mask)"
-            animate={startMask ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: 0.75, ease: "easeInOut" }}
+      {/* Background ambient spotlight glow */}
+      <div className="absolute inset-0 bg-radial-[circle_at_center,rgba(197,168,128,0.12)_0%,transparent_60%] pointer-events-none" />
+
+      {/* Brand Logo with Metallic Shine */}
+      <div className="relative z-10 flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 12, scale: 0.96, filter: "blur(4px)" }}
+          animate={
+            isFadingOut
+              ? { opacity: 0, y: -28, scale: 0.94, filter: "blur(10px)" }
+              : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }
+          }
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <ShinyText
+            imageSrc="/logo/logo.png"
+            imageWidth={300}
+            imageHeight={82}
+            speed={2}
+            color={isLightMode ? "rgba(14, 18, 26, 0.25)" : "rgba(244, 241, 235, 0.25)"}
+            shineColor={isLightMode ? "#0e121a" : "#c5a880"}
+            spread={120}
+            alt="Msfilms Logo"
           />
-        </svg>
+        </motion.div>
       </div>
-
-      {/* Shiny Logo - Silver-metallic base with White shine sweep */}
-      <motion.div
-        animate={logoFadeOut ? { opacity: 0, scale: 0.94, filter: "blur(12px)" } : { opacity: 1, scale: 1, filter: "blur(0px)" }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10"
-      >
-        <ShinyText
-          imageSrc="/logo/logo.png"
-          imageWidth={320}
-          imageHeight={88}
-          speed={2.2}
-          color={isLightMode ? "rgba(2, 9, 18, 0.22)" : "rgba(255, 255, 255, 0.22)"}
-          shineColor={isLightMode ? "#020912" : "#ffffff"}
-          spread={100}
-          alt="Msfilms Logo"
-        />
-      </motion.div>
-
-      {/* Subtle Atmospheric Light Effect */}
-      <motion.div
-        animate={logoFadeOut ? { opacity: 0 } : { opacity: 1 }}
-        className="absolute inset-0 bg-radial-[circle_at_center,rgba(197,168,128,0.08)_0%,transparent_60%] pointer-events-none"
-      />
     </motion.div>
   );
 }
-
-
-

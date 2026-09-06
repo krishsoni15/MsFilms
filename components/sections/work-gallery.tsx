@@ -1,15 +1,52 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import { AnimatedText } from "@/components/animated-text";
 import PageFlip from "@/components/ui/page-flip";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export function WorkGallery() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeSheetIndex, setActiveSheetIndex] = useState(-1);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Total pages = 10 -> 5 sheets (0, 1, 2, 3, 4). Cover state is -1.
+    const totalSheets = 5;
+    const totalStates = totalSheets + 1;
+
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top top",
+        end: "+=220%",
+        pin: true,
+        scrub: 0.5,
+        refreshPriority: 4,
+        onUpdate: (self) => {
+          const rawIdx = Math.floor(self.progress * totalStates) - 1;
+          const clampedIdx = Math.min(Math.max(rawIdx, -1), totalSheets - 1);
+          setActiveSheetIndex(clampedIdx);
+        },
+      });
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="py-24 md:py-36 px-5 md:px-10 lg:px-16 bg-background border-t border-border overflow-hidden">
-      <div className="mb-16 md:mb-20 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+    <section ref={containerRef} className="py-16 md:py-24 px-5 md:px-10 lg:px-16 bg-background border-t border-border overflow-hidden min-h-screen flex flex-col justify-center">
+      <div className="mb-8 md:mb-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 w-full">
         <div>
-          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-4">
+          <AnimatedText as="p" className="text-[10px] tracking-[0.25em] uppercase text-gold/90 font-semibold mb-3">
             Creative Portfolio
           </AnimatedText>
           <ScrollReveal
@@ -25,13 +62,13 @@ export function WorkGallery() {
           </ScrollReveal>
         </div>
         <p className="text-xs text-foreground/50 max-w-xs leading-relaxed font-sans">
-          Interact with our digital lookbook: drag the page corners or use the navigation arrows to flip through our fine-art selected portfolios.
+          Scroll down to watch our digital lookbook flip through selected fine-art portfolio chapters page by page.
         </p>
       </div>
 
       {/* Interactive PageFlip Book Wrapper */}
-      <div className="max-w-7xl mx-auto w-full relative flex justify-center py-4">
-        <PageFlip width={950} height={600} className="mx-auto">
+      <div className="max-w-7xl mx-auto w-full relative flex justify-center py-2">
+        <PageFlip width={950} height={600} className="mx-auto" activeSheetIndex={activeSheetIndex}>
           {/* Page 1: Front Cover */}
           <div className="w-full h-full bg-neutral-950 flex flex-col justify-between p-8 md:p-14 border border-gold/10 relative">
             <div className="absolute inset-[15px] border border-gold/10 pointer-events-none rounded-lg" />

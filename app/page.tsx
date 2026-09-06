@@ -28,10 +28,9 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading) {
-      // Refresh ScrollTrigger once preloader ends to ensure layout dimensions are fully calculated
       const timer = setTimeout(() => {
         ScrollTrigger.refresh();
-      }, 750);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isLoading]);
@@ -51,7 +50,6 @@ export default function Home() {
         <AboutStudio />
         <AboutPhotographer />
         <WorkIntro />
-        <WorkGallery />
         <CircularGallerySection />
         <Services />
         <Blog />
