@@ -89,7 +89,7 @@ const categories = [
     titleHighlight: "Remembering",
     description:
       "We create cinematic wedding films and photographs that turn moments into memories you'll cherish forever.",
-    bgImage: "/wedding/hero_wedding_bg.png",
+    bgImage: "/wedding/hero_wedding_bg_new.png",
     leftImage: "/wedding/1_2.png",
     rightImage: "/wedding/1_3.png",
     leftImagePosition: "center",
@@ -272,7 +272,7 @@ export function Hero({
                 alt="Background"
                 fill
                 className="object-cover"
-                style={{ filter: "blur(3px) brightness(0.85) contrast(1.05) sepia(0.12) saturate(1.05)", transform: "scale(1.06)" }}
+                style={{ filter: "blur(1px) brightness(0.8) contrast(1.1) sepia(0.12) saturate(1.05)", transform: "scale(1.06)" }}
                 sizes="100vw"
                 quality={75}
                 priority={categoryIndex === 0}
