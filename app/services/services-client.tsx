@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { Services } from "@/components/sections/services";
 import { FaqSection } from "@/components/sections/faq-section";
 import { ArrowUpRight, Sparkles } from "lucide-react";
+import { CircularGallerySection } from "@/components/sections/circular-gallery-section";
 
 export function ServicesClient() {
   return (
@@ -68,6 +69,9 @@ export function ServicesClient() {
 
           {/* Detailed Services Component with LineSidebar */}
           <Services />
+
+          {/* User requested the 3 video cards (CircularGallerySection) on the services page */}
+          <CircularGallerySection />
 
           {/* Service & Process FAQ Section */}
           <FaqSection />

@@ -85,18 +85,7 @@ const useMeasure = (): [React.RefObject<HTMLDivElement | null>, { width: number;
   return [ref, size];
 };
 
-const preloadImages = async (urls: string[]) => {
-  await Promise.all(
-    urls.map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const img = new globalThis.Image();
-          img.src = src;
-          img.onload = img.onerror = () => resolve();
-        })
-    )
-  );
-};
+// preloadImages removed — Next.js <Image> handles lazy loading natively
 
 const Masonry = ({
   items,
@@ -112,7 +101,6 @@ const Masonry = ({
 }: MasonryProps) => {
   const columns = useMedia<number>(MEDIA_QUERIES, MEDIA_VALUES, DEFAULT_COLUMNS);
   const [containerRef, { width }] = useMeasure();
-  const [imagesReady, setImagesReady] = useState(false);
 
   const getInitialPosition = (item: GridItem) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
@@ -144,10 +132,7 @@ const Masonry = ({
     }
   };
 
-  useEffect(() => {
-    setImagesReady(false);
-    preloadImages(items.map((i) => i.img)).then(() => setImagesReady(true));
-  }, [items]);
+  // Images load lazily via Next.js <Image> — no blocking preload needed
 
   const grid = useMemo<GridItem[]>(() => {
     if (!width) return [];
@@ -175,7 +160,7 @@ const Masonry = ({
   }, [grid]);
 
   useLayoutEffect(() => {
-    if (!imagesReady || !containerRef.current) return;
+    if (!containerRef.current || grid.length === 0) return;
 
     const ctx = gsap.context(() => {
       grid.forEach((item, index) => {
@@ -234,7 +219,7 @@ const Masonry = ({
     }, containerRef);
 
     return () => ctx.revert();
-  }, [grid, imagesReady, columns, blurToFocus, duration, ease]);
+  }, [grid, columns, blurToFocus, duration, ease]);
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, item: GridItem) => {
     const selector = `[data-key="${item.id}"]`;
@@ -292,7 +277,8 @@ const Masonry = ({
                 fill
                 sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-108"
-                quality={85}
+                quality={70}
+                loading="lazy"
               />
 
               {/* Hover Dark Overlay & Text Badges */}

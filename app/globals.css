@@ -1152,37 +1152,35 @@ body {
   filter: grayscale(0) contrast(1.05) brightness(1.02);
 }
 
-/* Idle floating micro-animations for photographer section images */
+/* Refined, ultra-smooth floating micro-animations for photographer section images */
 @keyframes float-gentle {
-
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0px) rotate(0deg);
   }
-
   50% {
-    transform: translateY(-10px) rotate(1deg);
+    transform: translateY(-8px) rotate(0.4deg);
   }
 }
 
 @keyframes float-delayed {
-
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0px) rotate(0deg);
   }
-
   50% {
-    transform: translateY(10px) rotate(-1deg);
+    transform: translateY(8px) rotate(-0.4deg);
   }
 }
 
 .floating-portrait {
-  animation: float-gentle 7s ease-in-out infinite;
+  animation: float-gentle 7.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
 }
 
 .floating-portrait-delayed {
-  animation: float-delayed 9s ease-in-out infinite;
+  animation: float-delayed 8.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
 }
 
 /* Initial mask state for photographer section reveal to avoid layout flash */

@@ -178,7 +178,7 @@ function HoverVideoCard({
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="none"
         className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
           isHovered ? "opacity-100 scale-105" : "opacity-0 scale-100 pointer-events-none"
         }`}
@@ -224,7 +224,7 @@ export function CircularGallerySection() {
     : FEATURED_FILMS.filter((f) => f.category === activeCategory);
 
   // Duplicated list for seamless right-to-left infinite auto-scrolling
-  const displayFilms = [...filteredFilms, ...filteredFilms, ...filteredFilms];
+  const displayFilms = [...filteredFilms, ...filteredFilms];
 
   // Silky Right-to-Left Auto-Scroll Engine (Pauses when hovered)
   useEffect(() => {
@@ -242,8 +242,8 @@ export function CircularGallerySection() {
         track.scrollLeft += delta * 0.04; // Smooth continuous movement
 
         // Infinite loop reset
-        if (track.scrollLeft >= (track.scrollWidth / 3) * 2) {
-          track.scrollLeft -= track.scrollWidth / 3;
+        if (track.scrollLeft >= track.scrollWidth / 2) {
+          track.scrollLeft -= track.scrollWidth / 2;
         }
       }
 

@@ -12,7 +12,10 @@ const nextConfig: NextConfig = {
         hostname: "static.showit.co",
       },
     ],
-    qualities: [70, 75, 85],
+    formats: ["image/webp"],
+    deviceSizes: [640, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    qualities: [60, 70, 75],
   },
 };
 

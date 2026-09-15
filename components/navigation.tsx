@@ -70,14 +70,29 @@ export function Navigation({
   const connectRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    const sectionId = href === "/" ? "home" : href.replace("/", "").split("#")[0];
+    if (pathname === "/" && href !== "/services") {
+      const targetEl = document.getElementById(sectionId);
+      if (targetEl) {
+        e.preventDefault();
+        const offset = targetEl.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({
+          top: Math.max(0, offset),
+          behavior: "smooth",
+        });
+        setActiveSection(sectionId);
+        window.history.pushState(null, "", `#${sectionId}`);
+        return;
+      }
+    }
     if (href.startsWith("#") || (href.startsWith("/#") && pathname === "/")) {
       e.preventDefault();
       const targetId = href.split("#")[1];
       const targetEl = document.getElementById(targetId);
       if (targetEl) {
-        const offset = targetEl.getBoundingClientRect().top + window.scrollY;
+        const offset = targetEl.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({
-          top: offset,
+          top: Math.max(0, offset),
           behavior: "smooth",
         });
         window.history.pushState(null, "", `#${targetId}`);
@@ -111,7 +126,8 @@ export function Navigation({
 
       // Detect active section on scroll
       if (pathname !== "/") {
-        setActiveSection("work");
+        const currentPathSection = links.find((l) => l.href !== "/" && pathname.startsWith(l.href))?.href.replace("/", "") || "home";
+        setActiveSection(currentPathSection);
         return;
       }
 
@@ -131,8 +147,7 @@ export function Navigation({
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          // If the top of the section has scrolled past the threshold, it is active
-          if (rect.top <= threshold) {
+          if (rect.top <= threshold && rect.bottom > 80) {
             currentSection = id;
           }
         }
@@ -274,10 +289,11 @@ export function Navigation({
               className="flex items-center gap-1.5 px-1 py-1"
             >
               {links.map((link) => {
-                const sectionId = link.href.replace("/", "") || "home";
+                const sectionId = link.href === "/" ? "home" : link.href.replace("/", "");
                 const isActive =
-                  pathname === link.href ||
-                  (pathname === "/" && activeSection === sectionId);
+                  pathname === "/"
+                    ? activeSection === sectionId
+                    : pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                 const isHighlighted =
                   hoveredSection !== null
                     ? hoveredSection === sectionId
@@ -546,10 +562,13 @@ export function Navigation({
               {/* Nav Links */}
               <nav className="relative z-10 flex-1 flex flex-col justify-center px-6 sm:px-8 gap-1 py-4">
                 {links.map((link, i) => {
-                  const sectionId = link.href.includes("#")
+                  const sectionId = link.href === "/" ? "home" : (link.href.includes("#")
                     ? link.href.split("#")[1]
-                    : link.href.replace("/", "");
-                  const isActive = activeSection === sectionId;
+                    : link.href.replace("/", ""));
+                  const isActive =
+                    pathname === "/"
+                      ? activeSection === sectionId
+                      : pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
                   return (
                     <motion.div
                       key={link.label}

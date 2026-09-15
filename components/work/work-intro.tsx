@@ -105,7 +105,6 @@ export function WorkIntro() {
         {
           xPercent: -65,
           opacity: 0.15,
-          filter: "blur(6px)",
           ease: "power2.out",
         },
         0
@@ -116,7 +115,6 @@ export function WorkIntro() {
         {
           xPercent: 65,
           opacity: 0.15,
-          filter: "blur(6px)",
           ease: "power2.out",
         },
         0
@@ -127,7 +125,6 @@ export function WorkIntro() {
         {
           opacity: 0,
           y: -30,
-          filter: "blur(6px)",
           ease: "power2.out",
         },
         0
@@ -138,7 +135,6 @@ export function WorkIntro() {
         {
           opacity: 0.5,
           scale: 1.04,
-          filter: "blur(1px)",
           ease: "power2.out",
         },
         0
@@ -392,7 +388,7 @@ export function WorkIntro() {
 
             {/* Page 3: Wedding 1 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter I</span>
@@ -412,7 +408,7 @@ export function WorkIntro() {
 
             {/* Page 4: Wedding 2 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter I</span>
@@ -432,7 +428,7 @@ export function WorkIntro() {
 
             {/* Page 5: Landscape 1 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter II</span>
@@ -452,7 +448,7 @@ export function WorkIntro() {
 
             {/* Page 6: Landscape 2 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter II</span>
@@ -472,7 +468,7 @@ export function WorkIntro() {
 
             {/* Page 7: Drone 1 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter III</span>
@@ -492,7 +488,7 @@ export function WorkIntro() {
 
             {/* Page 8: Drone 2 */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter III</span>
@@ -512,7 +508,7 @@ export function WorkIntro() {
 
             {/* Page 9: Real Estate / Sunset Peak */}
             <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.7]" />
+              <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter IV</span>

@@ -56,13 +56,13 @@ export function AboutPhotographer() {
       // 2. Portraits entrance reveal
       gsap.fromTo(
         ".reveal-image-item",
-        { opacity: 0, y: 40, scale: 0.92 },
+        { opacity: 0, y: 35, scale: 0.94 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1.2,
-          stagger: 0.2,
+          duration: 1.1,
+          stagger: 0.18,
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
@@ -72,77 +72,7 @@ export function AboutPhotographer() {
         }
       );
 
-      // 3. Viewport Scroll Zoom-In & Zoom-Out Timeline (Zooms IN as section enters view, zooms OUT as section leaves view)
-      const zoomTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: el,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.2,
-        }
-      });
-
-      zoomTl
-        .fromTo(
-          ".image-collage-container",
-          { scale: 0.88, opacity: 0.85 },
-          { scale: 1.05, opacity: 1, ease: "power1.out" }
-        )
-        .to(
-          ".image-collage-container",
-          { scale: 0.88, opacity: 0.85, ease: "power1.in" }
-        );
-
-      // 4. Parallax shift on main portrait
-      gsap.fromTo(
-        ".main-parallax-wrapper",
-        { yPercent: 6, scale: 0.96 },
-        {
-          yPercent: -4,
-          scale: 1.02,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          }
-        }
-      );
-
-      // 5. Parallax shift on secondary bottom-left portrait
-      gsap.fromTo(
-        ".secondary-parallax-wrapper",
-        { yPercent: 14 },
-        {
-          yPercent: -18,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          }
-        }
-      );
-
-      // 6. Parallax shift on tertiary bottom-right portrait
-      gsap.fromTo(
-        ".tertiary-parallax-wrapper",
-        { yPercent: -10 },
-        {
-          yPercent: 18,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          }
-        }
-      );
-
-      // 7. Top-Right Sun Rays subtle ambient drift
+      // 3. Top-Right Sun Rays subtle ambient drift
       gsap.fromTo(
         ".sun-rays-beam",
         { opacity: 0.12, rotate: 0 },
@@ -207,8 +137,8 @@ export function AboutPhotographer() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center max-w-7xl mx-auto relative z-10">
 
         {/* Left Column — Editorial Text & Philosophy */}
-        <div className="lg:col-span-6 lg:pr-6 order-2 lg:order-1 photographer-text-column">
-          <div className="reveal-text-item inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-4 shadow-sm">
+        <div className="lg:col-span-6 lg:pr-8 order-2 lg:order-1 photographer-text-column">
+          <div className="reveal-text-item inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold/10 border border-gold/30 mb-5 shadow-sm">
             <Sparkles size={12} className="text-gold animate-pulse" />
             <span className="text-[10px] tracking-[0.25em] uppercase text-gold font-bold font-sans">
               The Visualist
@@ -219,53 +149,47 @@ export function AboutPhotographer() {
             baseOpacity={0.05}
             preset="blur"
             blurStrength={6}
-            textClassName="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.15] mb-4 text-foreground font-normal"
+            textClassName="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-3 text-foreground font-normal tracking-tight"
             rotationEnd="bottom center+=20%"
             wordAnimationEnd="bottom center+=45%"
           >
             Madhav Soni
           </ScrollReveal>
 
-          <p className="reveal-text-item text-[10px] tracking-[0.2em] uppercase text-foreground/40 mb-8 font-sans font-medium">
+          <p className="reveal-text-item text-[10px] sm:text-[11px] tracking-[0.25em] uppercase text-foreground/50 mb-7 font-sans font-semibold">
             Founder &amp; Lead Visualist · Based in Saskatoon · Serving All Canada
           </p>
 
-          <div className="reveal-text-item space-y-5 font-sans text-sm md:text-base text-foreground/70 leading-relaxed max-w-lg mb-8">
-            <p className="font-serif italic text-lg text-gold/90">
-              &ldquo;Hey, I&apos;m Madhav, the visualist behind the lens.&rdquo;
-            </p>
-            <p>
-              Welcome to MS Films! Driven by a passion for raw emotions and cinematic precision, I specialize in capturing Saskatoon&apos;s and Canada&apos;s most meaningful wedding celebrations and commercial productions.
-            </p>
-            <p>
-              I believe the best visual stories are told through quiet, candid moments. By blending artistic direction with a relaxed, comfortable atmosphere, my goal is to help you feel naturally confident in front of the lens while we preserve the memories that shape your life.
+          <div className="reveal-text-item pl-4 border-l-2 border-gold/60 my-7 py-1 bg-gold/[0.03] rounded-r-xl">
+            <p className="font-serif italic text-xl sm:text-2xl text-gold/90 font-light leading-snug">
+              &ldquo;I believe the best visual stories are told through quiet, candid moments — preserving emotions that shape your life.&rdquo;
             </p>
           </div>
 
-          {/* Key highlights */}
-          <div className="reveal-text-item mb-10 font-sans max-w-lg">
-            <p className="text-[11px] tracking-[0.2em] uppercase text-gold/80 font-semibold mb-4">
-              Why Work With Madhav?
+          <div className="reveal-text-item space-y-4 font-sans text-base sm:text-lg text-foreground/80 leading-relaxed max-w-lg mb-7 font-normal">
+            <p>
+              Welcome to MS Films. Driven by a passion for raw emotion and cinematic precision, I specialize in capturing Saskatoon&apos;s and Canada&apos;s most meaningful wedding celebrations and commercial productions.
             </p>
-            <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
-                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
-                  <Check size={11} strokeWidth={3.5} />
-                </div>
-                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">6+ Years of Industry Experience</span>
-              </div>
-              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
-                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
-                  <Check size={11} strokeWidth={3.5} />
-                </div>
-                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">Cinema &amp; Photography Combined</span>
-              </div>
-              <div className="flex items-center gap-3.5 bg-foreground/[0.02] border border-border rounded-xl p-3.5 pr-5 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:border-gold/30 hover:bg-gold/[0.02] transition-all duration-300 group">
-                <div className="w-6 h-6 rounded-full border border-gold/45 flex items-center justify-center text-gold bg-gold/5 flex-shrink-0 shadow-[0_0_10px_rgba(197,168,128,0.1)] transition-transform duration-300 group-hover:scale-105">
-                  <Check size={11} strokeWidth={3.5} />
-                </div>
-                <span className="text-[10px] md:text-[11px] text-foreground/80 tracking-[0.15em] uppercase font-semibold">Collaborative, Client-Focused Process</span>
-              </div>
+            <p className="text-foreground/65 text-sm sm:text-base">
+              By blending artistic direction with a relaxed atmosphere, my goal is to help you feel naturally confident in front of the lens while your authentic story unfolds.
+            </p>
+          </div>
+
+          {/* Key Experience & Highlights Bar */}
+          <div className="reveal-text-item flex items-center justify-between gap-3 max-w-lg my-8 py-4 border-y border-gold/20 font-sans">
+            <div className="flex flex-col">
+              <span className="text-gold font-display text-xl sm:text-2xl font-bold leading-none">6+ Years</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-foreground/60 mt-1.5 font-semibold">Industry Experience</span>
+            </div>
+            <div className="w-[1px] h-8 bg-gold/25" />
+            <div className="flex flex-col">
+              <span className="text-gold font-display text-xl sm:text-2xl font-bold leading-none">Hybrid</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-foreground/60 mt-1.5 font-semibold">Cinema &amp; Stills</span>
+            </div>
+            <div className="w-[1px] h-8 bg-gold/25" />
+            <div className="flex flex-col">
+              <span className="text-gold font-display text-xl sm:text-2xl font-bold leading-none">Client-First</span>
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-foreground/60 mt-1.5 font-semibold">Candid Process</span>
             </div>
           </div>
 
@@ -292,12 +216,6 @@ export function AboutPhotographer() {
                   background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.12) 0%, rgba(197, 168, 128, 0.01) 100%)",
                 }}
               >
-                <span
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-full"
-                  style={{
-                    background: "linear-gradient(to bottom, rgba(197, 168, 128, 0.2) 0%, rgba(197, 168, 128, 0.05) 100%)",
-                  }}
-                />
                 <span className="relative z-10 flex items-center gap-2.5">
                   Connect With Me
                   <ArrowRight size={13} className="transform group-hover:translate-x-1 transition-transform duration-300 text-current" />
@@ -307,10 +225,10 @@ export function AboutPhotographer() {
           </div>
         </div>
 
-        {/* Right Column — Editorial Dual Photo Layout with Scroll Zoom Magnification */}
-        <div className="lg:col-span-6 relative order-1 lg:order-2 image-collage-container origin-center">
+        {/* Right Column — Editorial Dual Photo Layout */}
+        <div className="lg:col-span-6 relative order-1 lg:order-2 image-collage-container origin-center pb-10 pt-4">
           {/* Main Portrait */}
-          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-lg overflow-hidden group shadow-2xl rounded-2xl ml-auto main-parallax-wrapper">
+          <div className="reveal-image-item relative aspect-[4/5] w-full max-w-[460px] overflow-hidden group shadow-2xl rounded-2xl ml-auto">
             <BorderGlow
               borderRadius={16}
               backgroundColor="transparent"
@@ -338,17 +256,13 @@ export function AboutPhotographer() {
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
                 <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
-                <div className="absolute bottom-3 left-3 bg-black/65 backdrop-blur-md border border-gold/30 px-3 py-1.5 rounded-full text-[9px] tracking-[0.2em] uppercase text-white/90 font-sans z-20 shadow-lg flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <span>Madhav Soni · Lead Visualist</span>
-                </div>
               </div>
             </BorderGlow>
           </div>
 
-          {/* Overlapping secondary image — parallax floating on bottom-left */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-8 -left-6 lg:-left-12 w-[44%] aspect-[3/4] shadow-2xl rounded-2xl group/sub overflow-visible z-20 secondary-parallax-wrapper">
-            <div className="floating-portrait w-full h-full relative rounded-[inherit] overflow-hidden">
+          {/* Overlapping secondary video card — floating on bottom-left */}
+          <div className="reveal-image-item hidden sm:block absolute bottom-6 -left-4 lg:-left-10 w-[43%] aspect-[3/4] shadow-2xl rounded-2xl group/sub overflow-visible z-20">
+            <div className="w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
                 backgroundColor="transparent"
@@ -367,26 +281,23 @@ export function AboutPhotographer() {
                 }}
               >
                 <div className="relative w-full h-full overflow-hidden rounded-2xl">
-                  <Image
-                    src="/me/imgi_85_622505371_18140539135468400_2765037163092247242_n.jpg"
-                    alt="Madhav Soni on location behind the lens"
-                    fill
-                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-110"
-                    sizes="30vw"
+                  <video
+                    src="/WhatsApp Video 2026-09-16 at 12.24.20 AM.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-105"
                   />
                   <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
-                  <div className="absolute bottom-3 left-3 bg-black/65 backdrop-blur-md border border-gold/30 px-3 py-1.5 rounded-full text-[9px] tracking-[0.2em] uppercase text-white/90 font-sans z-20 shadow-lg flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                    <span>On Location Cinema</span>
-                  </div>
                 </div>
               </BorderGlow>
             </div>
           </div>
 
-          {/* Overlapping third image — parallax floating on bottom-right */}
-          <div className="reveal-image-item hidden sm:block absolute -bottom-12 -right-6 lg:-right-10 w-[45%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 overflow-visible z-20 tertiary-parallax-wrapper">
-            <div className="floating-portrait-delayed w-full h-full relative rounded-[inherit] overflow-hidden">
+          {/* Overlapping third image card — floating on bottom-right */}
+          <div className="reveal-image-item hidden sm:block absolute bottom-0 -right-2 lg:-right-6 w-[43%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 overflow-visible z-20">
+            <div className="w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
                 backgroundColor="transparent"
@@ -409,14 +320,10 @@ export function AboutPhotographer() {
                     src="/me/013A5316.jpg"
                     alt="Madhav Soni — Media Production"
                     fill
-                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub2:scale-110"
+                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub2:scale-105"
                     sizes="25vw"
                   />
                   <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
-                  <div className="absolute bottom-3 left-3 bg-black/65 backdrop-blur-md border border-gold/30 px-3 py-1.5 rounded-full text-[9px] tracking-[0.2em] uppercase text-white/90 font-sans z-20 shadow-lg flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                    <span>Canada-Wide Media</span>
-                  </div>
                 </div>
               </BorderGlow>
             </div>
