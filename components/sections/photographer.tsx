@@ -106,7 +106,7 @@ export function AboutPhotographer() {
         <div className="absolute -top-36 -right-36 w-[650px] h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,225,160,0.30)_0%,rgba(203,163,88,0.14)_35%,rgba(197,168,128,0.03)_65%,transparent_85%)] blur-3xl animate-pulse" style={{ animationDuration: "8s" }} />
 
         {/* Soft Volumetric Rays (Heavy Blur for Ultra-Smooth Blend) */}
-        <div 
+        <div
           className="sun-rays-beam absolute -top-24 -right-24 w-[1200px] h-[1200px] opacity-20 mix-blend-screen pointer-events-none origin-top-right blur-xl"
           style={{
             background: `conic-gradient(from 200deg at 100% 0%, 
@@ -252,7 +252,7 @@ export function AboutPhotographer() {
                   alt="Madhav Soni — Founder & Lead Photographer of MS Films"
                   fill
                   priority={true}
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-[1.4s] ease-out group-hover:scale-108"
+                  className="object-cover grayscale transition-all duration-[1.4s] ease-out group-hover:scale-108"
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
                 <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
@@ -287,7 +287,7 @@ export function AboutPhotographer() {
                     loop
                     muted
                     playsInline
-                    className="w-full h-full object-cover transition-transform duration-[1.8s] ease-out group-hover/sub:scale-105"
+                    className="w-full h-full object-cover grayscale transition-transform duration-[1.8s] ease-out group-hover/sub:scale-105"
                   />
                   <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
                 </div>
@@ -296,7 +296,7 @@ export function AboutPhotographer() {
           </div>
 
           {/* Overlapping third image card — floating on bottom-right */}
-          <div className="reveal-image-item hidden sm:block absolute bottom-0 -right-2 lg:-right-6 w-[43%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 overflow-visible z-20">
+          <div className="reveal-image-item hidden sm:block absolute -bottom-2 lg:-bottom-4 -right-8 lg:-right-20 w-[43%] aspect-[16/10] shadow-2xl rounded-2xl group/sub2 overflow-visible z-20">
             <div className="w-full h-full relative rounded-[inherit] overflow-hidden">
               <BorderGlow
                 borderRadius={16}
@@ -320,7 +320,7 @@ export function AboutPhotographer() {
                     src="/me/013A5316.jpg"
                     alt="Madhav Soni — Media Production"
                     fill
-                    className="object-cover transition-transform duration-[1.8s] ease-out group-hover/sub2:scale-105"
+                    className="object-cover grayscale transition-transform duration-[1.8s] ease-out group-hover/sub2:scale-105"
                     sizes="25vw"
                   />
                   <div className="absolute inset-2 border border-gold/15 pointer-events-none z-20 rounded-lg" />
