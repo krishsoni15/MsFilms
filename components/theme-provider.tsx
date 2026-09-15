@@ -5,6 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 type Theme = "light" | "dark";
 
 type Palette =
+  | "vows-mocha"
   | "midnight-gold"
   | "rose-ember"
   | "forest-sage"
@@ -30,6 +31,13 @@ export interface PaletteInfo {
 }
 
 export const PALETTES: PaletteInfo[] = [
+  {
+    id: "vows-mocha",
+    label: "Vows Mocha & Pista",
+    swatchDark: "#2A2018",
+    swatchLight: "#5A4636",
+    accentSwatch: "#C8D0B4",
+  },
   {
     id: "midnight-gold",
     label: "Midnight Gold",
