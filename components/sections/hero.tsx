@@ -89,7 +89,7 @@ const categories = [
     titleHighlight: "Remembering",
     description:
       "We create cinematic wedding films and photographs that turn moments into memories you'll cherish forever.",
-    bgImage: "/wedding/bg1.png",
+    bgImage: "/wedding/hero_wedding_bg.png",
     leftImage: "/wedding/1_2.png",
     rightImage: "/wedding/1_3.png",
     leftImagePosition: "center",
