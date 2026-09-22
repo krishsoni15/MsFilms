@@ -16,11 +16,12 @@ if (typeof window !== "undefined") {
 
 const DOME_IMAGES = [
   "/wedding/1_1.png",
-  "/wedding/1_2.png",
-  "/wedding/1_3.png",
+  "/wedding/imgi_6_4.jpg",
+  "/wedding/imgi_7_3.jpg",
   "/wedding/1_4.png",
   "/wedding/1_5.png",
-  "/wedding/bg1.png",
+  "/wedding/imgi_4_7.jpg",
+  "/wedding/DSC00085.JPG",
   "/real-estate/img_1.jpg",
   "/real-estate/img_2.jpg",
   "/real-estate/img_3.jpg",
@@ -45,6 +46,8 @@ export function WorkIntro() {
   const bookWrapperRef = useRef<HTMLDivElement>(null);
 
   const [activeSheetIndex, setActiveSheetIndex] = useState(-1);
+  const [isDomeEnlarged, setIsDomeEnlarged] = useState(false);
+  const [isBookOpen, setIsBookOpen] = useState(false);
 
   const handleExploreClick = () => {
     const container = containerRef.current;
@@ -84,6 +87,14 @@ export function WorkIntro() {
           refreshPriority: 5,
           onUpdate: (self) => {
             const progress = self.progress;
+            const bookIsOpen = progress >= 0.12;
+            setIsBookOpen(bookIsOpen);
+            if (domeContainerRef.current) {
+              domeContainerRef.current.style.pointerEvents = bookIsOpen ? "none" : "auto";
+            }
+            if (bookWrapperRef.current) {
+              bookWrapperRef.current.style.pointerEvents = bookIsOpen ? "auto" : "none";
+            }
             // Phase 2: Page flip state when book is centered (progress 0.12 to 0.90)
             if (progress >= 0.12 && progress <= 0.90) {
               const relProgress = (progress - 0.12) / (0.90 - 0.12);
@@ -173,18 +184,22 @@ export function WorkIntro() {
       {/* 3D Dome Gallery Background */}
       <div
         ref={domeContainerRef}
-        className="absolute inset-0 w-full h-full z-0 work-bg-dome"
-        style={{ willChange: "transform, opacity" }}
+        className="absolute inset-0 w-full h-full work-bg-dome pointer-events-auto"
+        style={{ willChange: "transform, opacity", zIndex: isDomeEnlarged ? 50 : 0 }}
       >
         <DomeGallery
           images={DOME_IMAGES}
-          fit={0.85}
+          fit={0.78}
           fitBasis="auto"
-          minRadius={650}
-          maxRadius={1300}
+          minRadius={680}
+          maxRadius={1250}
+          maxVerticalRotationDeg={0}
           overlayBlurColor="var(--background)"
           grayscale={true}
           segments={28}
+          autoSpinSpeed={0.0015}
+          disabled={isBookOpen}
+          onEnlargeChange={setIsDomeEnlarged}
           openedImageWidth="360px"
           openedImageHeight="480px"
           imageBorderRadius="16px"
@@ -209,8 +224,12 @@ export function WorkIntro() {
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background" />
       </div>
 
-      {/* Editorial Title & Intro Overlay */}
-      <div className="relative z-20 flex flex-col items-center justify-center text-center px-6 max-w-5xl pointer-events-none">
+      {/* Editorial Title & Intro Overlay — fades out completely when photo is enlarged */}
+      <div
+        className={`relative z-20 flex flex-col items-center justify-center text-center px-6 max-w-5xl pointer-events-none transition-all duration-300 ${
+          isDomeEnlarged ? "opacity-0 invisible pointer-events-none" : "opacity-100 visible"
+        }`}
+      >
         {/* Supporting text */}
         <div
           ref={categoriesRef}
@@ -273,7 +292,9 @@ export function WorkIntro() {
       {/* Scroll indicator */}
       <div
         ref={scrollIndicatorRef}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/35 z-20 font-sans text-[9px] tracking-[0.25em] pointer-events-none"
+        className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/35 z-20 font-sans text-[9px] tracking-[0.25em] pointer-events-none transition-opacity duration-300 ${
+          isDomeEnlarged ? "opacity-0" : "opacity-100"
+        }`}
       >
         <span className="uppercase">SCROLL TO ENTER</span>
         <div className="w-[1px] h-10 bg-gradient-to-b from-white/30 to-transparent relative overflow-hidden">
@@ -284,7 +305,7 @@ export function WorkIntro() {
       {/* ─── 3D Interactive Lookbook Rising from Bottom into Pinned Center ─── */}
       <div
         ref={bookWrapperRef}
-        className="absolute inset-0 z-30 w-full h-full flex flex-col justify-center items-center px-4 pointer-events-auto"
+        className="absolute inset-0 z-30 w-full h-full flex flex-col justify-center items-center px-4 pointer-events-none"
         style={{ willChange: "transform, opacity" }}
       >
         <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
@@ -387,8 +408,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 3: Wedding 1 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/wedding/imgi_7_3.jpg" alt="Wedding Portrait" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter I</span>
@@ -407,8 +428,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 4: Wedding 2 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/wedding/imgi_6_4.jpg" alt="Wedding Bridal Close-up" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter I</span>
@@ -427,8 +448,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 5: Landscape 1 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/landscape/imgi_8_8.jpg" alt="Mist Mountain" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter II</span>
@@ -447,8 +468,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 6: Landscape 2 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/landscape/imgi_7_4.jpg" alt="Silent Forest" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter II</span>
@@ -467,8 +488,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 7: Drone 1 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/drone/imgi_10_3.jpg" alt="Aerial Coast" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter III</span>
@@ -487,8 +508,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 8: Drone 2 */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/drone/imgi_12_9.jpg" alt="Drone Overhead Path" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter III</span>
@@ -507,8 +528,8 @@ export function WorkIntro() {
             </div>
 
             {/* Page 9: Real Estate / Sunset Peak */}
-            <div className="w-full h-full bg-[#111111] relative overflow-hidden group">
-              <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.7]" loading="lazy" decoding="async" />
+            <div className="w-full h-full bg-[#111111] relative overflow-hidden group select-none">
+              <img src="/landscape/imgi_10_6.jpg" alt="Sunset Peak" className="w-full h-full object-cover brightness-[0.7] pointer-events-none select-none" loading="lazy" decoding="async" draggable={false} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
               <div className="absolute bottom-6 left-6 right-6 text-left z-10 space-y-1">
                 <span className="text-[8px] tracking-[0.3em] uppercase text-gold font-sans font-semibold mb-1 block">Chapter IV</span>

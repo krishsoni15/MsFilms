@@ -258,9 +258,9 @@ export function Navigation({
           : "opacity-100 translate-y-0"
           } ${isScrolled
             ? theme === "light"
-              ? "bg-white/75 backdrop-blur-xl border-b border-black/10 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-sm"
-              : "bg-background/55 backdrop-blur-2xl border-b border-gold/25 py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
-            : "bg-transparent border-b border-transparent py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
+              ? "bg-white/10 backdrop-blur-sm border-none py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16"
+              : "bg-transparent backdrop-blur-[2px] border-none py-3 sm:py-3.5 px-6 sm:px-10 lg:px-16"
+            : "bg-transparent border-none py-4 sm:py-5 px-6 sm:px-10 lg:px-16"
           }`}
       >
         <div className="flex items-center justify-between w-full mx-auto">

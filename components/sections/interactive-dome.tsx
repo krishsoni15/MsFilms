@@ -54,6 +54,8 @@ export function InteractiveDome() {
           maxRadius={1350}
           overlayBlurColor="var(--background)"
           grayscale={false}
+          segments={24}
+          autoSpinSpeed={0.0015}
           openedImageWidth="300px"
           openedImageHeight="420px"
           imageBorderRadius="16px"

@@ -63,6 +63,9 @@ export interface DomeGalleryProps {
   imageBorderRadius?: string;
   openedImageBorderRadius?: string;
   grayscale?: boolean;
+  autoSpinSpeed?: number;
+  onEnlargeChange?: (enlarging: boolean) => void;
+  disabled?: boolean;
 }
 
 interface TileItem {
@@ -160,6 +163,9 @@ export default function DomeGallery({
   imageBorderRadius = "30px",
   openedImageBorderRadius = "30px",
   grayscale = true,
+  autoSpinSpeed = 0.0016,
+  onEnlargeChange,
+  disabled = false,
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -169,6 +175,7 @@ export default function DomeGallery({
   const scrimRef = useRef<HTMLDivElement>(null);
   const focusedElRef = useRef<HTMLElement | null>(null);
   const originalTilePositionRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+  const closeRef = useRef<(() => void) | null>(null);
 
   const rotationRef = useRef({ x: 0, y: 0 });
   const startRotRef = useRef({ x: 0, y: 0 });
@@ -393,6 +400,7 @@ export default function DomeGallery({
     if (!scrim) return;
     const close = () => {
       if (performance.now() - openStartedAtRef.current < 250) return;
+      onEnlargeChange?.(false);
       const el = focusedElRef.current;
       if (!el) return;
       const parent = el.parentElement as HTMLElement;
@@ -440,7 +448,7 @@ export default function DomeGallery({
       rootRef.current!.appendChild(animatingOverlay);
       void animatingOverlay.getBoundingClientRect();
       requestAnimationFrame(() => {
-        animatingOverlay.style.left = originalPosRelativeToRoot.left + "px';";
+        animatingOverlay.style.left = originalPosRelativeToRoot.left + "px";
         animatingOverlay.style.top = originalPosRelativeToRoot.top + "px";
         animatingOverlay.style.width = originalPosRelativeToRoot.width + "px";
         animatingOverlay.style.height = originalPosRelativeToRoot.height + "px";
@@ -478,16 +486,18 @@ export default function DomeGallery({
       };
       animatingOverlay.addEventListener("transitionend", cleanup, { once: true });
     };
+    closeRef.current = close;
     scrim.addEventListener("click", close);
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
     window.addEventListener("keydown", onKey);
     return () => {
+      closeRef.current = null;
       scrim.removeEventListener("click", close);
       window.removeEventListener("keydown", onKey);
     };
-  }, [enlargeTransitionMs, unlockScroll]);
+  }, [enlargeTransitionMs, unlockScroll, onEnlargeChange]);
 
   const openItemFromElement = useCallback(
     (el: HTMLElement) => {
@@ -549,6 +559,25 @@ export default function DomeGallery({
       const img = document.createElement("img");
       img.src = rawSrc;
       overlay.appendChild(img);
+
+      // Elegant Cross Close Button ('X')
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "dg-close-btn";
+      closeBtn.setAttribute("aria-label", "Close image");
+      closeBtn.type = "button";
+      closeBtn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      `;
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeRef.current?.();
+      });
+      overlay.appendChild(closeBtn);
+
+      onEnlargeChange?.(true);
       viewerRef.current!.appendChild(overlay);
       const tx0 = tileR.left - frameR.left;
       const ty0 = tileR.top - frameR.top;
@@ -632,47 +661,103 @@ export default function DomeGallery({
     };
   }, []);
 
-  // Visibility gating — pause inertia when offscreen
+  const cursorRef = useRef({ x: 0, y: 0, active: false });
+  const smoothedCursorRef = useRef({ x: 0, y: 0 });
+
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
+    if (draggingRef.current || disabled) return;
+    const rect = mainRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    cursorRef.current = {
+      x: clamp(x, -1, 1),
+      y: clamp(y, -1, 1),
+      active: true,
+    };
+  }, [disabled]);
+
+  const handlePointerLeave = useCallback(() => {
+    cursorRef.current.active = false;
+  }, []);
+
+  // Visibility gating and auto-rotation — zero CPU/GPU work when offscreen
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
-      },
-      { threshold: 0 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
-  // Auto-rotation when there is no user interaction (dragging or open/enlarging) and visible
-  useEffect(() => {
     let active = true;
+    let autoRotateRAF: number | null = null;
     let lastTime = performance.now();
 
     const tick = (time: number) => {
       if (!active) return;
 
-      const delta = time - lastTime;
+      // Clamp delta to prevent massive jumps when tab regains focus or after lag spikes
+      const delta = Math.min(time - lastTime, 50);
       lastTime = time;
+
+      // Smoothly steer rotation with cursor position (disabled when book is open)
+      const targetCursorX = (!disabled && cursorRef.current.active) ? cursorRef.current.x : 0;
+      smoothedCursorRef.current.x += (targetCursorX - smoothedCursorRef.current.x) * 0.05;
 
       const isEnlarging = rootRef.current?.getAttribute("data-enlarging") === "true";
       if (!draggingRef.current && !isEnlarging && !inertiaRAF.current && isVisibleRef.current) {
-        // Slow automated rotation: ~0.4 degrees per second (0.007 degrees per millisecond)
-        const nextY = wrapAngleSigned(rotationRef.current.y + 0.007 * delta);
-        rotationRef.current = { ...rotationRef.current, y: nextY };
-        applyTransform(rotationRef.current.x, nextY);
+        // Slow auto-rotation + gentle horizontal steering towards cursor X
+        const cursorSteer = smoothedCursorRef.current.x * 0.0028 * delta;
+        const nextY = wrapAngleSigned(rotationRef.current.y + autoSpinSpeed * delta + cursorSteer);
+
+        // Completely level — NO up/down tilt as requested
+        rotationRef.current = { x: 0, y: nextY };
+        applyTransform(0, nextY);
       }
 
-      requestAnimationFrame(tick);
+      if (isVisibleRef.current && active) {
+        autoRotateRAF = requestAnimationFrame(tick);
+      } else {
+        autoRotateRAF = null;
+      }
     };
 
-    requestAnimationFrame(tick);
+    const startLoop = () => {
+      if (!autoRotateRAF && active) {
+        lastTime = performance.now();
+        autoRotateRAF = requestAnimationFrame(tick);
+      }
+    };
+
+    const stopLoop = () => {
+      if (autoRotateRAF) {
+        cancelAnimationFrame(autoRotateRAF);
+        autoRotateRAF = null;
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting;
+        isVisibleRef.current = visible;
+        if (visible) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(el);
+
+    if (isVisibleRef.current) {
+      startLoop();
+    }
+
     return () => {
       active = false;
+      stopLoop();
+      observer.disconnect();
     };
-  }, []);
+  }, [autoSpinSpeed, maxVerticalRotationDeg]);
 
   return (
     <div
@@ -691,7 +776,12 @@ export default function DomeGallery({
         } as React.CSSProperties
       }
     >
-      <main ref={mainRef as any} className="sphere-main">
+      <main
+        ref={mainRef as any}
+        className="sphere-main"
+        onPointerMove={handlePointerMove}
+        onPointerLeave={handlePointerLeave}
+      >
         <div className="stage">
           <div ref={sphereRef} className="sphere">
             {items.map((it, i) => (

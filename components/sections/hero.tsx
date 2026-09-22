@@ -179,16 +179,15 @@ export function Hero({
 
   /* Parallax scroll transforms */
   const { scrollY } = useScroll();
-  const heroScale = useTransform(scrollY, [0, 700], [1, 0.95]);
-  const heroY = useTransform(scrollY, [0, 700], [0, -60]);
-  const heroOpacity = useTransform(scrollY, [0, 550], [1, 0.15]);
-  const heroBlur = useTransform(scrollY, [0, 600], ["blur(0px)", "blur(6px)"]);
+  const heroScale = useTransform(scrollY, [0, 800], [1, 0.98]);
+  const bgParallaxY = useTransform(scrollY, [0, 800], [0, 140]);
+  const heroOpacity = useTransform(scrollY, [300, 850], [1, 0.35]);
 
   /* Multi-layered element parallax offsets */
-  const leftCardY = useTransform(scrollY, [0, 600], [0, -45]);
-  const rightCardY = useTransform(scrollY, [0, 600], [0, -75]);
-  const centerTextY = useTransform(scrollY, [0, 600], [0, -30]);
-  const bottomDeckY = useTransform(scrollY, [0, 600], [0, -95]);
+  const leftCardY = useTransform(scrollY, [0, 600], [0, -35]);
+  const rightCardY = useTransform(scrollY, [0, 600], [0, -50]);
+  const centerTextY = useTransform(scrollY, [0, 600], [0, -20]);
+  const bottomDeckY = useTransform(scrollY, [0, 600], [0, -60]);
 
   /* Trigger loaded state from parent (preloader) */
   useEffect(() => {
@@ -239,24 +238,22 @@ export function Hero({
     <section
       id="home"
       ref={containerRef}
-      className="sticky top-0 w-full overflow-hidden h-screen lg:h-svh flex flex-col z-0"
+      className="relative w-full overflow-hidden h-screen lg:h-svh flex flex-col z-0"
       style={{ backgroundColor: "var(--background)" }}
     >
       <motion.div
         style={{
           scale: heroScale,
-          y: heroY,
           opacity: heroOpacity,
-          filter: heroBlur,
         }}
-        className="relative w-full h-full flex flex-col overflow-hidden origin-bottom"
+        className="relative w-full h-full flex flex-col overflow-hidden origin-center"
       >
         {/* ══════════════════════════════════════════════════════
             BACKGROUND LAYERS & SHADERS
             ══════════════════════════════════════════════════════ */}
 
         {/* Layer 0 & 1: Synchronized Background Image + Vibe Shader Overlay */}
-        <div className="absolute inset-0 z-0">
+        <motion.div style={{ y: bgParallaxY }} className="absolute inset-0 z-0">
           <AnimatePresence mode="popLayout">
             <motion.div
               key={`bg-slide-${categoryIndex}`}
@@ -292,7 +289,7 @@ export function Hero({
               />
             </motion.div>
           </AnimatePresence>
-        </div>
+        </motion.div>
 
         {/* Layer 2: Soft Shimmering Vibe-Adaptive Gold Bloom Shader */}
         <div
@@ -805,6 +802,9 @@ export function Hero({
             </a>
           </motion.div>
         </div>
+
+        {/* ── Seamless Bottom Gradient Feather into Next Section ── */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/40 to-transparent pointer-events-none z-30" />
 
         {/* ── Video Modal ── */}
         <VideoModal

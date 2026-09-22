@@ -41,15 +41,23 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   transform-style: flat;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.page-face-el img {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
 }
 
 .page-face-el.front {
-  z-index: 2;
   transform: rotateY(0deg);
 }
 
 .page-face-el.back {
-  z-index: 1;
   transform: rotateY(180deg);
 }
 

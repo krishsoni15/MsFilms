@@ -27,9 +27,13 @@ export default function PageFlip({
   const [draggedSheet, setDraggedSheet] = useState<number | null>(null);
   const [dragAngle, setDragAngle] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const isPointerDownRef = useRef(false);
   const dragStartX = useRef(0);
+  const dragStartY = useRef(0);
   const dragDirection = useRef<"left" | "right" | null>(null);
   const dragStartTime = useRef(0);
+  const hasMovedRef = useRef(false);
+  const isClickOnInteractive = useRef(false);
   const isAnimatingRef = useRef(false);
 
   // Track parent activeSheetIndex scroll changes without state conflicts
@@ -115,131 +119,6 @@ export default function PageFlip({
     }
   }, [activeSheetIndex, currentFlipped, isDragging]);
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, sheetIdx: number) => {
-    // Ignore direct clicks on interactive elements (e.g. Inquiry links or buttons inside page)
-    const target = e.target as HTMLElement;
-    if (target.closest("a, button, input, [role='button']")) {
-      return;
-    }
-
-    if (isAnimatingRef.current) return;
-
-    const isTopLeft = sheetIdx === currentFlipped;
-    const isTopRight = sheetIdx === currentFlipped + 1;
-
-    if (!isTopLeft && !isTopRight) return;
-
-    // Capture pointer events to track movement across page boundaries
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (err) { }
-
-    setIsDragging(true);
-    setDraggedSheet(sheetIdx);
-    dragStartX.current = e.clientX;
-    dragStartTime.current = performance.now();
-
-    if (isTopLeft) {
-      // Clicked top left page -> ready to flip backward towards right
-      dragDirection.current = "right";
-      setDragAngle(-180);
-    } else {
-      // Clicked top right page -> ready to flip forward towards left
-      dragDirection.current = "left";
-      setDragAngle(0);
-    }
-  };
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>, sheetIdx: number) => {
-    if (!isDragging || draggedSheet !== sheetIdx || dragAngle === null || !containerRef.current) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const deltaX = e.clientX - dragStartX.current;
-    const halfWidth = rect.width / 2;
-
-    let angle = 0;
-    if (dragDirection.current === "left") {
-      // Dragging right page to the left (0 to -180 deg)
-      const pct = Math.max(0, Math.min(1, -deltaX / halfWidth));
-      angle = pct * -180;
-    } else {
-      // Dragging left page to the right (-180 to 0 deg)
-      const pct = Math.max(0, Math.min(1, deltaX / halfWidth));
-      angle = -180 + pct * 180;
-    }
-
-    setDragAngle(angle);
-  };
-
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>, sheetIdx: number) => {
-    if (!isDragging || draggedSheet !== sheetIdx || dragAngle === null) return;
-
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch (err) { }
-
-    setIsDragging(false);
-
-    const deltaX = e.clientX - dragStartX.current;
-    const elapsed = performance.now() - dragStartTime.current;
-    const velocityX = deltaX / elapsed; // px/ms
-
-    const isClick = Math.abs(deltaX) < 10 && elapsed < 350; // brief tap/click turns page
-    const isSwipe = Math.abs(velocityX) > 0.2 && Math.abs(deltaX) > 25; // quick swipe gesture
-
-    if (isClick) {
-      // Simple tap/click page turn
-      if (sheetIdx === currentFlipped) {
-        // Clicked left page -> flip backward
-        animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
-      } else if (sheetIdx === currentFlipped + 1) {
-        // Clicked right page -> flip forward
-        animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
-      }
-    } else if (isSwipe) {
-      // Fast swipe/flick gesture
-      if (deltaX < 0) {
-        // Swiped left -> flip forward
-        if (currentFlipped < totalSheets - 1) {
-          const targetIdx = sheetIdx === currentFlipped ? currentFlipped + 1 : sheetIdx;
-          animateToAngle(targetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
-        } else {
-          // Snap back
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped, "right", true);
-        }
-      } else {
-        // Swiped right -> flip backward
-        if (currentFlipped >= 0) {
-          const targetIdx = sheetIdx === currentFlipped + 1 ? currentFlipped : sheetIdx;
-          animateToAngle(targetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
-        } else {
-          // Snap back
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped, "left", true);
-        }
-      }
-    } else {
-      // Slow drag release: check if dragged past 50% midpoint (-90 deg)
-      const threshold = -90;
-      if (dragDirection.current === "left") {
-        if (dragAngle < threshold) {
-          // Dragged past 50% -> complete flip forward
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped + 1, "left", true);
-        } else {
-          // Snap back to 0 deg
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped, "right", true);
-        }
-      } else if (dragDirection.current === "right") {
-        if (dragAngle > threshold) {
-          // Dragged past 50% -> complete flip backward
-          animateToAngle(sheetIdx, dragAngle, 0, currentFlipped - 1, "right", true);
-        } else {
-          // Snap back to -180 deg
-          animateToAngle(sheetIdx, dragAngle, -180, currentFlipped, "left", true);
-        }
-      }
-    }
-  };
-
   const handlePrev = () => {
     if (isAnimatingRef.current || isDragging) return;
     if (currentFlipped >= 0) {
@@ -251,6 +130,162 @@ export default function PageFlip({
     if (isAnimatingRef.current || isDragging) return;
     if (currentFlipped < totalSheets - 1) {
       animateToAngle(currentFlipped + 1, 0, -180, currentFlipped + 1, "left", true);
+    }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isAnimatingRef.current) return;
+
+    const target = e.target as HTMLElement;
+    isClickOnInteractive.current = !!target.closest("a, button, input, [role='button']");
+
+    // Prevent browser native image dragging or text selection
+    if (!isClickOnInteractive.current) {
+      e.preventDefault();
+    }
+
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (err) {}
+
+    isPointerDownRef.current = true;
+    hasMovedRef.current = false;
+    dragStartX.current = e.clientX;
+    dragStartY.current = e.clientY;
+    dragStartTime.current = performance.now();
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isPointerDownRef.current || isAnimatingRef.current) return;
+
+    const deltaX = e.clientX - dragStartX.current;
+    const deltaY = e.clientY - dragStartY.current;
+
+    const rect = containerRef.current?.getBoundingClientRect();
+    const halfWidth = rect ? rect.width / 2 : 450;
+
+    if (!isDragging) {
+      // Don't hijack vertical scrolling
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 12) {
+        isPointerDownRef.current = false;
+        try {
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+        return;
+      }
+
+      // Responsive grab threshold
+      if (Math.abs(deltaX) > 4) {
+        hasMovedRef.current = true;
+
+        if (deltaX > 0) {
+          // Swiping right -> flip backward (left sheet turns back to right)
+          if (currentFlipped >= 0) {
+            setIsDragging(true);
+            setDraggedSheet(currentFlipped);
+            dragDirection.current = "right";
+            const pct = Math.max(0, Math.min(1, deltaX / halfWidth));
+            setDragAngle(-180 + pct * 180);
+          }
+        } else {
+          // Swiping left -> flip forward (right sheet turns forward to left)
+          if (currentFlipped < totalSheets - 1) {
+            setIsDragging(true);
+            setDraggedSheet(currentFlipped + 1);
+            dragDirection.current = "left";
+            const pct = Math.max(0, Math.min(1, -deltaX / halfWidth));
+            setDragAngle(-pct * 180);
+          }
+        }
+      }
+    } else {
+      // Already dragging active sheet
+      if (dragDirection.current === "right") {
+        const pct = Math.max(0, Math.min(1, deltaX / halfWidth));
+        setDragAngle(-180 + pct * 180);
+      } else if (dragDirection.current === "left") {
+        const pct = Math.max(0, Math.min(1, -deltaX / halfWidth));
+        setDragAngle(-pct * 180);
+      }
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isPointerDownRef.current) return;
+    isPointerDownRef.current = false;
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+
+    const deltaX = e.clientX - dragStartX.current;
+    const elapsed = performance.now() - dragStartTime.current;
+
+    // Handle Tap / Click on page
+    if (!hasMovedRef.current && !isDragging) {
+      if (isClickOnInteractive.current) {
+        return; // Allow native click on links/buttons
+      }
+
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        const clickX = e.clientX - rect.left;
+        if (currentFlipped === -1) {
+          handleNext();
+        } else if (currentFlipped === totalSheets - 1) {
+          handlePrev();
+        } else {
+          if (clickX < rect.width / 2) {
+            handlePrev();
+          } else {
+            handleNext();
+          }
+        }
+      }
+      return;
+    }
+
+    // Handle Drag / Swipe release
+    if (isDragging && draggedSheet !== null && dragAngle !== null) {
+      setIsDragging(false);
+      const velocityX = deltaX / elapsed;
+      const isSwipe = Math.abs(velocityX) > 0.18 && Math.abs(deltaX) > 20;
+
+      if (dragDirection.current === "right") {
+        if ((isSwipe && deltaX > 0) || dragAngle > -90) {
+          // Successfully flipped backward
+          animateToAngle(draggedSheet, dragAngle, 0, currentFlipped - 1, "right", true);
+        } else {
+          // Snap back to -180
+          animateToAngle(draggedSheet, dragAngle, -180, currentFlipped, "left", true);
+        }
+      } else if (dragDirection.current === "left") {
+        if ((isSwipe && deltaX < 0) || dragAngle < -90) {
+          // Successfully flipped forward
+          animateToAngle(draggedSheet, dragAngle, -180, currentFlipped + 1, "left", true);
+        } else {
+          // Snap back to 0
+          animateToAngle(draggedSheet, dragAngle, 0, currentFlipped, "right", true);
+        }
+      }
+    }
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isPointerDownRef.current) return;
+    isPointerDownRef.current = false;
+
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+
+    if (isDragging && draggedSheet !== null && dragAngle !== null) {
+      setIsDragging(false);
+      if (dragDirection.current === "right") {
+        animateToAngle(draggedSheet, dragAngle, -180, currentFlipped, "left", true);
+      } else if (dragDirection.current === "left") {
+        animateToAngle(draggedSheet, dragAngle, 0, currentFlipped, "right", true);
+      }
     }
   };
 
@@ -288,7 +323,20 @@ export default function PageFlip({
           touchAction: "pan-y",
         }}
       >
-        <div className="book-viewport">
+        <div
+          className="book-viewport select-none"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onDragStart={(e) => e.preventDefault()}
+          style={{
+            cursor: isDragging ? "grabbing" : "pointer",
+            touchAction: "pan-y",
+            userSelect: "none",
+            WebkitUserSelect: "none",
+          }}
+        >
           <div
             className={cn(
               "book-wrap w-full h-full",
@@ -331,6 +379,9 @@ export default function PageFlip({
                 shadowOpacity = Math.sin(pct * Math.PI) * 0.45;
               }
 
+              // If sheet is tilted past 90 degrees, back face is facing the user
+              const isFacingLeft = isBeingDragged ? (dragAngle !== null && dragAngle < -90) : isFlipped;
+
               return (
                 <div
                   key={idx}
@@ -344,12 +395,7 @@ export default function PageFlip({
                     transform: `rotateY(${rotation}deg)`,
                     cursor: isDragging && isBeingDragged ? "grabbing" : isInteractive ? "pointer" : "default",
                     pointerEvents: isInteractive || isBeingDragged ? "auto" : "none",
-                    touchAction: isBeingDragged ? "none" : "pan-y",
                   }}
-                  onPointerDown={(e) => handlePointerDown(e, idx)}
-                  onPointerMove={(e) => handlePointerMove(e, idx)}
-                  onPointerUp={(e) => handlePointerUp(e, idx)}
-                  onPointerCancel={(e) => handlePointerUp(e, idx)}
                 >
                   {/* Shadow layer to darken backing sheets during page lift */}
                   <div
@@ -364,12 +410,24 @@ export default function PageFlip({
                   />
 
                   {/* Front Face (Right Side Page) */}
-                  <div className="page-face-el front overflow-hidden rounded-r-xl border-l border-border bg-background-alt shadow-[inset_10px_0_20px_rgba(0,0,0,0.4)]">
+                  <div
+                    className="page-face-el front overflow-hidden rounded-r-xl border-l border-border bg-background-alt shadow-[inset_10px_0_20px_rgba(0,0,0,0.4)]"
+                    style={{
+                      zIndex: isFacingLeft ? 1 : 2,
+                      pointerEvents: isFacingLeft ? "none" : (isInteractive ? "auto" : "none"),
+                    }}
+                  >
                     {sheet.front}
                   </div>
 
                   {/* Back Face (Left Side Page) */}
-                  <div className="page-face-el back overflow-hidden rounded-l-xl border-r border-border bg-background-alt shadow-[inset_-10px_0_20px_rgba(0,0,0,0.4)]">
+                  <div
+                    className="page-face-el back overflow-hidden rounded-l-xl border-r border-border bg-background-alt shadow-[inset_-10px_0_20px_rgba(0,0,0,0.4)]"
+                    style={{
+                      zIndex: isFacingLeft ? 2 : 1,
+                      pointerEvents: isFacingLeft ? (isInteractive ? "auto" : "none") : "none",
+                    }}
+                  >
                     {sheet.back || (
                       <div className="w-full h-full bg-background-alt-2 flex items-center justify-center">
                         <span className="text-[10px] uppercase tracking-widest text-foreground/30">End</span>

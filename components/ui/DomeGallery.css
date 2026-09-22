@@ -58,13 +58,12 @@ main.sphere-main {
 }
 
 .overlay {
-  background-image: radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, #120F17) 100%);
+  background-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 50%, var(--overlay-blur-color, #120F17) 100%);
 }
 
 .overlay--blur {
-  -webkit-mask-image: radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, #120F17) 90%);
-  mask-image: radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, #120F17) 90%);
-  backdrop-filter: blur(3px);
+  background-image: radial-gradient(circle at center, transparent 40%, var(--overlay-blur-color, #120F17) 95%);
+  opacity: 0.85;
 }
 
 .item {
@@ -78,7 +77,7 @@ main.sphere-main {
   margin: auto;
   transform-origin: 50% 50%;
   backface-visibility: hidden;
-  transition: transform 300ms;
+  contain: layout paint;
   transform: rotateY(calc(var(--rot-y) * (var(--offset-x) + ((var(--item-size-x) - 1) / 2)) + var(--rot-y-delta, 0deg))) rotateX(calc(var(--rot-x) * (var(--offset-y) - ((var(--item-size-y) - 1) / 2)) + var(--rot-x-delta, 0deg))) translateZ(var(--radius));
 }
 
@@ -149,32 +148,81 @@ main.sphere-main {
   backdrop-filter: blur(3px);
 }
 
+.sphere-root[data-enlarging='true'] {
+  z-index: 100;
+}
+
+.sphere-root[data-enlarging='true'] .viewer {
+  z-index: 100;
+  pointer-events: auto;
+}
+
 .sphere-root[data-enlarging='true'] .viewer .scrim {
   opacity: 1;
   pointer-events: all;
+  background: rgba(6, 5, 8, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .viewer .enlarge {
   position: absolute;
-  z-index: 30;
-  border-radius: var(--enlarge-radius, 32px);
+  z-index: 110;
+  border-radius: var(--enlarge-radius, 24px);
   overflow: hidden;
   transition:
     transform 500ms ease,
     opacity 500ms ease;
   transform-origin: top left;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.95), 0 0 45px rgba(197, 168, 128, 0.35);
+  border: 1px solid rgba(197, 168, 128, 0.4);
 }
 
 .viewer .enlarge img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: var(--image-filter, none);
+  filter: none !important; /* Full vibrant color when opened! */
 }
 
 .sphere-root .enlarge-closing img {
-  filter: var(--image-filter, none);
+  filter: none !important;
+}
+
+/* Elegant Cross Close Button ('X') */
+.dg-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(14, 12, 18, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(197, 168, 128, 0.5);
+  color: #c5a880;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 120;
+  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  padding: 0;
+  pointer-events: auto;
+}
+
+.dg-close-btn:hover {
+  background: rgba(197, 168, 128, 0.95);
+  color: #080808;
+  border-color: #c5a880;
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 8px 24px rgba(197, 168, 128, 0.5);
+}
+
+.dg-close-btn:active {
+  transform: scale(0.95);
 }
 
 .edge-fade {
@@ -198,20 +246,24 @@ main.sphere-main {
 
 /* ─── Work Intro Background Specific Customizations ─── */
 .work-bg-dome .item__image {
-  opacity: 0.55;
-  transition: opacity 400ms ease, transform 400ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 400ms ease;
+  opacity: 0.65;
+  transition: opacity 300ms ease, box-shadow 300ms ease;
 }
 
 .work-bg-dome .item__image:hover {
-  opacity: 1;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(197, 168, 128, 0.5);
+  opacity: 1 !important;
+  z-index: 20;
+  transform: translateZ(0) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(197, 168, 128, 0.4);
 }
 
 .item__image:hover {
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(197, 168, 128, 0.5);
+  z-index: 20;
+  transform: translateZ(0) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(197, 168, 128, 0.4);
 }
 
 .item__image:hover img {
-  transform: scale(1.1);
-  filter: none;
+  transform: none !important;
+  filter: grayscale(0) brightness(1.06) contrast(1.04) !important;
 }

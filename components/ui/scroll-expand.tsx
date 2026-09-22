@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./scroll-expand.css";
@@ -36,6 +36,7 @@ interface ScrollExpandProps {
   endRadiusVmax?: number;
   featherVmax?: number;
   showArrows?: boolean;
+  ambientBg?: boolean;
 }
 
 export function ScrollExpand({
@@ -64,12 +65,14 @@ export function ScrollExpand({
   endRadiusVmax = 80,
   featherVmax = 15,
   showArrows = true,
+  ambientBg = true,
   ...rest
 }: ScrollExpandProps) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
+  const bgAmbientRef = useRef<HTMLDivElement>(null);
+  const bgMediaRef = useRef<HTMLVideoElement | HTMLImageElement>(null);
   const mediaRef = useRef<HTMLImageElement | HTMLVideoElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -77,12 +80,51 @@ export function ScrollExpand({
   const hintRef = useRef<HTMLDivElement>(null);
   const bgDecorationsRef = useRef<HTMLDivElement>(null);
 
+  // Synchronize foreground and background ambient video playback
+  useEffect(() => {
+    const fg = mediaRef.current;
+    const bg = bgMediaRef.current;
+    if (mediaType !== "video" || !fg || !bg || !(fg instanceof HTMLVideoElement) || !(bg instanceof HTMLVideoElement)) return;
+
+    const playBoth = () => {
+      fg.play().catch(() => { });
+      bg.play().catch(() => { });
+    };
+
+    const pauseBoth = () => {
+      bg.pause();
+    };
+
+    const syncTime = () => {
+      if (Math.abs(bg.currentTime - fg.currentTime) > 0.15) {
+        bg.currentTime = fg.currentTime;
+      }
+    };
+
+    fg.addEventListener("play", playBoth);
+    fg.addEventListener("pause", pauseBoth);
+    fg.addEventListener("timeupdate", syncTime);
+    fg.addEventListener("seeking", syncTime);
+    fg.addEventListener("seeked", syncTime);
+
+    playBoth();
+
+    return () => {
+      fg.removeEventListener("play", playBoth);
+      fg.removeEventListener("pause", pauseBoth);
+      fg.removeEventListener("timeupdate", syncTime);
+      fg.removeEventListener("seeking", syncTime);
+      fg.removeEventListener("seeked", syncTime);
+    };
+  }, [mediaType]);
+
   useEffect(() => {
     if (!enabled) return;
 
     const root = rootRef.current;
     const frame = frameRef.current;
     const media = mediaRef.current;
+    const bgMedia = bgMediaRef.current;
     if (!root || !frame || !media) return;
 
     // Calculate initial inset percentages to center the frame
@@ -102,23 +144,27 @@ export function ScrollExpand({
           anticipatePin: 1,
           refreshPriority: 10,
           onEnter: () => {
-            if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.play().catch(() => { });
+            if (mediaType === "video") {
+              if (media instanceof HTMLVideoElement) media.play().catch(() => { });
+              if (bgMedia instanceof HTMLVideoElement) bgMedia.play().catch(() => { });
             }
           },
           onEnterBack: () => {
-            if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.play().catch(() => { });
+            if (mediaType === "video") {
+              if (media instanceof HTMLVideoElement) media.play().catch(() => { });
+              if (bgMedia instanceof HTMLVideoElement) bgMedia.play().catch(() => { });
             }
           },
           onLeave: () => {
-            if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.pause();
+            if (mediaType === "video") {
+              if (media instanceof HTMLVideoElement) media.pause();
+              if (bgMedia instanceof HTMLVideoElement) bgMedia.pause();
             }
           },
           onLeaveBack: () => {
-            if (mediaType === "video" && media instanceof HTMLVideoElement) {
-              media.pause();
+            if (mediaType === "video") {
+              if (media instanceof HTMLVideoElement) media.pause();
+              if (bgMedia instanceof HTMLVideoElement) bgMedia.pause();
             }
           },
         },
@@ -150,6 +196,14 @@ export function ScrollExpand({
       if (hintRef.current) gsap.set(hintRef.current, { opacity: 1, y: 0 });
       if (overlayRef.current) gsap.set(overlayRef.current, { opacity: 0, y: 35, filter: "blur(18px)", pointerEvents: "none" });
       if (bgDecorationsRef.current) gsap.set(bgDecorationsRef.current, { opacity: 1, scale: 1 });
+      if (bgAmbientRef.current) {
+        gsap.set(bgAmbientRef.current, {
+          width: `calc(${startWidth}% + 100px)`,
+          height: `calc(${startHeight}% + 80px)`,
+          borderRadius: `${startRadius + 14}px`,
+          opacity: 0.68,
+        });
+      }
 
       // Animate clipPath, scale, and scrim opacity mathematically for perfect centering and rendering stability
       const stateObj = { progress: 0 };
@@ -190,6 +244,20 @@ export function ScrollExpand({
               frame.style.maskImage = "none";
               frame.style.webkitMaskImage = "none";
               frame.style.clipPath = `inset(${curIy}% ${curIx}% ${curIy}% ${curIx}% round ${r}px)`;
+
+              // Keep ambient glow locked to the middle card and expanding in sync
+              if (bgAmbientRef.current) {
+                bgAmbientRef.current.style.width = `calc(${currentW}% + ${(1 - clipProgress) * 100}px)`;
+                bgAmbientRef.current.style.height = `calc(${currentH}% + ${(1 - clipProgress) * 80}px)`;
+                bgAmbientRef.current.style.borderRadius = `${r + (1 - clipProgress) * 14}px`;
+              }
+            }
+
+            // Fade ambient background video smoothly as foreground expands to fullscreen
+            if (bgAmbientRef.current) {
+              const fadeStart = 0.45;
+              const fadeProgress = Math.max(0, Math.min(1, (clipProgress - fadeStart) / (1 - fadeStart)));
+              bgAmbientRef.current.style.opacity = `${(1 - fadeProgress) * 0.68}`;
             }
 
             // Interpolate media transform over the entire scroll progress p
@@ -282,10 +350,6 @@ export function ScrollExpand({
           );
         }
       }
-
-      // Spacing is handled natively in totalDuration above
-
-
     }, root);
 
     return () => {
@@ -307,6 +371,7 @@ export function ScrollExpand({
     startRadiusVmax,
     endRadiusVmax,
     featherVmax,
+    ambientBg,
   ]);
 
   const mediaElement =
@@ -319,7 +384,8 @@ export function ScrollExpand({
         muted
         loop
         playsInline
-        preload="metadata"
+        autoPlay
+        preload="auto"
       />
     ) : (
       <img
@@ -339,10 +405,48 @@ export function ScrollExpand({
       {...rest}
     >
       <div ref={stageRef} className="scroll-expand__stage">
-        {/* Background decorations: big color glow and pointing arrows */}
+        {/* Background Ambient Video with YouTube-style Ambilight Glow centered on horizontal middle */}
+        {ambientBg && src && (
+          <div
+            ref={bgAmbientRef}
+            className="scroll-expand__bg-ambient pointer-events-none"
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              width: `calc(${startWidth}% + 100px)`,
+              height: `calc(${startHeight}% + 80px)`,
+              borderRadius: `${startRadius + 14}px`,
+            }}
+          >
+            {mediaType === "video" ? (
+              <video
+                ref={bgMediaRef as React.RefObject<HTMLVideoElement>}
+                className="scroll-expand__bg-ambient-media"
+                src={src}
+                poster={poster}
+                muted
+                loop
+                playsInline
+                autoPlay
+                preload="auto"
+              />
+            ) : (
+              <img
+                ref={bgMediaRef as React.RefObject<HTMLImageElement>}
+                className="scroll-expand__bg-ambient-media"
+                src={src}
+                alt=""
+                draggable={false}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Background decorations: pointing arrows */}
         <div ref={bgDecorationsRef} className="scroll-expand__bg-decorations pointer-events-none">
-
-
           {/* Left Arrow pointing to the center */}
           {showArrows && (
             <div className="scroll-expand__arrow-wrapper scroll-expand__arrow-wrapper--left">
@@ -390,6 +494,7 @@ export function ScrollExpand({
           )}
         </div>
 
+        {/* Real Foreground Video as is */}
         <div ref={frameRef} className="scroll-expand__frame">
           {mediaElement}
           <div ref={scrimRef} className="scroll-expand__scrim" />
@@ -399,6 +504,7 @@ export function ScrollExpand({
             </div>
           ) : null}
         </div>
+
         {title ? (
           <div ref={titleRef} className="scroll-expand__title uppercase font-display">
             {title}
